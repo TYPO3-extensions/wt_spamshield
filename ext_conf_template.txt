@@ -1,3 +1,7 @@
+TSConstantEditor.basic { 
+  description = <div style="position:absolute;top:10px;right:10px; width:300px;"><div class="typo3-message message-warning"><div class="message-header">Impotant Notice</div><div class="message-body">If you're updating from<br>wt_spamshield < 1.0.0 you have to make sure that you have to do the following:<ul><li>Press the <b>Update button</b> again! Otherwise some functions (like the honeypot) will not work.</li><li>Check your XClassing. We have changed some paths.</li><ul></div></div></div>
+}
+
 # cat=basic//010; type=boolean; label= Use Name Check: Enable or disable name check. Simple comparison of first and last name. If the values are equal the post vars will be ignored.
 useNameCheck = 1
 
@@ -7,8 +11,8 @@ usehttpCheck = 3
 # cat=basic//030; type=text; label= Use Unique Check: Enter different field names (separated by comma) which should not be equal. Example for powermail: uid1 = first name and uid2 = last name -> "uid1,uid2". You can add more than one condition by splitting them with semicolons. Example for powermail: uid1 = first name, uid2 = last name, uid3 = address, uid1 and uid3 should not be equal as well as uid2 and uid3 should not be equal but uid1 and uid2 can be equal -> "uid1,uid3[semicolon]uid2,uid3".
 notUnique = 
 
-# cat=basic//040; type=boolean; label= Use Honeypod Check: A non-visible input field is added to your form. If the field is filled the message is handled as spam.
-honeypodCheck = 1
+# cat=basic//040; type=boolean; label= Use Honeypot Check: A non-visible input field is added to your form. If the field is filled the message is handled as spam.
+honeypotCheck = 1
 
 # cat=basic//050; type=boolean; label= Use Session Check: Enable or disable session check. As soon as a form is generated a timestamp is stored in the session. Only if this timestamp is available during the submit process the database entry will follow (avoids POST values from outside your website).
 useSessionCheck = 1
