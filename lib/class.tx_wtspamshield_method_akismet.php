@@ -48,8 +48,11 @@ class tx_wtspamshield_method_akismet extends tslib_pibase {
 				// Get field mapping from TS
 				$fields = $GLOBALS['TSFE']->tmpl->setup['plugin.']['wt_spamshield.']['fields.'][$ext.'.'];
 				foreach ($fields as $key => $value) {
-					$akismet_array[$key] = $form[$value];
+					if ($value && array_key_exists($value, $form)) {
+						$akismet_array[$key] = $form[$value];
+					}
 				}
+
 				$akismet_array += array(
 					'user_ip' => t3lib_div::getIndpEnv('REMOTE_ADDR'),
 					'user_agent' => t3lib_div::getIndpEnv('HTTP_USER_AGENT')

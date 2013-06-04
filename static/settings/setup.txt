@@ -8,8 +8,10 @@ plugin.wt_spamshield {
 		ke_userregister = {$plugin.wt_spamshield.ke_userregister}
 	}
 
-	redirect.standardMailform = {$plugin.wt_spamshield.redirect_mailform}
-	redirect.ve_guestbook = {$plugin.wt_spamshield.ve_guestbook}
+	redirect {
+		standardMailform = {$plugin.wt_spamshield.redirect_mailform}
+		ve_guestbook = {$plugin.wt_spamshield.ve_guestbook}
+	}
 
 	message {
 		blacklist = {$plugin.wt_spamshield.message.blacklist}
@@ -24,12 +26,6 @@ plugin.wt_spamshield {
 	}
 
 	fields {
-		powermail {
-			author =
-			email =
-			homepage =
-			body =
-		}
 		comments {
 			author = lastname
 			email = email
@@ -37,12 +33,15 @@ plugin.wt_spamshield {
 			body = content
 			permalink = homepage
 		}
-		veguestbook {
-			author = surname
+		ke_userregister {
+			author = last_name
 			email = email
-			homepage = homepage
-			body = entry
-			permalink = homepage
+		}
+		powermail {
+			author =
+			email =
+			homepage =
+			body =
 		}
 		t3_blog {
 			author = author
@@ -50,9 +49,12 @@ plugin.wt_spamshield {
 			homepage = website
 			body = text
 		}
-		ke_userregister {
-			author = last_name
+		ve_guestbook {
+			author = surname
 			email = email
+			homepage = homepage
+			body = entry
+			permalink = homepage
 		}
 	}
 }

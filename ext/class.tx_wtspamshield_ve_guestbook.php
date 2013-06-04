@@ -132,7 +132,7 @@ class tx_wtspamshield_ve_guestbook extends tslib_pibase {
 			// 1f. Akismet Check
 			if (!$error) {
 				$method_akismet_instance = t3lib_div::makeInstance('tx_wtspamshield_method_akismet'); // Generate Instance for Akismet method
-				$error .= $method_akismet_instance->checkAkismet($form, $this->messages['akismet'], 'veguestbook');
+				$error .= $method_akismet_instance->checkAkismet($form, $this->messages['akismet'], 've_guestbook');
 			}
 			
 			// 2a. Safe log file

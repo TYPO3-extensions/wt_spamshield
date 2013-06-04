@@ -134,7 +134,7 @@ class tx_wtspamshield_powermail extends tslib_pibase {
 			// 1f. Akismet Check
 			if (!$error) {
 				$method_akismet_instance = t3lib_div::makeInstance('tx_wtspamshield_method_akismet'); // Generate Instance for Akismet method
-				$error .= $method_akismet_instance->checkAkismet($form, $this->messages['akismet'], 'tx_powermail_pi1');
+				$error .= $method_akismet_instance->checkAkismet($form, $this->messages['akismet'], 'powermail');
 			}
 			
 			// 2a. Safe log file
