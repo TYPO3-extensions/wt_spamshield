@@ -2,7 +2,7 @@
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2009 Alexander Kellner <Alexander.Kellner@einpraegsam.net>
+*  (c) 2011 Stefan Froemken <froemken@gmail.com>
 *  All rights reserved
 *
 *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -41,15 +41,14 @@ class tx_wtspamshield_ke_userregister extends tslib_pibase {
 	 * Function is called if form is rendered (set tstamp in session)
 	 *
 	 * @param	array		$markerArray: Array with markers
-	 * @param	array		$row: Values from database
-	 * @param	array		$config: configuration
-	 * @param	object		$obj: parent object
-	 * @return	array		$markerArray
+	 * @param	object		$pObj: parent object
+	 * @param	array		$errors: Array with errors
+	 * @return	void
 	 */
 	function additionalMarkers(&$markerArray, $pObj, $errors) {
 		$this->div = t3lib_div::makeInstance('tx_wtspamshield_div'); // Generate Instance for div method
 
-		if ( // If guestbookform is shown AND if spamshield should be activated
+		if ( // If ke_userregister form is shown AND if spamshield should be activated
 			!empty($GLOBALS['TSFE']->tmpl->setup['plugin.']['wt_spamshield.']['enable.']['ke_userregister']) &&
 			$this->div->spamshieldIsNotDisabled()
 		) {
@@ -75,7 +74,7 @@ class tx_wtspamshield_ke_userregister extends tslib_pibase {
 	 * @param	object		$pObj: parent object
 	 * @return	void
 	 */
-	public function processSpecialEvaluations(&$errors, $pObj) {
+	public function processSpecialEvaluations(&$errors, &$pObj) {
 		// execute this hook only if there are no other errors
 		if (is_array($errors) && count($errors)) return;
 
@@ -91,7 +90,7 @@ class tx_wtspamshield_ke_userregister extends tslib_pibase {
 			// 1a. nameCheck
 			if (!$error) {
 				$method_namecheck_instance = t3lib_div::makeInstance('tx_wtspamshield_method_namecheck'); // Generate Instance for namecheck method
-				$error .= $method_namecheck_instance->nameCheck($form['firstname'], $form['surname'], $this->messages['namecheck']);
+				$error .= $method_namecheck_instance->nameCheck($form['first_name'], $form['last_name'], $this->messages['namecheck']);
 			}
 
 			// 1b. httpCheck
@@ -116,7 +115,7 @@ class tx_wtspamshield_ke_userregister extends tslib_pibase {
 			// 1e. Akismet Check
 			if (!$error) {
 				$method_akismet_instance = t3lib_div::makeInstance('tx_wtspamshield_method_akismet'); // Generate Instance for Akismet method
-				$error .= $method_akismet_instance->checkAkismet($form, $this->messages['akismet']);
+				$error .= $method_akismet_instance->checkAkismet($form, $this->messages['akismet'], 'ke_userregister');
 			}
 
 			// 2a. Safe log file
@@ -131,9 +130,10 @@ class tx_wtspamshield_ke_userregister extends tslib_pibase {
 				$method_sendEmail_instance->sendEmail('ve_guestbook', $error, $form);
 			}
 
-			// 2c. If error appears, don't save registration to db
+			// 2c. Error message
 			if ($error) {
-				$errors[$this->honeypod_inputName] = $error;
+				// Workaround: create field via TS and put it in HTML template of ke_userregister
+				$errors['wt_spamshield'] = $error;
 			}
 		}
 	}

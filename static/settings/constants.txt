@@ -16,6 +16,12 @@ plugin.wt_spamshield {
 	# cat=wt_spamshield main//0040; type=boolean; label= Comments active: Enable spamshield for comments
 	comments = 0
 
+	# cat=wt_spamshield main//0050; type=boolean; label= t3_blog active: Enable spamshield for t3_blog
+	t3_blog = 0
+
+	# cat=wt_spamshield main//0060; type=boolean; label= ke_userregister active: Enable spamshield for ke_userregister
+	ke_userregister = 0
+
 	# cat=wt_spamshield main//0200; type=text; label= Mailform Redirect: Redirect URL for default mailform
 	redirect_mailform =
 

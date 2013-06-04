@@ -35,6 +35,7 @@ require_once(t3lib_extMgm::extPath('wt_spamshield') . 'functions/class.tx_wtspam
 require_once(t3lib_extMgm::extPath('wt_spamshield') . 'functions/class.tx_wtspamshield_div.php');
 
 class tx_wtspamshield_defaultmailform extends tslib_pibase {
+
 	/**
 	 * @var array
 	 */
@@ -46,7 +47,8 @@ class tx_wtspamshield_defaultmailform extends tslib_pibase {
 	protected $div;
 
 	var $honeypod_inputName = 'wt_spamshield_honey';
-
+	
+	
 	/**
 	 * Function generateSession() is called if the form is rendered (generate a session)
 	 *
@@ -61,7 +63,7 @@ class tx_wtspamshield_defaultmailform extends tslib_pibase {
 		) {
 			$this->getDiv()->checkConf(); // Check Extension Manager configuration
 			$forceValue = !(isset($configuration['ifOutdated']) && $configuration['ifOutdated']);
-
+			
 			// Set session on form create
 			/** @var $method_session_instance tx_wtspamshield_method_session */
 			$method_session_instance = t3lib_div::makeInstance('tx_wtspamshield_method_session');
@@ -85,7 +87,7 @@ class tx_wtspamshield_defaultmailform extends tslib_pibase {
 			$this->getDiv()->spamshieldIsNotDisabled()
 		) {
 			$error = $this->processValidationChain($form);
-
+			
 			// 2c. Redirect and stop mail sending
 			if (!empty($error)) { // If error
 				$link = (!empty($GLOBALS['TSFE']->tmpl->setup['plugin.']['wt_spamshield.']['redirect.']['standardMailform']) ? $GLOBALS['TSFE']->tmpl->setup['plugin.']['wt_spamshield.']['redirect.']['standardMailform'] : t3lib_div::getIndpEnv('TYPO3_SITE_URL')); // redirection link - take only Domain if no target in TS
@@ -114,8 +116,9 @@ class tx_wtspamshield_defaultmailform extends tslib_pibase {
 			$fieldValues = $parent->getRequestHandler()->getByMethod();
 			$error = $this->processValidationChain($fieldValues);
 
-				// If an error was detected, show the initial form again
-				// @todo Maybe show an error message as well - if it is interesting for bots...
+			// If an error was detected, show the initial form again
+
+			// @todo Maybe show an error message as well - if it is interesting for bots...
 			if (empty($error) === FALSE) {
 				$parameters['show'] = TRUE;
 			}

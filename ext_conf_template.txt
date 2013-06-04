@@ -1,7 +1,7 @@
 # cat=basic//010; type=boolean; label= Use Name Check: This option enables (or disables) a name check. It's a very simple thing: If prename == lastname the post vars will be ignored
 useNameCheck = 1
 
-# cat=basic//020; type=int [0-100]; label= Use HTTP Check: This option enables (or disables) a check for the string http. If you want only to allow 3x http, enter 3 (0 disables this option complete)
+# cat=basic//020; type=int [0-100]; label= Use HTTP Check: This option enables (or disables) a check for the string http. If you want only to allow 3x http, enter 3. If you want no http, enter 0. (-1 disables this option complete)
 usehttpCheck = 3
 
 # cat=basic//030; type=text; label= Use unique check: Enter different field keys (commaseparated), which should not equal - firstname and lastname for powermail (e.g. uid1,uid2). You can add more conditions and split them with semicolon. If firstname uid1 should not be equal to address uid3 and lastname uid2 should not be equal to address uid3 but uid1 and uid2 could be the same (e.g. uid1,uid3[semicolon]uid2,uid3)

@@ -1,9 +1,13 @@
 plugin.wt_spamshield {
+	enable {
+		standardMailform = {$plugin.wt_spamshield.mailform}
+		powermail = {$plugin.wt_spamshield.powermail}
+		ve_guestbook = {$plugin.wt_spamshield.ve_guestbook}
+		comments = {$plugin.wt_spamshield.comments}
+		t3_blog = {$plugin.wt_spamshield.t3_blog}
+		ke_userregister = {$plugin.wt_spamshield.ke_userregister}
+	}
 
-	enable.standardMailform = {$plugin.wt_spamshield.mailform}
-	enable.powermail = {$plugin.wt_spamshield.powermail}
-	enable.ve_guestbook = {$plugin.wt_spamshield.ve_guestbook}
-	enable.comments = {$plugin.wt_spamshield.comments}
 	redirect.standardMailform = {$plugin.wt_spamshield.redirect_mailform}
 	redirect.ve_guestbook = {$plugin.wt_spamshield.ve_guestbook}
 
@@ -17,5 +21,48 @@ plugin.wt_spamshield {
 		namecheck = {$plugin.wt_spamshield.message.namecheck}
 		akismet = {$plugin.wt_spamshield.message.akismet}
 		honeypod = {$plugin.wt_spamshield.message.honeypod}
+	}
+
+	fields {
+		powermail {
+			author =
+			email =
+			homepage =
+			body =
+		}
+		comments {
+			author = lastname
+			email = email
+			homepage = homepage
+			body = content
+			permalink = homepage
+		}
+		veguestbook {
+			author = surname
+			email = email
+			homepage = homepage
+			body = entry
+			permalink = homepage
+		}
+		t3_blog {
+			author = author
+			email = email
+			homepage = website
+			body = text
+		}
+		ke_userregister {
+			author = last_name
+			email = email
+		}
+	}
+}
+
+plugin.tx_keuserregister {
+	create.fields {
+		# create field for error messages
+		wt_spamshield {    
+			type = text
+			doNotSaveInDB = 1
+		}
 	}
 }

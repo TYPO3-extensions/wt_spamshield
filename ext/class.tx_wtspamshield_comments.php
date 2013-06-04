@@ -156,11 +156,10 @@ class tx_wtspamshield_comments extends tslib_pibase {
 			}
 			
 			
-			
 			// 1f. Akismet Check
 			if (!$error) {
 				$method_akismet_instance = t3lib_div::makeInstance('tx_wtspamshield_method_akismet'); // Generate Instance for Akismet method
-				$tempError =  $method_akismet_instance->checkAkismet($form, $this->messages['akismet']);
+				$tempError =  $method_akismet_instance->checkAkismet($form, $this->messages['akismet'], 'comments');
 				
 				if (!empty($tempError)) {
 					$points += 1000;

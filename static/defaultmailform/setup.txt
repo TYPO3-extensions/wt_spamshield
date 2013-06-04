@@ -7,6 +7,8 @@ tt_content.mailform {
 		preUserFunc = tx_wtspamshield_defaultmailform->generateSession
 		preUserFunc.ifOutdated = 1
 
+		# ToDo: field outside of form tag, see forge #33620
 		innerWrap = | <input name="wt_spamshield_honey" type="text" style="position: absolute; margin: 0 0 0 -9999px;" value="" />
+		no_cache = 1
 	}
 }
