@@ -108,7 +108,11 @@ class tx_wtspamshield_ve_guestbook extends tslib_pibase {
 				$obj->strEntryTable = 'tx_wtspamshield_veguestbooktemp'; // change table for saving
 				$obj->config['notify_mail'] = ''; // don't send a notify email
 				$obj->config['feedback_mail'] = false; // don't send a feedback mail
-				$obj->config['redirect_page'] = (intval($GLOBALS['TSFE']->tmpl->setup['plugin.']['wt_spamshield.']['redirect.']['ve_guestbook']) > 0 ? $GLOBALS['TSFE']->tmpl->setup['plugin.']['wt_spamshield.']['redirect.']['ve_guestbook'] : 1); // pid to redirect
+				if( intval($GLOBALS['TSFE']->tmpl->setup['plugin.']['wt_spamshield.']['redirect.']['ve_guestbook']) > 0) {
+					$obj->config['redirect_page'] = intval($GLOBALS['TSFE']->tmpl->setup['plugin.']['wt_spamshield.']['redirect.']['ve_guestbook']);
+				} else {
+					$obj->config['redirect_page'] = $GLOBALS['TSFE']->tmpl->rootLine[0]['uid'];
+				}
 				unset($obj->tt_news); // remove superfluous tt_news piVars
 			}
 		}

@@ -11,7 +11,7 @@ plugin.wt_spamshield {
 
   redirect {
     standardMailform = {$plugin.wt_spamshield.redirect_mailform}
-    ve_guestbook = {$plugin.wt_spamshield.ve_guestbook}
+    ve_guestbook = {$plugin.wt_spamshield.redirect_ve_guestbook}
   }
 
   honeypot {
