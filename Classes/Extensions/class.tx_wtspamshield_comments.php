@@ -84,7 +84,8 @@ class tx_wtspamshield_comments extends tslib_pibase {
 			$methodSessionInstance->setSessionTime();
 
 				// 3. Honeypot check - generate honeypot Input field
-			$honeypotInputName = $GLOBALS['TSFE']->tmpl->setup['plugin.']['wt_spamshield.']['honeypot.']['inputname.']['comments'];
+			$tsConf = $this->getDiv()->getTsConf();
+			$honeypotInputName = $tsConf['honeypot.']['inputname.']['comments'];
 			$methodHoneypotInstance = t3lib_div::makeInstance('tx_wtspamshield_method_honeypot');
 			$methodHoneypotInstance->inputName = $honeypotInputName;
 			$methodHoneypotInstance->prefixInputName = $this->prefixInputName;
@@ -171,7 +172,8 @@ class tx_wtspamshield_comments extends tslib_pibase {
 
 			// 1e. honeypotCheck
 		if (!$error) {
-			$honeypotInputName = $GLOBALS['TSFE']->tmpl->setup['plugin.']['wt_spamshield.']['honeypot.']['inputname.']['comments'];
+			$tsConf = $this->getDiv()->getTsConf();
+			$honeypotInputName = $tsConf['honeypot.']['inputname.']['comments'];
 			$methodHoneypotInstance = t3lib_div::makeInstance('tx_wtspamshield_method_honeypot');
 			$methodHoneypotInstance->inputName = $honeypotInputName;
 			$tempError = $methodHoneypotInstance->checkHoney($fieldValues);

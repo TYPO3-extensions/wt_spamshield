@@ -76,7 +76,8 @@ class tx_wtspamshield_ve_guestbook extends tslib_pibase {
 			$methodSessionInstance->setSessionTime();
 
 				// 3. Honeypot check - generate honeypot Input field
-			$honeypotInputName = $GLOBALS['TSFE']->tmpl->setup['plugin.']['wt_spamshield.']['honeypot.']['inputname.']['ve_guestbook'];
+			$tsConf = $this->getDiv()->getTsConf();
+			$honeypotInputName = $tsConf['honeypot.']['inputname.']['ve_guestbook'];
 			$methodHoneypotInstance = t3lib_div::makeInstance('tx_wtspamshield_method_honeypot');
 			$methodHoneypotInstance->inputName = $honeypotInputName;
 			$methodHoneypotInstance->prefixInputName = $this->prefixInputName;
@@ -120,9 +121,10 @@ class tx_wtspamshield_ve_guestbook extends tslib_pibase {
 				$obj->strEntryTable = 'tx_wtspamshield_veguestbooktemp';
 				$obj->config['notify_mail'] = '';
 				$obj->config['feedback_mail'] = FALSE;
-				if ( intval($GLOBALS['TSFE']->tmpl->setup['plugin.']['wt_spamshield.']['redirect.']['ve_guestbook']) > 0) {
+				$tsConf = $this->getDiv()->getTsConf();
+				if ( intval($tsConf['redirect.']['ve_guestbook']) > 0) {
 					$obj->config['redirect_page'] =
-						intval($GLOBALS['TSFE']->tmpl->setup['plugin.']['wt_spamshield.']['redirect.']['ve_guestbook']);
+						intval($tsConf['redirect.']['ve_guestbook']);
 				} else {
 					$obj->config['redirect_page'] = $GLOBALS['TSFE']->tmpl->rootLine[0]['uid'];
 				}
@@ -167,7 +169,8 @@ class tx_wtspamshield_ve_guestbook extends tslib_pibase {
 
 			// 1e. honeypotCheck
 		if (!$error) {
-			$honeypotInputName = $GLOBALS['TSFE']->tmpl->setup['plugin.']['wt_spamshield.']['honeypot.']['inputname.']['ve_guestbook'];
+			$tsConf = $this->getDiv()->getTsConf();
+			$honeypotInputName = $tsConf['honeypot.']['inputname.']['ve_guestbook'];
 			$methodHoneypotInstance = t3lib_div::makeInstance('tx_wtspamshield_method_honeypot');
 			$methodHoneypotInstance->inputName = $honeypotInputName;
 			$error .= $methodHoneypotInstance->checkHoney($fieldValues);

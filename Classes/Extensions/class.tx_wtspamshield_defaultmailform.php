@@ -89,8 +89,9 @@ class tx_wtspamshield_defaultmailform extends tslib_pibase {
 
 				// 2c. Redirect and stop mail sending
 			if (!empty($error)) {
-				$link = (!empty($GLOBALS['TSFE']->tmpl->setup['plugin.']['wt_spamshield.']['redirect.']['standardMailform'])
-					? $GLOBALS['TSFE']->tmpl->setup['plugin.']['wt_spamshield.']['redirect.']['standardMailform']
+				$tsConf = $this->getDiv()->getTsConf();
+				$link = (!empty($tsConf['redirect.']['standardMailform'])
+					? $tsConf['redirect.']['standardMailform']
 					: t3lib_div::getIndpEnv('TYPO3_SITE_URL'));
 				header('HTTP/1.1 301 Moved Permanently');
 				header('Location: ' . $link);
@@ -137,7 +138,8 @@ class tx_wtspamshield_defaultmailform extends tslib_pibase {
 
 			// 1e. honeypotCheck
 		if (!$error) {
-			$honeypotInputName = $GLOBALS['TSFE']->tmpl->setup['plugin.']['wt_spamshield.']['honeypot.']['inputname.']['standardMailform'];
+			$tsConf = $this->getDiv()->getTsConf();
+			$honeypotInputName = $tsConf['honeypot.']['inputname.']['standardMailform'];
 			$methodHoneypotInstance = t3lib_div::makeInstance('tx_wtspamshield_method_honeypot');
 			$methodHoneypotInstance->inputName = $honeypotInputName;
 			$error .= $methodHoneypotInstance->checkHoney($fieldValues);

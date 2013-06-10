@@ -73,7 +73,8 @@ class tx_wtspamshield_powermail extends tslib_pibase {
 			$methodSessionInstance->setSessionTime();
 
 				// 3. Add Honeypot
-			$honeypotInputName = $GLOBALS['TSFE']->tmpl->setup['plugin.']['wt_spamshield.']['honeypot.']['inputname.']['powermail'];
+			$tsConf = $this->getDiv()->getTsConf();
+			$honeypotInputName = $tsConf['honeypot.']['inputname.']['powermail'];
 			$methodHoneypotInstance = t3lib_div::makeInstance('tx_wtspamshield_method_honeypot');
 			$methodHoneypotInstance->inputName = $honeypotInputName;
 			$methodHoneypotInstance->prefixInputName = $this->prefixInputName;
@@ -143,7 +144,8 @@ class tx_wtspamshield_powermail extends tslib_pibase {
 
 			// 1e. honeypotCheck
 		if (!$error) {
-			$honeypotInputName = $GLOBALS['TSFE']->tmpl->setup['plugin.']['wt_spamshield.']['honeypot.']['inputname.']['powermail'];
+			$tsConf = $this->getDiv()->getTsConf();
+			$honeypotInputName = $tsConf['honeypot.']['inputname.']['powermail'];
 			$methodHoneypotInstance = t3lib_div::makeInstance('tx_wtspamshield_method_honeypot');
 			$methodHoneypotInstance->inputName = $honeypotInputName;
 			$error .= $methodHoneypotInstance->checkHoney($fieldValues);

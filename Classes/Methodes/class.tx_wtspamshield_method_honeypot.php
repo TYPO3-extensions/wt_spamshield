@@ -51,17 +51,18 @@ class tx_wtspamshield_method_honeypot extends tx_wtspamshield_method_abstract {
 
 		if(isset($extConf)) {
 			if ($extConf['honeypotCheck']) {
-				$cObjType = $GLOBALS['TSFE']->tmpl->setup['plugin.']['wt_spamshield.']['honeypot.']['explanation'];
-				$cObjvalues = $GLOBALS['TSFE']->tmpl->setup['plugin.']['wt_spamshield.']['honeypot.']['explanation.'];
+				$tsConf = $this->getDiv()->getTsConf();
+				$cObjType = $tsConf['honeypot.']['explanation'];
+				$cObjvalues = $tsConf['honeypot.']['explanation.'];
 				$lll = $cObjvalues['value'];
 				$cObjvalues['value'] = $this->getL10n($lll);
 				$code = $this->cObj->cObjGetSingle($cObjType, $cObjvalues);
 
 				$code .= '<input type="text" name="';
 				$code .= $this->prefixInputName . '[' . $this->inputName . ']"';
-				$code .= ' ' . $GLOBALS['TSFE']->tmpl->setup['plugin.']['wt_spamshield.']['honeypot.']['css.']['inputStyle'];
+				$code .= ' ' . $tsConf['honeypot.']['css.']['inputStyle'];
 				$code .= ' value=""';
-				$code .= ' ' . $GLOBALS['TSFE']->tmpl->setup['plugin.']['wt_spamshield.']['honeypot.']['css.']['inputClass'];
+				$code .= ' ' . $tsConf['honeypot.']['css.']['inputClass'];
 				$code .= ' />';
 
 				return $code;
@@ -83,7 +84,8 @@ class tx_wtspamshield_method_honeypot extends tx_wtspamshield_method_abstract {
 			&& isset($extConf)
 			&& $extConf['honeypotCheck']
 		) {
-			return $this->renderCobj($GLOBALS['TSFE']->tmpl->setup['plugin.']['wt_spamshield.']['errors.'], 'honeypot');
+			$tsConf = $this->getDiv()->getTsConf();
+			return $this->renderCobj($tsConf['errors.'], 'honeypot');
 		}
 		unset($sessiondata[$this->inputName]);
 

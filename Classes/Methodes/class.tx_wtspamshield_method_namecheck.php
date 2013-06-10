@@ -44,7 +44,8 @@ class tx_wtspamshield_method_namecheck extends tx_wtspamshield_method_abstract {
 		if (isset($extConf)) {
 			if ($extConf['useNameCheck'] == 1) {
 				if ($name1 === $name2 && $name1) {
-					$error = $this->renderCobj($GLOBALS['TSFE']->tmpl->setup['plugin.']['wt_spamshield.']['errors.'], 'nameCheck');
+					$tsConf = $this->getDiv()->getTsConf();
+					$error = $this->renderCobj($tsConf['errors.'], 'nameCheck');
 				}
 				if (isset($error)) {
 					return $error;

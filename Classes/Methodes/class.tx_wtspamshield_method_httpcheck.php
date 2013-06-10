@@ -49,7 +49,8 @@ class tx_wtspamshield_method_httpcheck extends tx_wtspamshield_method_abstract {
 			if ($extConf['usehttpCheck'] >= 0) {
 
 				$noOfErrors = 0;
-				$error = $this->renderCobj($GLOBALS['TSFE']->tmpl->setup['plugin.']['wt_spamshield.']['errors.'], 'httpCheck');
+				$tsConf = $this->getDiv()->getTsConf();
+				$error = $this->renderCobj($tsConf['errors.'], 'httpCheck');
 				$error = sprintf($error, $extConf['usehttpCheck']);
 
 				foreach ((array) $array as $key => $value) {

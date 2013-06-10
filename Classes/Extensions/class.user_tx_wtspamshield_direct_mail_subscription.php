@@ -66,8 +66,8 @@ class user_tx_wtspamshield_direct_mail_subscription extends user_feAdmin {
 	public function displayCreateScreen() {
 
 		if ( $this->getDiv()->isActivated('direct_mail_subscription') ) {
-			$honeypotInputName =
-				$GLOBALS['TSFE']->tmpl->setup['plugin.']['wt_spamshield.']['honeypot.']['inputname.']['direct_mail_subscription'];
+			$tsConf = $this->getDiv()->getTsConf();
+			$honeypotInputName = $tsConf ['honeypot.']['inputname.']['direct_mail_subscription'];
 			$methodHoneypotInstance = t3lib_div::makeInstance('tx_wtspamshield_method_honeypot');
 			$methodHoneypotInstance->inputName = $honeypotInputName;
 			$methodHoneypotInstance->prefixInputName = $this->prefixInputName;
@@ -137,8 +137,8 @@ class user_tx_wtspamshield_direct_mail_subscription extends user_feAdmin {
 
 			// 1e. honeypotCheck
 		if (!$error) {
-			$honeypotInputName =
-				$GLOBALS['TSFE']->tmpl->setup['plugin.']['wt_spamshield.']['honeypot.']['inputname.']['direct_mail_subscription'];
+			$tsConf = $this->getDiv()->getTsConf();
+			$honeypotInputName = $tsConf['honeypot.']['inputname.']['direct_mail_subscription'];
 			$honeypotInputName = t3lib_div::makeInstance('tx_wtspamshield_method_honeypot');
 			$honeypotInputName->inputName = $honeypotInputName;
 			$error .= $honeypotInputName->checkHoney($fieldValues);

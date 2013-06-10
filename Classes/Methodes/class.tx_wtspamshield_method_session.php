@@ -64,17 +64,18 @@ class tx_wtspamshield_method_session extends tx_wtspamshield_method_abstract {
 		if (isset($extConf)) {
 			if ($extConf['useSessionCheck'] == 1) {
 				$sessTstamp = intval($GLOBALS['TSFE']->fe_user->getKey('ses', 'wt_spamshield_form_tstamp'));
+				$tsConf = $this->getDiv()->getTsConf();
 
 				if ($sessTstamp > 0) {
 					if ((($sessTstamp + $extConf['SessionEndTime']) < time()) && ($extConf['SessionEndTime'] > 0)) {
-						$error = $this->renderCobj($GLOBALS['TSFE']->tmpl->setup['plugin.']['wt_spamshield.']['errors.'], 'session_error_1');
+						$error = $this->renderCobj($tsConf['errors.'], 'session_error_1');
 					} elseif ( (($sessTstamp + $extConf['SessionStartTime']) > time())
 								&& ($extConf['SessionStartTime'] > 0)
 					) {
-						$error = $this->renderCobj($GLOBALS['TSFE']->tmpl->setup['plugin.']['wt_spamshield.']['errors.'], 'session_error_2');
+						$error = $this->renderCobj($tsConf['errors.'], 'session_error_2');
 					}
 				} else {
-					$error = $this->renderCobj($GLOBALS['TSFE']->tmpl->setup['plugin.']['wt_spamshield.']['errors.'], 'session_error_3');
+					$error = $this->renderCobj($tsConf['errors.'], 'session_error_3');
 				}
 			}
 		}

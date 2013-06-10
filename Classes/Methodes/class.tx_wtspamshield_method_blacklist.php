@@ -39,7 +39,8 @@ class tx_wtspamshield_method_blacklist extends tx_wtspamshield_method_abstract {
 	 */
 	public function checkBlacklist($formValues) {
 		if ($this->isCurrentIpBlacklisted() || $this->isCurrentEmailBlacklisted($formValues)) {
-			return $this->renderCobj($GLOBALS['TSFE']->tmpl->setup['plugin.']['wt_spamshield.']['errors.'], 'blacklist');
+			$tsConf = $this->getDiv()->getTsConf();
+			return $this->renderCobj($tsConf['errors.'], 'blacklist');
 		}
 		return '';
 	}

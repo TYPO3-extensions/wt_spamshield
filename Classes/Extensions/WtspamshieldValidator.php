@@ -111,7 +111,8 @@ class WtspamshieldValidator extends \TYPO3\CMS\Form\Validation\AbstractValidator
 
 			// 1e. honeypotCheck
 		if (!$error) {
-			$honeypotInputName = $GLOBALS['TSFE']->tmpl->setup['plugin.']['wt_spamshield.']['honeypot.']['inputname.']['standardMailform'];
+			$tsConf = $this->getDiv()->getTsConf();
+			$honeypotInputName = $tsConf['honeypot.']['inputname.']['standardMailform'];
 			$methodHoneypotInstance = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_wtspamshield_method_honeypot');
 			$methodHoneypotInstance->inputName = $honeypotInputName;
 			$error .= $methodHoneypotInstance->checkHoney($fieldValues);

@@ -44,7 +44,8 @@ class tx_wtspamshield_method_unique extends tx_wtspamshield_method_abstract {
 		$extConf = $this->getDiv->getExtConf();
 		if (isset($extConf)) {
 			if ($extConf['notUnique']) {
-				$error = $this->renderCobj($GLOBALS['TSFE']->tmpl->setup['plugin.']['wt_spamshield.']['errors.'], 'uniquecheck');
+				$tsConf = $this->getDiv()->getTsConf();
+				$error = $this->renderCobj($tsConf['errors.'], 'uniquecheck');
 
 				$myFieldArray = t3lib_div::trimExplode(';', $extConf['notUnique'], 1);
 				if (is_array($myFieldArray)) {

@@ -46,9 +46,10 @@ class tx_wtspamshield_method_akismet extends tx_wtspamshield_method_abstract {
 		if (isset($extConf)) {
 			if ($extConf['AkismetKey']) {
 				$akismetArray = array();
+				$tsConf = $this->getDiv()->getTsConf();
 
 					// Get field mapping from TS
-				$fields = $GLOBALS['TSFE']->tmpl->setup['plugin.']['wt_spamshield.']['fields.'][$ext . '.'];
+				$fields = $tsConf['fields.'][$ext . '.'];
 				foreach ($fields as $key => $value) {
 					if ($value && array_key_exists($value, $form)) {
 						$akismetArray[$key] = $form[$value];
@@ -64,7 +65,7 @@ class tx_wtspamshield_method_akismet extends tx_wtspamshield_method_abstract {
 														$extConf['AkismetKey'], $akismetArray);
 
 				if (!$akismet->isError() && $akismet->isSpam()) {
-					$error = $this->renderCobj($GLOBALS['TSFE']->tmpl->setup['plugin.']['wt_spamshield.']['errors.'], 'akismet');
+					$error = $this->renderCobj($tsConf['errors.'], 'akismet');
 				}
 			}
 		}
