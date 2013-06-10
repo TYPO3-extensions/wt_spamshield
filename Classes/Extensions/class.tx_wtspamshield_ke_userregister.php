@@ -37,20 +37,20 @@ class tx_wtspamshield_ke_userregister extends tslib_pibase {
 	public $prefixInputName = 'tx_keuserregister_pi1';
 
 	/**
-	 * @var tx_wtspamshield_extensions_abstract
+	 * @var tx_wtspamshield_div
 	 */
-	protected $abstract;
+	protected $div;
 
 	/**
-	 * getAbstract
+	 * getDiv
 	 * 
-	 * @return	tx_wtspamshield_div
+	 * @return tx_wtspamshield_div
 	 */
-	protected function getAbstract() {
-		if (!isset($this->abstract)) {
-			$this->abstract = t3lib_div::makeInstance('tx_wtspamshield_extensions_abstract');
+	protected function getDiv() {
+		if (!isset($this->div)) {
+			$this->div = t3lib_div::makeInstance('tx_wtspamshield_div');
 		}
-		return $this->abstract;
+		return $this->div;
 	}
 
 	/**
@@ -62,9 +62,9 @@ class tx_wtspamshield_ke_userregister extends tslib_pibase {
 	 * @return void
 	 */
 	public function additionalMarkers(&$markerArray, $pObj, $errors) {
-		if ( $this->getAbstract()->isActivated('ke_userregister') ) {
+		if ( $this->getDiv()->isActivated('ke_userregister') ) {
 				// 1. check Extension Manager configuration
-			$this->getAbstract()->getDiv()->checkConf();
+			$this->getDiv()->getExtConf();
 
 				// 2. Session check - generate session entry
 			$methodSessionInstance = t3lib_div::makeInstance('tx_wtspamshield_method_session');
@@ -103,7 +103,7 @@ class tx_wtspamshield_ke_userregister extends tslib_pibase {
 			$validateArray = t3lib_div::_GP('tx_keuserregister_pi1');
 		}
 
-		if ( $this->getAbstract()->isActivated('ke_userregister') ) {
+		if ( $this->getDiv()->isActivated('ke_userregister') ) {
 
 			$error = $this->processValidationChain($validateArray);
 				// 2c. Error message

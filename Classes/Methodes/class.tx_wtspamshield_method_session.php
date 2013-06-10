@@ -32,11 +32,6 @@
 class tx_wtspamshield_method_session extends tx_wtspamshield_method_abstract {
 
 	/**
-	 * @var string
-	 */
-	public $extKey = 'wt_spamshield';
-
-	/**
 	 * Set Timestamp in session (when the form is rendered)
 	 *
 	 * @param boolean $forceValue Whether to force setting the
@@ -44,14 +39,16 @@ class tx_wtspamshield_method_session extends tx_wtspamshield_method_abstract {
 	 * @return void
 	 */
 	public function setSessionTime($forceValue = TRUE) {
-		$conf = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf'][$this->extKey]);
+		$extConf = $this->getDiv->getExtConf();
 
-		$timeStamp = intval($GLOBALS['TSFE']->fe_user->getKey('ses', 'wt_spamshield_form_tstamp'));
-		$isOutdated = ($timeStamp + $conf['SessionEndTime'] < time());
+		if (isset($extConf)) {
+			$timeStamp = intval($GLOBALS['TSFE']->fe_user->getKey('ses', 'wt_spamshield_form_tstamp'));
+			$isOutdated = ($timeStamp + $extConf['SessionEndTime'] < time());
 
-		if ($forceValue || $isOutdated) {
-			$GLOBALS['TSFE']->fe_user->setKey('ses', 'wt_spamshield_form_tstamp', time());
-			$GLOBALS['TSFE']->storeSessionData();
+			if ($forceValue || $isOutdated) {
+				$GLOBALS['TSFE']->fe_user->setKey('ses', 'wt_spamshield_form_tstamp', time());
+				$GLOBALS['TSFE']->storeSessionData();
+			}
 		}
 	}
 
@@ -61,17 +58,18 @@ class tx_wtspamshield_method_session extends tx_wtspamshield_method_abstract {
 	 * @return string $error Return errormessage if error exists
 	 */
 	public function checkSessionTime() {
-		$conf = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf'][$this->extKey]);
+		$extConf = $this->getDiv->getExtConf();
+		$error = '';
 
-		if (isset($conf)) {
-			if ($conf['useSessionCheck'] == 1) {
+		if (isset($extConf)) {
+			if ($extConf['useSessionCheck'] == 1) {
 				$sessTstamp = intval($GLOBALS['TSFE']->fe_user->getKey('ses', 'wt_spamshield_form_tstamp'));
 
 				if ($sessTstamp > 0) {
-					if ((($sessTstamp + $conf['SessionEndTime']) < time()) && ($conf['SessionEndTime'] > 0)) {
+					if ((($sessTstamp + $extConf['SessionEndTime']) < time()) && ($extConf['SessionEndTime'] > 0)) {
 						$error = $this->renderCobj($GLOBALS['TSFE']->tmpl->setup['plugin.']['wt_spamshield.']['errors.'], 'session_error_1');
-					} elseif ( (($sessTstamp + $conf['SessionStartTime']) > time())
-								&& ($conf['SessionStartTime'] > 0)
+					} elseif ( (($sessTstamp + $extConf['SessionStartTime']) > time())
+								&& ($extConf['SessionStartTime'] > 0)
 					) {
 						$error = $this->renderCobj($GLOBALS['TSFE']->tmpl->setup['plugin.']['wt_spamshield.']['errors.'], 'session_error_2');
 					}
@@ -79,8 +77,6 @@ class tx_wtspamshield_method_session extends tx_wtspamshield_method_abstract {
 					$error = $this->renderCobj($GLOBALS['TSFE']->tmpl->setup['plugin.']['wt_spamshield.']['errors.'], 'session_error_3');
 				}
 			}
-		} else {
-			$error = 'Please update your extension (' . $this->extKey . ') in the Extension Manager<br />';
 		}
 
 		return $error;

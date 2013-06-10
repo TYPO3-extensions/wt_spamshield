@@ -32,40 +32,37 @@
 class tx_wtspamshield_method_unique extends tx_wtspamshield_method_abstract {
 
 	/**
-	 * @var string
-	 */
-	public $extKey = 'wt_spamshield';
-
-	/**
 	 * Check if the values are in more fields and return error
 	 *
 	 * @param array $sessiondata Array with submitted values
 	 * @return string $error Return errormessage if error exists
 	 */
 	public function main($sessiondata) {
-		$this->conf = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf'][$this->extKey]);
 		$found = 0;
 		$wholearray = array();
 
-		if ($this->conf['notUnique']) {
-			$error = $this->renderCobj($GLOBALS['TSFE']->tmpl->setup['plugin.']['wt_spamshield.']['errors.'], 'uniquecheck');
+		$extConf = $this->getDiv->getExtConf();
+		if (isset($extConf)) {
+			if ($extConf['notUnique']) {
+				$error = $this->renderCobj($GLOBALS['TSFE']->tmpl->setup['plugin.']['wt_spamshield.']['errors.'], 'uniquecheck');
 
-			$myFieldArray = t3lib_div::trimExplode(';', $this->conf['notUnique'], 1);
-			if (is_array($myFieldArray)) {
-				foreach ($myFieldArray as $myKey => $myValue) {
-					$wholearray = array();
-					$fieldarray = t3lib_div::trimExplode(',', $myValue, 1);
+				$myFieldArray = t3lib_div::trimExplode(';', $extConf['notUnique'], 1);
+				if (is_array($myFieldArray)) {
+					foreach ($myFieldArray as $myKey => $myValue) {
+						$wholearray = array();
+						$fieldarray = t3lib_div::trimExplode(',', $myValue, 1);
 
-					if (is_array($fieldarray)) {
-						foreach ($fieldarray as $key => $value) {
-							if ($sessiondata[$value]) {
-								$wholearray[] = $sessiondata[$value];
+						if (is_array($fieldarray)) {
+							foreach ($fieldarray as $key => $value) {
+								if ($sessiondata[$value]) {
+									$wholearray[] = $sessiondata[$value];
+								}
 							}
 						}
-					}
 
-					if (count($wholearray) != count(array_unique($wholearray))) {
-						$found = 1;
+						if (count($wholearray) != count(array_unique($wholearray))) {
+							$found = 1;
+						}
 					}
 				}
 			}

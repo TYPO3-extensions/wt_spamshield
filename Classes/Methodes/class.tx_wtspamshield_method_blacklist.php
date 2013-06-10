@@ -32,11 +32,6 @@
 class tx_wtspamshield_method_blacklist extends tx_wtspamshield_method_abstract {
 
 	/**
-	 * @var string
-	 */
-	public $extKey = 'wt_spamshield';
-
-	/**
 	 * Function checkBlacklist() checks if IP or sender is blacklisted
 	 *
 	 * @param array $formValues Form values

@@ -34,11 +34,6 @@ class tx_wtspamshield_method_httpcheck extends tx_wtspamshield_method_abstract {
 	/**
 	 * @var string
 	 */
-	public $extKey = 'wt_spamshield';
-
-	/**
-	 * @var string
-	 */
 	public $searchstring = 'http://|https://|ftp.';
 
 	/**
@@ -48,14 +43,14 @@ class tx_wtspamshield_method_httpcheck extends tx_wtspamshield_method_abstract {
 	 * @return string $error Return errormessage if error exists
 	 */
 	public function httpCheck($array) {
-		$this->conf = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf'][$this->extKey]);
+		$extConf = $this->getDiv->getExtConf();
 
-		if (isset($this->conf) && isset($array)) {
-			if ($this->conf['usehttpCheck'] >= 0) {
+		if (isset($extConf) && isset($array)) {
+			if ($extConf['usehttpCheck'] >= 0) {
 
 				$noOfErrors = 0;
 				$error = $this->renderCobj($GLOBALS['TSFE']->tmpl->setup['plugin.']['wt_spamshield.']['errors.'], 'httpCheck');
-				$error = sprintf($error, $this->conf['usehttpCheck']);
+				$error = sprintf($error, $extConf['usehttpCheck']);
 
 				foreach ((array) $array as $key => $value) {
 					if (!is_array($value)) {
@@ -78,7 +73,7 @@ class tx_wtspamshield_method_httpcheck extends tx_wtspamshield_method_abstract {
 					}
 				}
 
-				if ($noOfErrors > $this->conf['usehttpCheck']) {
+				if ($noOfErrors > $extConf['usehttpCheck']) {
 					return $error;
 				}
 			}

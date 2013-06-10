@@ -37,20 +37,20 @@ class tx_wtspamshield_powermail extends tslib_pibase {
 	public $prefixInputName = 'tx_powermail_pi1';
 
 	/**
-	 * @var tx_wtspamshield_extensions_abstract
+	 * @var tx_wtspamshield_div
 	 */
-	protected $abstract;
+	protected $div;
 
 	/**
-	 * getAbstract
+	 * getDiv
 	 * 
-	 * @return	tx_wtspamshield_div
+	 * @return tx_wtspamshield_div
 	 */
-	protected function getAbstract() {
-		if (!isset($this->abstract)) {
-			$this->abstract = t3lib_div::makeInstance('tx_wtspamshield_extensions_abstract');
+	protected function getDiv() {
+		if (!isset($this->div)) {
+			$this->div = t3lib_div::makeInstance('tx_wtspamshield_div');
 		}
-		return $this->abstract;
+		return $this->div;
 	}
 
 	/**
@@ -64,9 +64,9 @@ class tx_wtspamshield_powermail extends tslib_pibase {
 	 */
 	public function PM_FormWrapMarkerHook($outerMarkerArray, &$subpartArray, $conf, $obj) {
 
-		if ( $this->getAbstract()->isActivated('powermail') ) {
+		if ( $this->getDiv()->isActivated('powermail') ) {
 				// 1. check Extension Manager configuration
-			$this->getAbstract()->getDiv()->checkConf();
+			$this->getDiv()->getExtConf();
 
 				// 2. Set session on form create
 			$methodSessionInstance = t3lib_div::makeInstance('tx_wtspamshield_method_session');
@@ -95,7 +95,7 @@ class tx_wtspamshield_powermail extends tslib_pibase {
 	public function PM_SubmitBeforeMarkerHook($obj, $markerArray = array(), $sessiondata = array()) {
 		$error = '';
 
-		if ( $this->getAbstract()->isActivated('powermail') ) {
+		if ( $this->getDiv()->isActivated('powermail') ) {
 
 			$error = $this->processValidationChain($sessiondata);
 

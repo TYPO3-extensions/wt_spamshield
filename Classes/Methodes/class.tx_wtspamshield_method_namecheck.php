@@ -32,11 +32,6 @@
 class tx_wtspamshield_method_namecheck extends tx_wtspamshield_method_abstract {
 
 	/**
-	 * @var string
-	 */
-	public $extKey = 'wt_spamshield';
-
-	/**
 	 * Function nameCheck() to disable the same first- and lastname
 	 *
 	 * @param string $name1 Content of Field Firstname
@@ -44,10 +39,10 @@ class tx_wtspamshield_method_namecheck extends tx_wtspamshield_method_abstract {
 	 * @return string $error Return errormessage if error exists
 	 */
 	public function nameCheck($name1, $name2) {
-		$conf = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf'][$this->extKey]);
+		$extConf = $this->getDiv->getExtConf();
 
-		if (isset($conf)) {
-			if ($conf['useNameCheck'] == 1) {
+		if (isset($extConf)) {
+			if ($extConf['useNameCheck'] == 1) {
 				if ($name1 === $name2 && $name1) {
 					$error = $this->renderCobj($GLOBALS['TSFE']->tmpl->setup['plugin.']['wt_spamshield.']['errors.'], 'nameCheck');
 				}

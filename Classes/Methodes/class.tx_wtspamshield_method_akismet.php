@@ -32,11 +32,6 @@
 class tx_wtspamshield_method_akismet extends tx_wtspamshield_method_abstract {
 
 	/**
-	 * @var string
-	 */
-	public $extKey = 'wt_spamshield';
-
-	/**
 	 * Function checkAkismet() send form values to akismet server and
 	 * waits for the feedback if it's spam or not
 	 *
@@ -45,11 +40,11 @@ class tx_wtspamshield_method_akismet extends tx_wtspamshield_method_abstract {
 	 * @return string $error Return errormessage if error exists
 	 */
 	public function checkAkismet($form, $ext) {
-		$conf = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf'][$this->extKey]);
+		$extConf = $this->getDiv->getExtConf();
 		$error = '';
 
-		if (isset($conf)) {
-			if ($conf['AkismetKey']) {
+		if (isset($extConf)) {
+			if ($extConf['AkismetKey']) {
 				$akismetArray = array();
 
 					// Get field mapping from TS
@@ -66,7 +61,7 @@ class tx_wtspamshield_method_akismet extends tx_wtspamshield_method_abstract {
 				);
 
 				$akismet = new tx_wtspamshield_akismet('http://' . t3lib_div::getIndpEnv('HTTP_HOST') . '/',
-														$conf['AkismetKey'], $akismetArray);
+														$extConf['AkismetKey'], $akismetArray);
 
 				if (!$akismet->isError() && $akismet->isSpam()) {
 					$error = $this->renderCobj($GLOBALS['TSFE']->tmpl->setup['plugin.']['wt_spamshield.']['errors.'], 'akismet');

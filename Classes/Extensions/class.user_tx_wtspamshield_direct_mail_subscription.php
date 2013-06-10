@@ -42,20 +42,20 @@ class user_tx_wtspamshield_direct_mail_subscription extends user_feAdmin {
 	public $spamshieldDisplayError;
 
 	/**
-	 * @var tx_wtspamshield_extensions_abstract
+	 * @var tx_wtspamshield_div
 	 */
-	protected $abstract;
+	protected $div;
 
 	/**
-	 * getAbstract
+	 * getDiv
 	 * 
 	 * @return tx_wtspamshield_div
 	 */
-	protected function getAbstract() {
-		if (!isset($this->abstract)) {
-			$this->abstract = t3lib_div::makeInstance('tx_wtspamshield_extensions_abstract');
+	protected function getDiv() {
+		if (!isset($this->div)) {
+			$this->div = t3lib_div::makeInstance('tx_wtspamshield_div');
 		}
-		return $this->abstract;
+		return $this->div;
 	}
 
 	/**
@@ -65,7 +65,7 @@ class user_tx_wtspamshield_direct_mail_subscription extends user_feAdmin {
 	 */
 	public function displayCreateScreen() {
 
-		if ( $this->getAbstract()->isActivated('direct_mail_subscription') ) {
+		if ( $this->getDiv()->isActivated('direct_mail_subscription') ) {
 			$honeypotInputName =
 				$GLOBALS['TSFE']->tmpl->setup['plugin.']['wt_spamshield.']['honeypot.']['inputname.']['direct_mail_subscription'];
 			$methodHoneypotInstance = t3lib_div::makeInstance('tx_wtspamshield_method_honeypot');
@@ -88,7 +88,7 @@ class user_tx_wtspamshield_direct_mail_subscription extends user_feAdmin {
 	public function save() {
 		$error = '';
 
-		if ( $this->getAbstract()->isActivated('direct_mail_subscription') ) {
+		if ( $this->getDiv()->isActivated('direct_mail_subscription') ) {
 			$validateArray = $this->dataArr;
 			$error = $this->processValidationChain($validateArray);
 

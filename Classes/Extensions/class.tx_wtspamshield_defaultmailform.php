@@ -37,20 +37,20 @@ class tx_wtspamshield_defaultmailform extends tslib_pibase {
 	protected $messages = array();
 
 	/**
-	 * @var tx_wtspamshield_extensions_abstract
+	 * @var tx_wtspamshield_div
 	 */
-	protected $abstract;
+	protected $div;
 
 	/**
-	 * getAbstract
+	 * getDiv
 	 * 
-	 * @return	tx_wtspamshield_div
+	 * @return tx_wtspamshield_div
 	 */
-	protected function getAbstract() {
-		if (!isset($this->abstract)) {
-			$this->abstract = t3lib_div::makeInstance('tx_wtspamshield_extensions_abstract');
+	protected function getDiv() {
+		if (!isset($this->div)) {
+			$this->div = t3lib_div::makeInstance('tx_wtspamshield_div');
 		}
-		return $this->abstract;
+		return $this->div;
 	}
 
 	/**
@@ -62,8 +62,8 @@ class tx_wtspamshield_defaultmailform extends tslib_pibase {
 	 * @return string
 	 */
 	public function generateSession($content, array $configuration = NULL) {
-		if ( $this->getAbstract()->isActivated('standardMailform') ) {
-			$this->getDiv()->checkConf();
+		if ( $this->getDiv()->isActivated('standardMailform') ) {
+			$this->getDiv()->getExtConf();
 			$forceValue = !(isset($configuration['ifOutdated']) && $configuration['ifOutdated']);
 
 				// Set session on form create
@@ -84,7 +84,7 @@ class tx_wtspamshield_defaultmailform extends tslib_pibase {
 	 * @return object $form
 	 */
 	public function sendFormmail_preProcessVariables($form, $obj, $legacyConfArray = array()) {
-		if ( $this->getAbstract()->isActivated('standardMailform') ) {
+		if ( $this->getDiv()->isActivated('standardMailform') ) {
 			$error = $this->processValidationChain($form);
 
 				// 2c. Redirect and stop mail sending

@@ -32,9 +32,9 @@
 class tx_form_System_Validate_Wtspamshield extends tx_form_System_Validate_Abstract {
 
 	/**
-	 * @var tx_wtspamshield_extensions_abstract
+	 * @var tx_wtspamshield_div
 	 */
-	protected $abstract;
+	protected $div;
 
 	/**
 	 * Constructor
@@ -47,15 +47,15 @@ class tx_form_System_Validate_Wtspamshield extends tx_form_System_Validate_Abstr
 	}
 
 	/**
-	 * getAbstract
+	 * getDiv
 	 * 
 	 * @return	tx_wtspamshield_div
 	 */
-	protected function getAbstract() {
-		if (!isset($this->abstract)) {
-			$this->abstract = t3lib_div::makeInstance('tx_wtspamshield_extensions_abstract');
+	protected function getDiv() {
+		if (!isset($this->div)) {
+			$this->div = t3lib_div::makeInstance('tx_wtspamshield_div');
 		}
-		return $this->abstract;
+		return $this->div;
 	}
 
 	/**
@@ -66,7 +66,7 @@ class tx_form_System_Validate_Wtspamshield extends tx_form_System_Validate_Abstr
 	 */
 	public function isValid() {
 
-		if ( $this->getAbstract()->isActivated('standardMailform') ) {
+		if ( $this->getDiv()->isActivated('standardMailform') ) {
 			$error = '';
 
 			if ($this->requestHandler->has($this->fieldName)) {

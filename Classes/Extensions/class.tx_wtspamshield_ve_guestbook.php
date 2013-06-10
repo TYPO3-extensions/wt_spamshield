@@ -37,20 +37,20 @@ class tx_wtspamshield_ve_guestbook extends tslib_pibase {
 	public $prefixInputName = 'tx_veguestbook_pi1';
 
 	/**
-	 * @var tx_wtspamshield_extensions_abstract
+	 * @var tx_wtspamshield_div
 	 */
-	protected $abstract;
+	protected $div;
 
 	/**
-	 * getAbstract
+	 * getDiv
 	 * 
-	 * @return	tx_wtspamshield_div
+	 * @return tx_wtspamshield_div
 	 */
-	protected function getAbstract() {
-		if (!isset($this->abstract)) {
-			$this->abstract = t3lib_div::makeInstance('tx_wtspamshield_extensions_abstract');
+	protected function getDiv() {
+		if (!isset($this->div)) {
+			$this->div = t3lib_div::makeInstance('tx_wtspamshield_div');
 		}
-		return $this->abstract;
+		return $this->div;
 	}
 
 	/**
@@ -66,10 +66,10 @@ class tx_wtspamshield_ve_guestbook extends tslib_pibase {
 
 		if (
 			$obj->code == 'FORM' &&
-			$this->getAbstract()->isActivated('ve_guestbook')
+			$this->getDiv()->isActivated('ve_guestbook')
 		) {
 				// 1. check Extension Manager configuration
-			$this->getAbstract()->getDiv()->checkConf();
+			$this->getDiv()->getExtConf();
 
 				// 2. Session check - generate session entry
 			$methodSessionInstance = t3lib_div::makeInstance('tx_wtspamshield_method_session');
@@ -97,7 +97,7 @@ class tx_wtspamshield_ve_guestbook extends tslib_pibase {
 		$cObj = $GLOBALS['TSFE']->cObj;
 		$error = '';
 
-		if ( $this->getAbstract()->isActivated('ve_guestbook') ) {
+		if ( $this->getDiv()->isActivated('ve_guestbook') ) {
 				// get GPvars, downwards compatibility
 			$t3Version = class_exists('t3lib_utility_VersionNumber')
 				? t3lib_utility_VersionNumber::convertVersionNumberToInteger(TYPO3_version)

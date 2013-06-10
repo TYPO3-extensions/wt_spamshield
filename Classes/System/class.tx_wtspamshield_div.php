@@ -37,6 +37,16 @@ class tx_wtspamshield_div extends tslib_pibase {
 	public $extKey = 'wt_spamshield';
 
 	/**
+	 * @var mixed
+	 */
+	public $tsConf;
+
+	/**
+	 * @var mixed
+	 */
+	public $extConf;
+
+	/**
 	 * Disable Spamshield for current page - set entry to session
 	 *
 	 * @param int $time how long should the disabling work (in seconds)
@@ -74,16 +84,49 @@ class tx_wtspamshield_div extends tslib_pibase {
 	}
 
 	/**
-	 * Check if button "update" was clicked in the extension manager
-	 * after the installation
-	 *
-	 * @return void
+	 * isActivated
+	 * 
+	 * @param string $extension
+	 * @return boolean
 	 */
-	public function checkConf() {
-		$config = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf'][$this->extKey]);
-		if (!is_array($config)) {
-			echo $this->msg('Please open wt_spamshield in the Extension Manager, scroll down and click "Update"');
+	public function isActivated($extension) {
+		$tsConf = $this->getTsConf();
+		if (!empty($tsConf['enable.'][$extension])
+			&& $this->spamshieldIsNotDisabled()
+		) {
+			return TRUE;
 		}
+		return FALSE;
+	}
+
+	/**
+	 * getTsConf
+	 * 
+	 * @return mixed
+	 */
+	public function getTsConf() {
+		if (!isset($this->tsConf)) {
+			$this->tsConf = $GLOBALS['TSFE']->tmpl->setup['plugin.']['wt_spamshield.'];
+		}
+		return $this->tsConf;
+	}
+
+	/**
+	 * getExtConf
+	 *
+	 * @return mixed
+	 */
+	public function getExtConf() {
+		if(!isset($this->extConf)) {
+			$extConf = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf'][$this->extKey]);
+			if ( !is_array($extConf) ) {
+				echo $this->msg('Please open ' . $this->extKey . ' in the Extension Manager, scroll down and click "Update"');
+				$this->extConf = NULL;
+			} else {
+				$this->extConf = $extConf;
+			}
+		}
+		return $this->extConf;
 	}
 
 	/**

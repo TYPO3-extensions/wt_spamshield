@@ -34,9 +34,9 @@ namespace TYPO3\CMS\Form\Validation;
 class WtspamshieldValidator extends \TYPO3\CMS\Form\Validation\AbstractValidator {
 
 	/**
-	 * @var tx_wtspamshield_extensions_abstract
+	 * @var tx_wtspamshield_div
 	 */
-	protected $abstract;
+	protected $div;
 
 	/**
 	 * Constructor
@@ -49,15 +49,15 @@ class WtspamshieldValidator extends \TYPO3\CMS\Form\Validation\AbstractValidator
 	}
 
 	/**
-	 * getAbstract
+	 * getDiv
 	 * 
 	 * @return tx_wtspamshield_div
 	 */
-	protected function getAbstract() {
-		if (!isset($this->abstract)) {
-			$this->abstract = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_wtspamshield_extensions_abstract');
+	protected function getDiv() {
+		if (!isset($this->div)) {
+			$this->div = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_wtspamshield_div');
 		}
-		return $this->abstract;
+		return $this->div;
 	}
 
 	/**
@@ -68,7 +68,7 @@ class WtspamshieldValidator extends \TYPO3\CMS\Form\Validation\AbstractValidator
 	 */
 	public function isValid() {
 
-		if ( $this->getAbstract()->isActivated('standardMailform') ) {
+		if ( $this->getDiv()->isActivated('standardMailform') ) {
 			$error = '';
 
 			if ($this->requestHandler->has($this->fieldName)) {

@@ -32,6 +32,12 @@
  * @subpackage wt_spamshield
  */
 class tx_wtspamshield_comments extends tslib_pibase {
+
+	/**
+	 * @var tx_wtspamshield_div
+	 */
+	protected $div;
+
 	/**
 	 * @var string
 	 */
@@ -43,15 +49,15 @@ class tx_wtspamshield_comments extends tslib_pibase {
 	public $points;
 
 	/**
-	 * getAbstract
+	 * getDiv
 	 * 
-	 * @return	tx_wtspamshield_div
+	 * @return tx_wtspamshield_div
 	 */
-	protected function getAbstract() {
-		if (!isset($this->abstract)) {
-			$this->abstract = t3lib_div::makeInstance('tx_wtspamshield_extensions_abstract');
+	protected function getDiv() {
+		if (!isset($this->div)) {
+			$this->div = t3lib_div::makeInstance('tx_wtspamshield_div');
 		}
-		return $this->abstract;
+		return $this->div;
 	}
 
 	/**
@@ -68,10 +74,10 @@ class tx_wtspamshield_comments extends tslib_pibase {
 		$template = $params['template'];
 		$markers = $params['markers'];
 
-		if ( $this->getAbstract()->isActivated('comments') ) {
+		if ( $this->getDiv()->isActivated('comments') ) {
 
 				// 1. check Extension Manager configuration
-			$this->getAbstract()->getDiv()->checkConf();
+			$this->getDiv()->getExtConf();
 
 				// 2. Session check - generate session entry
 			$methodSessionInstance = t3lib_div::makeInstance('tx_wtspamshield_method_session');
@@ -103,7 +109,7 @@ class tx_wtspamshield_comments extends tslib_pibase {
 		$validateArray = $params['formdata'];
 		$this->points = $params['points'];
 
-		if ( $this->getAbstract()->isActivated('comments') ) {
+		if ( $this->getDiv()->isActivated('comments') ) {
 			$error = $this->processValidationChain($validateArray);
 		}
 

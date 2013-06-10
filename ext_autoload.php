@@ -21,8 +21,6 @@ $return = array(
 'tx_wtspamshield_method_namecheck' => $extPath . 'Classes/Methodes/class.tx_wtspamshield_method_namecheck.php',
 'tx_wtspamshield_method_session' => $extPath . 'Classes/Methodes/class.tx_wtspamshield_method_session.php',
 'tx_wtspamshield_method_unique' => $extPath . 'Classes/Methodes/class.tx_wtspamshield_method_unique.php',
-
-'tx_wtspamshield_extensions_abstract' => $extPath . 'Classes/Extensions/class.tx_wtspamshield_extensions_abstract.php',
 );
 
 if (t3lib_extMgm::isLoaded('direct_mail_subscription')) {

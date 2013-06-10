@@ -47,6 +47,11 @@ class tx_wtspamshield_method_abstract extends tslib_pibase {
 	public $cObj;
 
 	/**
+	 * @var tx_wtspamshield_div
+	 */
+	protected $div;
+
+	/**
 	 * Constructor
 	 *
 	 */
@@ -122,6 +127,17 @@ class tx_wtspamshield_method_abstract extends tslib_pibase {
 		return $content;
 	}
 
+	/**
+	 * getDiv
+	 * 
+	 * @return	tx_wtspamshield_div
+	 */
+	public function getDiv() {
+		if (!isset($this->div)) {
+			$this->div = t3lib_div::makeInstance('tx_wtspamshield_div');
+		}
+		return $this->div;
+	}
 }
 
 if (defined('TYPO3_MODE')
