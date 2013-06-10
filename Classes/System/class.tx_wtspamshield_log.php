@@ -70,7 +70,7 @@ class tx_wtspamshield_log extends tslib_pibase {
 				'crdate' => time(),
 				'title' => $title,
 				'form' => $ext,
-				'errormsg' => str_replace(array('<br>', '<br />'), "\n", $error),
+				'errormsg' => strip_tags($error),
 				'pageid' => $GLOBALS['TSFE']->id,
 				'ip' => t3lib_div::getIndpEnv('REMOTE_ADDR'),
 				'useragent' => t3lib_div::getIndpEnv('HTTP_USER_AGENT')
