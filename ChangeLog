@@ -4,6 +4,8 @@
 	Ralf Zimmermann <ralf.zimmermann@tritum.de>
 	
 	* FIX: #48740: Redirect for ve_guestbook does not work under T3 6.1
+	* ADD: logging: useful title in the backend list view
+	* FEATURE: TYPO3 coding standards
 
 1.0.2
 

@@ -17,7 +17,7 @@ if ($t3Version < 4006000) {
 $TCA['tx_wtspamshield_log'] = array (
 	'ctrl' => array (
 		'title'     => 'LLL:EXT:wt_spamshield/Resources/Private/Language/locallang_db.xml:tx_wtspamshield_log',
-		'label'     => 'errormsg',
+		'label'     => 'title',
 		'tstamp'    => 'tstamp',
 		'crdate'    => 'crdate',
 		'cruser_id' => 'cruser_id',
@@ -27,7 +27,7 @@ $TCA['tx_wtspamshield_log'] = array (
 		'iconfile' => t3lib_extMgm::extRelPath($_EXTKEY) . 'Resources/Public/Icons/tx_wtspamshield_log.gif',
 	),
 	'feInterface' => array (
-		'fe_admin_fieldList' => 'form, errormsg, formvalues, pageid, ip, useragent',
+		'fe_admin_fieldList' => 'title, form, errormsg, formvalues, pageid, ip, useragent',
 	)
 );
 

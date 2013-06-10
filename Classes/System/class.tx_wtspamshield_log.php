@@ -61,10 +61,14 @@ class tx_wtspamshield_log extends tslib_pibase {
 				$conf['pid'] = $GLOBALS['TSFE']->id;
 			}
 
+			$title = date('d.m.Y H:i:s', time()) . ' - ' .
+				$ext . ' - pid: ' . $GLOBALS['TSFE']->id;
+
 			$dbValues = array (
 				'pid' => intval($conf['pid']),
 				'tstamp' => time(),
 				'crdate' => time(),
+				'title' => $title,
 				'form' => $ext,
 				'errormsg' => str_replace(array('<br>', '<br />'), "\n", $error),
 				'pageid' => $GLOBALS['TSFE']->id,
