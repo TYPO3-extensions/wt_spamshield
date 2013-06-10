@@ -22,54 +22,68 @@
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 
+/**
+ * unique check
+ *
+ * @author Ralf Zimmermann <ralf.zimmermann@tritum.de>
+ * @package tritum
+ * @subpackage wt_spamshield
+ */
 class tx_wtspamshield_method_unique extends tx_wtspamshield_method_abstract {
 
-	var $extKey = 'wt_spamshield'; // Extension key of current extension
-	
+	/**
+	 * @var string
+	 */
+	public $extKey = 'wt_spamshield';
+
 	/**
 	 * Check if the values are in more fields and return error
 	 *
-	 * @param	array		$sessiondata: Array with submitted values
-	 * @return	string		$error: Return errormessage if error exists
+	 * @param array $sessiondata Array with submitted values
+	 * @return string $error Return errormessage if error exists
 	 */
-	function main($sessiondata) {
-		$this->conf = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf'][$this->extKey]); // Get backend configuration of this extension
-		$found = 0; // no errors at the beginning
-		$wholearray = array(); // clear array
+	public function main($sessiondata) {
+		$this->conf = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf'][$this->extKey]);
+		$found = 0;
+		$wholearray = array();
 
-		if ($this->conf['notUnique']) { // only if there are values in the backend
-			$error = $this->renderCObj($GLOBALS['TSFE']->tmpl->setup['plugin.']['wt_spamshield.']['errors.'], 'uniquecheck');
+		if ($this->conf['notUnique']) {
+			$error = $this->renderCobj($GLOBALS['TSFE']->tmpl->setup['plugin.']['wt_spamshield.']['errors.'], 'uniquecheck');
 
-			$myFieldArray = t3lib_div::trimExplode(';', $this->conf['notUnique'], 1); // explode at ';' for field groups
-			if (is_array($myFieldArray)) { // if there is an array
-				foreach ($myFieldArray as $myKey => $myValue) { // one loop for every field group
-					$wholearray = array(); // clear array
-					$fieldarray = t3lib_div::trimExplode(',', $myValue, 1); // explode at ','
-					
-					if (is_array($fieldarray)) { // if there is an array
-						foreach ($fieldarray as $key => $value) { // one loop for every field
-							if ($sessiondata[$value]) $wholearray[] = $sessiondata[$value]; // if value exists in session, write value to an array
+			$myFieldArray = t3lib_div::trimExplode(';', $this->conf['notUnique'], 1);
+			if (is_array($myFieldArray)) {
+				foreach ($myFieldArray as $myKey => $myValue) {
+					$wholearray = array();
+					$fieldarray = t3lib_div::trimExplode(',', $myValue, 1);
+
+					if (is_array($fieldarray)) {
+						foreach ($fieldarray as $key => $value) {
+							if ($sessiondata[$value]) {
+								$wholearray[] = $sessiondata[$value];
+							}
 						}
 					}
-					
-					if (count($wholearray) != count(array_unique($wholearray))) { // if numbers of array values not numbers if array values without double entries
-						$found = 1; // found spam
+
+					if (count($wholearray) != count(array_unique($wholearray))) {
+						$found = 1;
 					}
 				}
 			}
-			
-			
 		}
-		
+
 		if ($found) {
 			return $error;
 		}
+
+		return '';
 	}
 
 }
 
-if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/wt_spamshield/Classes/Methodes/class.tx_wtspamshield_method_unique.php']) {
-	include_once ($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/wt_spamshield/Classes/Methodes/class.tx_wtspamshield_method_unique.php']);
+if (defined('TYPO3_MODE')
+	&& isset($GLOBALS['TYPO3_CONF_VARS'][TYPO3_MODE]['XCLASS']['ext/wt_spamshield/Classes/Methodes/class.tx_wtspamshield_method_unique.php'])
+) {
+	require_once ($GLOBALS['TYPO3_CONF_VARS'][TYPO3_MODE]['XCLASS']['ext/wt_spamshield/Classes/Methodes/class.tx_wtspamshield_method_unique.php']);
 }
 
 ?>

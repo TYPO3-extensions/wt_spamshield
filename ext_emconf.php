@@ -32,19 +32,19 @@ $EM_CONF[$_EXTKEY] = array (
 	'author_company' => 'in2code, TRITUM',
 	'CGLcompliance' => NULL,
 	'CGLcompliance_note' => NULL,
-	'constraints' => 
+	'constraints' =>
 	array (
-		'depends' => 
+		'depends' =>
 		array (
 			'php' => '4.0.0-0.0.0',
 			'typo3' => '4.5.0-0.0.0',
 		),
-		'conflicts' => 
+		'conflicts' =>
 		array (
 			'mf_akismet' => '0.0.0-9.9.9',
 			'wt_calculating_captcha' => '0.0.0-0.0.0',
 		),
-		'suggests' => 
+		'suggests' =>
 		array (
 		),
 	),

@@ -22,32 +22,46 @@
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 
+/**
+ * log
+ *
+ * @author Ralf Zimmermann <ralf.zimmermann@tritum.de>
+ * @package tritum
+ * @subpackage wt_spamshield
+ */
 class tx_wtspamshield_log extends tslib_pibase {
 
-	var $extKey = 'wt_spamshield'; // Extension key of current extension
-	var $dbInsert = 1; // DB insert can be disabled for testing
-	
+	/**
+	 * @var string
+	 */
+	public $extKey = 'wt_spamshield';
+
+	/**
+	 * @var integer
+	 */
+	public $dbInsert = 1;
+
 	/**
 	 * Function dbLog to write a log into the database if spam was recognized
 	 *
-	 * @param	string		$ext: Name of extension in which the spam was recognized
-	 * @param	string		$error: Error Message
-	 * @param	array		$formArray: Array with submitted values
-	 * @return	void
+	 * @param string $ext Name of extension in which the spam was recognized
+	 * @param string $error Error Message
+	 * @param array $formArray Array with submitted values
+	 * @return string
 	 */
-	function dbLog($ext, $error, $formArray) {
-		$conf = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf'][$this->extKey]); // Get backend configuration of this extension
-		
-		if (isset($conf)) { // Only if Backendconfiguration exists in localconf
-			if ($conf['pid'] == -1) { // Deactivated
-				return false;
+	public function dbLog($ext, $error, $formArray) {
+		$conf = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf'][$this->extKey]);
+
+		if (isset($conf)) {
+			if ($conf['pid'] == -1) {
+				return FALSE;
 			}
 
-			if ($conf['pid'] == -2) { // save on current page
+			if ($conf['pid'] == -2) {
 				$conf['pid'] = $GLOBALS['TSFE']->id;
 			}
-			
-			$db_values = array ( // DB entry for table tx_wtspamshield_log
+
+			$dbValues = array (
 				'pid' => intval($conf['pid']),
 				'tstamp' => time(),
 				'crdate' => time(),
@@ -57,26 +71,28 @@ class tx_wtspamshield_log extends tslib_pibase {
 				'ip' => t3lib_div::getIndpEnv('REMOTE_ADDR'),
 				'useragent' => t3lib_div::getIndpEnv('HTTP_USER_AGENT')
 			);
-			// Downwards compatibility
-			$T3Version = class_exists('t3lib_utility_VersionNumber')
+				// Downwards compatibility
+			$t3Version = class_exists('t3lib_utility_VersionNumber')
 				? t3lib_utility_VersionNumber::convertVersionNumberToInteger(TYPO3_version)
 				: t3lib_div::int_from_ver(TYPO3_version);
-			if ($T3Version < 4007000) {
-				$db_values += array('formvalues' => t3lib_div::view_array($formArray));
+			if ($t3Version < 4007000) {
+				$dbValues += array('formvalues' => t3lib_div::view_array($formArray));
 			} else {
-				$db_values += array('formvalues' => t3lib_utility_Debug::viewArray($formArray));
+				$dbValues += array('formvalues' => t3lib_utility_Debug::viewArray($formArray));
 			}
-			
+
 			if ($this->dbInsert) {
-				$GLOBALS['TYPO3_DB']->exec_INSERTquery('tx_wtspamshield_log', $db_values); // DB entry
+				$GLOBALS['TYPO3_DB']->exec_INSERTquery('tx_wtspamshield_log', $dbValues);
 			}
 		}
+		return '';
 	}
-	
 }
 
-if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/wt_spamshield/Classes/System/class.tx_wtspamshield_log.php']) {
-	include_once ($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/wt_spamshield/Classes/System/class.tx_wtspamshield_log.php']);
+if (defined('TYPO3_MODE')
+	&& isset($GLOBALS['TYPO3_CONF_VARS'][TYPO3_MODE]['XCLASS']['ext/wt_spamshield/Classes/System/class.tx_wtspamshield_log.php'])
+) {
+	require_once ($GLOBALS['TYPO3_CONF_VARS'][TYPO3_MODE]['XCLASS']['ext/wt_spamshield/Classes/System/class.tx_wtspamshield_log.php']);
 }
 
 ?>

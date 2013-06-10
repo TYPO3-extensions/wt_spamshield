@@ -25,22 +25,12 @@ namespace TYPO3\CMS\Form\Validation;
 ***************************************************************/
 
 /**
+ * wtspamshield rule
  *
- * you can validate a form element by use of the wtspamshield rule
- * 
- * rules {
- *   1 = wtspamshield
- *   1 {
- *     breakOnError = 
- *     showMessage = 
- *     message = 
- *     error = 
- *     element = email
- *   }
- * 
-}
+ * @author Ralf Zimmermann <ralf.zimmermann@tritum.de>
+ * @package tritum
+ * @subpackage wt_spamshield
  */
-
 class WtspamshieldValidator extends \TYPO3\CMS\Form\Validation\AbstractValidator {
 
 	/**
@@ -52,13 +42,15 @@ class WtspamshieldValidator extends \TYPO3\CMS\Form\Validation\AbstractValidator
 	 * Constructor
 	 *
 	 * @param array $arguments
-	 * @return void
+	 * @return	void
 	 */
 	public function __construct($arguments) {
 		parent::__construct($arguments);
 	}
 
 	/**
+	 * getAbstract
+	 * 
 	 * @return tx_wtspamshield_div
 	 */
 	protected function getAbstract() {
@@ -87,7 +79,7 @@ class WtspamshieldValidator extends \TYPO3\CMS\Form\Validation\AbstractValidator
 				$error = $this->processValidationChain($validateArray);
 			}
 
-			if (!empty($error)) { // If error
+			if (!empty($error)) {
 				$this->setError('', strip_tags($error));
 				return FALSE;
 			}
@@ -97,56 +89,48 @@ class WtspamshieldValidator extends \TYPO3\CMS\Form\Validation\AbstractValidator
 	}
 
 	/**
+	 * processValidationChain
+	 * 
 	 * @param array $fieldValues
 	 * @return string
 	 */
 	protected function processValidationChain(array $fieldValues) {
 		$error = '';
 
-		// 1a. blacklistCheck
+			// 1a. blacklistCheck
 		if (!$error) {
-			/** @var $method_blacklist_instance tx_wtspamshield_method_blacklist */
-			$method_blacklist_instance = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_wtspamshield_method_blacklist'); // Generate Instance for session method
-			$error .= $method_blacklist_instance->checkBlacklist($fieldValues);
+			$methodBlacklistInstance = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_wtspamshield_method_blacklist');
+			$error .= $methodBlacklistInstance->checkBlacklist($fieldValues);
 		}
 
-		// 1c. httpCheck
+			// 1c. httpCheck
 		if (!$error) {
-			/** @var $method_httpcheck_instance tx_wtspamshield_method_httpcheck */
-			$method_httpcheck_instance = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_wtspamshield_method_httpcheck'); // Generate Instance for httpCheck method
-			$error .= $method_httpcheck_instance->httpCheck($fieldValues);
+			$methodHttpcheckInstance = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_wtspamshield_method_httpcheck');
+			$error .= $methodHttpcheckInstance->httpCheck($fieldValues);
 		}
 
-		// 1e. honeypotCheck
+			// 1e. honeypotCheck
 		if (!$error) {
-			/** @var $method_honeypot_instance tx_wtspamshield_method_honeypot */
-			$honeypot_inputName = $GLOBALS['TSFE']->tmpl->setup['plugin.']['wt_spamshield.']['honeypot.']['inputname.']['standardMailform'];
-			$method_honeypot_instance = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_wtspamshield_method_honeypot'); // Generate Instance for honeypot method
-			$method_honeypot_instance->inputName = $honeypot_inputName; // name for input field
-			$error .= $method_honeypot_instance->checkHoney($fieldValues);
+			$honeypotInputName = $GLOBALS['TSFE']->tmpl->setup['plugin.']['wt_spamshield.']['honeypot.']['inputname.']['standardMailform'];
+			$methodHoneypotInstance = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_wtspamshield_method_honeypot');
+			$methodHoneypotInstance->inputName = $honeypotInputName;
+			$error .= $methodHoneypotInstance->checkHoney($fieldValues);
 		}
 
-		// 2a. Safe log file
+			// 2a. Safe log file
 		if ($error) {
-			/** @var $method_log_instance tx_wtspamshield_log */
-			$method_log_instance = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_wtspamshield_log'); // Generate Instance for logging method
-			$method_log_instance->dbLog('standardMailform', $error, $fieldValues);
+			$methodLogInstance = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_wtspamshield_log');
+			$methodLogInstance->dbLog('standardMailform', $error, $fieldValues);
 		}
 
-		// 2b. Send email to admin
+			// 2b. Send email to admin
 		if ($error) {
-			/** @var $method_sendEmail_instance tx_wtspamshield_mail */
-			$method_sendEmail_instance = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_wtspamshield_mail'); // Generate Instance for email method
-			$method_sendEmail_instance->sendEmail('standardMailform', $error, $fieldValues);
+			$methodSendEmailInstance = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_wtspamshield_mail');
+			$methodSendEmailInstance->sendEmail('standardMailform', $error, $fieldValues);
 		}
 
 		return $error;
 	}
 
 }
-
-if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/wt_spamshield/Classes/Extensions/class.tx_form_System_Validate_Wtspamshield.php']) {
-	include_once ($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/wt_spamshield/Classes/Extensions/class.tx_form_System_Validate_Wtspamshield.php']);
-}
-
 ?>

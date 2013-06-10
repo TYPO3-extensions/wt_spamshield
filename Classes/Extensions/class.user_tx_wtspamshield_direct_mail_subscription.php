@@ -22,17 +22,33 @@
 *  This copyright notice MUST APPEAR in all copies of the script!
 */
 
+/**
+ * direct_mail_subscription hook
+ *
+ * @author Ralf Zimmermann <ralf.zimmermann@tritum.de>
+ * @package tritum
+ * @subpackage wt_spamshield
+ */
 class user_tx_wtspamshield_direct_mail_subscription extends user_feAdmin {
 
-	var $prefix_inputName = 'FE[tt_address]'; 
-	var $spamshieldDisplayError;
+	/**
+	 * @var string
+	 */
+	public $prefixInputName = 'FE[tt_address]';
+
+	/**
+	 * @var string
+	 */
+	public $spamshieldDisplayError;
 
 	/**
 	 * @var tx_wtspamshield_extensions_abstract
 	 */
 	protected $abstract;
-	
+
 	/**
+	 * getAbstract
+	 * 
 	 * @return tx_wtspamshield_div
 	 */
 	protected function getAbstract() {
@@ -42,15 +58,21 @@ class user_tx_wtspamshield_direct_mail_subscription extends user_feAdmin {
 		return $this->abstract;
 	}
 
-	function displayCreateScreen() {
+	/**
+	 * displayCreateScreen
+	 * 
+	 * @return mixed
+	 */
+	public function displayCreateScreen() {
 
 		if ( $this->getAbstract()->isActivated('direct_mail_subscription') ) {
-			$honeypot_inputName = $GLOBALS['TSFE']->tmpl->setup['plugin.']['wt_spamshield.']['honeypot.']['inputname.']['direct_mail_subscription'];
-			$method_honeypot_instance = t3lib_div::makeInstance('tx_wtspamshield_method_honeypot');
-			$method_honeypot_instance->inputName = $honeypot_inputName;
-			$method_honeypot_instance->prefix_inputName = $this->prefix_inputName;
-			$this->markerArray['###HIDDENFIELDS###'] .= $method_honeypot_instance->createHoneypot();
-			if($this->spamshieldDisplayError) {
+			$honeypotInputName =
+				$GLOBALS['TSFE']->tmpl->setup['plugin.']['wt_spamshield.']['honeypot.']['inputname.']['direct_mail_subscription'];
+			$methodHoneypotInstance = t3lib_div::makeInstance('tx_wtspamshield_method_honeypot');
+			$methodHoneypotInstance->inputName = $honeypotInputName;
+			$methodHoneypotInstance->prefixInputName = $this->prefixInputName;
+			$this->markerArray['###HIDDENFIELDS###'] .= $methodHoneypotInstance->createHoneypot();
+			if ($this->spamshieldDisplayError) {
 				$this->markerArray['###HIDDENFIELDS###'] .= $this->spamshieldDisplayError;
 			}
 		}
@@ -58,66 +80,78 @@ class user_tx_wtspamshield_direct_mail_subscription extends user_feAdmin {
 		return parent::displayCreateScreen();
 	}
 
-	function save() {
-		// config
-		$error = ''; // no error at the beginning
+	/**
+	 * save
+	 * 
+	 * @return	mixed
+	 */
+	public function save() {
+		$error = '';
 
 		if ( $this->getAbstract()->isActivated('direct_mail_subscription') ) {
 			$validateArray = $this->dataArr;
 			$error = $this->processValidationChain($validateArray);
 
 			if (!empty($error)) {
-				// error handling
-				$method_log_instance = t3lib_div::makeInstance('tx_wtspamshield_log'); // Generate Instance for logging method
-				$method_log_instance->dbLog('direct_mail_subscription', $error, $validateArray);
-				//$this->error='###TEMPLATE_NO_PERMISSIONS###';
-				$this->saved=0;
-				$this->cmd='create';
+					// error handling
+				$methodLogInstance = t3lib_div::makeInstance('tx_wtspamshield_log');
+				$methodLogInstance->dbLog('direct_mail_subscription', $error, $validateArray);
+					// $this->error='###TEMPLATE_NO_PERMISSIONS###';
+				$this->saved = 0;
+				$this->cmd = 'create';
 				$this->spamshieldDisplayError = $error;
 			} else {
 				return parent::save();
 			}
-		} else {
-			return parent::save();
 		}
+
+		return parent::save();
 	}
 
 	/**
+	 * processValidationChain
+	 * 
 	 * @param array $fieldValues
 	 * @return string
 	 */
 	protected function processValidationChain(array $fieldValues) {
 		$error = '';
-	
-		// 1a. blacklistCheck
+
+			// 1a. blacklistCheck
 		if (!$error) {
-			/** @var $method_blacklist_instance tx_wtspamshield_method_blacklist */
-			$method_blacklist_instance = t3lib_div::makeInstance('tx_wtspamshield_method_blacklist'); // Generate Instance for session method
-			$error .= $method_blacklist_instance->checkBlacklist($fieldValues);
+			$methodBlacklistInstance = t3lib_div::makeInstance('tx_wtspamshield_method_blacklist');
+			$error .= $methodBlacklistInstance->checkBlacklist($fieldValues);
 		}
 
-		// 1c. httpCheck
+			// 1c. httpCheck
 		if (!$error) {
-			$method_httpcheck_instance = t3lib_div::makeInstance('tx_wtspamshield_method_httpcheck'); // Generate Instance for httpCheck method
-			$error .= $method_httpcheck_instance->httpCheck($fieldValues);
+			$methodHttpcheckInstance = t3lib_div::makeInstance('tx_wtspamshield_method_httpcheck');
+			$error .= $methodHttpcheckInstance->httpCheck($fieldValues);
 		}
 
-		// 1d. uniqueCheck
+			// 1d. uniqueCheck
 		if (!$error) {
-			$method_unique_instance = t3lib_div::makeInstance('tx_wtspamshield_method_unique'); // Generate Instance for uniqueCheck method
-			$error .= $method_unique_instance->main($fieldValues);
+			$methodUniqueInstance = t3lib_div::makeInstance('tx_wtspamshield_method_unique');
+			$error .= $methodUniqueInstance->main($fieldValues);
 		}
 
-		// 1e. honeypotCheck
+			// 1e. honeypotCheck
 		if (!$error) {
-			$honeypot_inputName = $GLOBALS['TSFE']->tmpl->setup['plugin.']['wt_spamshield.']['honeypot.']['inputname.']['direct_mail_subscription'];
-			$method_honeypot_instance = t3lib_div::makeInstance('tx_wtspamshield_method_honeypot'); // Generate Instance for honeypot method
-			$method_honeypot_instance->inputName = $honeypot_inputName; // name for input field
-			$error .= $method_honeypot_instance->checkHoney($fieldValues);
+			$honeypotInputName =
+				$GLOBALS['TSFE']->tmpl->setup['plugin.']['wt_spamshield.']['honeypot.']['inputname.']['direct_mail_subscription'];
+			$honeypotInputName = t3lib_div::makeInstance('tx_wtspamshield_method_honeypot');
+			$honeypotInputName->inputName = $honeypotInputName;
+			$error .= $honeypotInputName->checkHoney($fieldValues);
 		}
-		
+
 		return $error;
 	}
+}
+
+if (defined('TYPO3_MODE')
+	&& isset($GLOBALS['TYPO3_CONF_VARS'][TYPO3_MODE]['XCLASS']['ext/wt_spamshield/Classes/Extensions/class.user_tx_wtspamshield_direct_mail_subscription.php'])
+) {
+	require_once ($GLOBALS['TYPO3_CONF_VARS'][TYPO3_MODE]['XCLASS']['ext/wt_spamshield/Classes/Extensions/class.user_tx_wtspamshield_direct_mail_subscription.php']);
 }
 
 ?>

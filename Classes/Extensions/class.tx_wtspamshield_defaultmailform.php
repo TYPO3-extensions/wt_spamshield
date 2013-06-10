@@ -22,6 +22,13 @@
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 
+/**
+ * defaultmailform hook
+ *
+ * @author Ralf Zimmermann <ralf.zimmermann@tritum.de>
+ * @package tritum
+ * @subpackage wt_spamshield
+ */
 class tx_wtspamshield_defaultmailform extends tslib_pibase {
 
 	/**
@@ -33,9 +40,11 @@ class tx_wtspamshield_defaultmailform extends tslib_pibase {
 	 * @var tx_wtspamshield_extensions_abstract
 	 */
 	protected $abstract;
-	
+
 	/**
-	 * @return tx_wtspamshield_div
+	 * getAbstract
+	 * 
+	 * @return	tx_wtspamshield_div
 	 */
 	protected function getAbstract() {
 		if (!isset($this->abstract)) {
@@ -45,116 +54,115 @@ class tx_wtspamshield_defaultmailform extends tslib_pibase {
 	}
 
 	/**
-	 * Function generateSession() is called if the form is rendered (generate a session)
+	 * Function generateSession() is called if the form is
+	 * rendered (generate a session)
 	 *
 	 * @param string $content
 	 * @param array $configuration
-	 * @return	void
+	 * @return string
 	 */
-	function generateSession($content, array $configuration = NULL) {
+	public function generateSession($content, array $configuration = NULL) {
 		if ( $this->getAbstract()->isActivated('standardMailform') ) {
-			$this->getDiv()->checkConf(); // Check Extension Manager configuration
+			$this->getDiv()->checkConf();
 			$forceValue = !(isset($configuration['ifOutdated']) && $configuration['ifOutdated']);
-			
-			// Set session on form create
-			/** @var $method_session_instance tx_wtspamshield_method_session */
-			$method_session_instance = t3lib_div::makeInstance('tx_wtspamshield_method_session');
-			$method_session_instance->setSessionTime($forceValue);
+
+				// Set session on form create
+			$methodSessionInstance = t3lib_div::makeInstance('tx_wtspamshield_method_session');
+			$methodSessionInstance->setSessionTime($forceValue);
 		}
 
 		return $content;
 	}
-	
+
 	/**
-	 * Function sendFormmail_preProcessVariables() is called after submit - stop mail if needed
+	 * Function sendFormmail_preProcessVariables() is called after
+	 * submit - stop mail if needed
 	 *
-	 * @param	object		$form: Form Object
-	 * @param	object		$obj: Parent Object
-	 * @param	array		$legacyConfArray: legacy configuration
-	 * @return	object		$form
+	 * @param object $form Form Object
+	 * @param object $obj Parent Object
+	 * @param array $legacyConfArray legacy configuration
+	 * @return object $form
 	 */
-	function sendFormmail_preProcessVariables($form, $obj, $legacyConfArray = array()) {
+	public function sendFormmail_preProcessVariables($form, $obj, $legacyConfArray = array()) {
 		if ( $this->getAbstract()->isActivated('standardMailform') ) {
 			$error = $this->processValidationChain($form);
-			
-			// 2c. Redirect and stop mail sending
-			if (!empty($error)) { // If error
-				$link = (!empty($GLOBALS['TSFE']->tmpl->setup['plugin.']['wt_spamshield.']['redirect.']['standardMailform']) ? $GLOBALS['TSFE']->tmpl->setup['plugin.']['wt_spamshield.']['redirect.']['standardMailform'] : t3lib_div::getIndpEnv('TYPO3_SITE_URL')); // redirection link - take only Domain if no target in TS
-				header('HTTP/1.1 301 Moved Permanently'); 
-				header('Location: ' . $link); 
+
+				// 2c. Redirect and stop mail sending
+			if (!empty($error)) {
+				$link = (!empty($GLOBALS['TSFE']->tmpl->setup['plugin.']['wt_spamshield.']['redirect.']['standardMailform'])
+					? $GLOBALS['TSFE']->tmpl->setup['plugin.']['wt_spamshield.']['redirect.']['standardMailform']
+					: t3lib_div::getIndpEnv('TYPO3_SITE_URL'));
+				header('HTTP/1.1 301 Moved Permanently');
+				header('Location: ' . $link);
 				header('Connection: close');
-				return false; // no return, so no email will be sent
+				return FALSE;
 			}
-			
 		}
-		
-		return $form; // default: return values to send email
+
+		return $form;
 	}
 
 	/**
+	 * processValidationChain
+	 * 
 	 * @param array $fieldValues
 	 * @return string
 	 */
 	protected function processValidationChain(array $fieldValues) {
 		$error = '';
 
-		// 1a. blacklistCheck
+			// 1a. blacklistCheck
 		if (!$error) {
-			/** @var $method_blacklist_instance tx_wtspamshield_method_blacklist */
-			$method_blacklist_instance = t3lib_div::makeInstance('tx_wtspamshield_method_blacklist'); // Generate Instance for session method
-			$error .= $method_blacklist_instance->checkBlacklist($fieldValues);
+			$methodBlacklistInstance = t3lib_div::makeInstance('tx_wtspamshield_method_blacklist');
+			$error .= $methodBlacklistInstance->checkBlacklist($fieldValues);
 		}
 
-		// 1b. sessionCheck
+			// 1b. sessionCheck
 		if (!$error) {
-			/** @var $method_session_instance tx_wtspamshield_method_session */
-			$method_session_instance = t3lib_div::makeInstance('tx_wtspamshield_method_session'); // Generate Instance for session method
-			$error .= $method_session_instance->checkSessionTime();
+			$methodSessionInstance = t3lib_div::makeInstance('tx_wtspamshield_method_session');
+			$error .= $methodSessionInstance->checkSessionTime();
 		}
 
-		// 1c. httpCheck
+			// 1c. httpCheck
 		if (!$error) {
-			/** @var $method_httpcheck_instance tx_wtspamshield_method_httpcheck */
-			$method_httpcheck_instance = t3lib_div::makeInstance('tx_wtspamshield_method_httpcheck'); // Generate Instance for httpCheck method
-			$error .= $method_httpcheck_instance->httpCheck($fieldValues);
+			$methodHttpcheckInstance = t3lib_div::makeInstance('tx_wtspamshield_method_httpcheck');
+			$error .= $methodHttpcheckInstance->httpCheck($fieldValues);
 		}
 
-		// 1d. uniqueCheck
+			// 1d. uniqueCheck
 		if (!$error) {
-			/** @var $method_unique_instance tx_wtspamshield_method_unique */
-			$method_unique_instance = t3lib_div::makeInstance('tx_wtspamshield_method_unique'); // Generate Instance for uniqueCheck method
-			$error .= $method_unique_instance->main($fieldValues);
+			$methodUniqueInstance = t3lib_div::makeInstance('tx_wtspamshield_method_unique');
+			$error .= $methodUniqueInstance->main($fieldValues);
 		}
 
-		// 1e. honeypotCheck
+			// 1e. honeypotCheck
 		if (!$error) {
-			/** @var $method_honeypot_instance tx_wtspamshield_method_honeypot */
-			$honeypot_inputName = $GLOBALS['TSFE']->tmpl->setup['plugin.']['wt_spamshield.']['honeypot.']['inputname.']['standardMailform'];
-			$method_honeypot_instance = t3lib_div::makeInstance('tx_wtspamshield_method_honeypot'); // Generate Instance for honeypot method
-			$method_honeypot_instance->inputName = $honeypot_inputName; // name for input field
-			$error .= $method_honeypot_instance->checkHoney($fieldValues);
+			$honeypotInputName = $GLOBALS['TSFE']->tmpl->setup['plugin.']['wt_spamshield.']['honeypot.']['inputname.']['standardMailform'];
+			$methodHoneypotInstance = t3lib_div::makeInstance('tx_wtspamshield_method_honeypot');
+			$methodHoneypotInstance->inputName = $honeypotInputName;
+			$error .= $methodHoneypotInstance->checkHoney($fieldValues);
 		}
 
-		// 2a. Safe log file
+			// 2a. Safe log file
 		if ($error) {
-			/** @var $method_log_instance tx_wtspamshield_log */
-			$method_log_instance = t3lib_div::makeInstance('tx_wtspamshield_log'); // Generate Instance for logging method
-			$method_log_instance->dbLog('standardMailform', $error, $fieldValues);
+			$methodLogInstance = t3lib_div::makeInstance('tx_wtspamshield_log');
+			$methodLogInstance->dbLog('standardMailform', $error, $fieldValues);
 		}
 
-		// 2b. Send email to admin
+			// 2b. Send email to admin
 		if ($error) {
-			/** @var $method_sendEmail_instance tx_wtspamshield_mail */
-			$method_sendEmail_instance = t3lib_div::makeInstance('tx_wtspamshield_mail'); // Generate Instance for email method
-			$method_sendEmail_instance->sendEmail('standardMailform', $error, $fieldValues);
+			$methodSendEmailInstance = t3lib_div::makeInstance('tx_wtspamshield_mail');
+			$methodSendEmailInstance->sendEmail('standardMailform', $error, $fieldValues);
 		}
 
 		return $error;
 	}
 }
 
-if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/wt_spamshield/Classes/Extensions/class.tx_wtspamshield_defaultmailform.php']) {
-	include_once ($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/wt_spamshield/Classes/Extensions/class.tx_wtspamshield_defaultmailform.php']);
+if (defined('TYPO3_MODE')
+	&& isset($GLOBALS['TYPO3_CONF_VARS'][TYPO3_MODE]['XCLASS']['ext/wt_spamshield/Classes/Extensions/class.tx_wtspamshield_defaultmailform.php'])
+) {
+	require_once ($GLOBALS['TYPO3_CONF_VARS'][TYPO3_MODE]['XCLASS']['ext/wt_spamshield/Classes/Extensions/class.tx_wtspamshield_defaultmailform.php']);
 }
 
 ?>

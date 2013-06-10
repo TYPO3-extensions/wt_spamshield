@@ -22,6 +22,13 @@
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 
+/**
+ * extension abstract
+ *
+ * @author Ralf Zimmermann <ralf.zimmermann@tritum.de>
+ * @package tritum
+ * @subpackage wt_spamshield
+ */
 class tx_wtspamshield_extensions_abstract {
 
 	/**
@@ -35,7 +42,9 @@ class tx_wtspamshield_extensions_abstract {
 	protected $configuration;
 
 	/**
-	 * @return tx_wtspamshield_div
+	 * getDiv
+	 * 
+	 * @return	tx_wtspamshield_div
 	 */
 	public function getDiv() {
 		if (!isset($this->div)) {
@@ -45,7 +54,9 @@ class tx_wtspamshield_extensions_abstract {
 	}
 
 	/**
-	 * @return mixed
+	 * getConfiguration
+	 * 
+	 * @return	mixed
 	 */
 	public function getConfiguration() {
 		if (!isset($this->configuration)) {
@@ -55,23 +66,27 @@ class tx_wtspamshield_extensions_abstract {
 	}
 
 	/**
+	 * isActivated
+	 * 
 	 * @param string $extension
 	 * @return boolean
 	 */
 	public function isActivated($extension) {
 		$configuration = $this->getConfiguration();
-		if(	!empty($configuration['enable.'][$extension]) &&
-			$this->getDiv()->spamshieldIsNotDisabled()
+		if (!empty($configuration['enable.'][$extension])
+			&& $this->getDiv()->spamshieldIsNotDisabled()
 		) {
-			return true;
+			return TRUE;
 		}
-		return false;
+		return FALSE;
 	}
 
 }
 
-if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/wt_spamshield/Classes/Extensions/class.tx_wtspamshield_extensions_abstract.php']) {
-	include_once ($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/wt_spamshield/Classes/Extensions/class.tx_wtspamshield_extensions_abstract.php']);
+if (defined('TYPO3_MODE')
+	&& isset($GLOBALS['TYPO3_CONF_VARS'][TYPO3_MODE]['XCLASS']['ext/wt_spamshield/Classes/Extensions/class.tx_wtspamshield_extensions_abstract.php'])
+) {
+	require_once ($GLOBALS['TYPO3_CONF_VARS'][TYPO3_MODE]['XCLASS']['ext/wt_spamshield/Classes/Extensions/class.tx_wtspamshield_extensions_abstract.php']);
 }
 
 ?>

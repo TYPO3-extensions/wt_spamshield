@@ -1,11 +1,13 @@
 <?php
-if (!defined ('TYPO3_MODE')) die ('Access denied.');
+if (!defined('TYPO3_MODE')) {
+	die ('Access denied.');
+}
 
 $extPath = t3lib_extMgm::extPath('wt_spamshield');
 
 $return = array(
-'tx_wtspamshield_AkismetObject' => $extPath . 'Classes/System/class.tx_wtspamshield_akismet.php',
-'tx_wtspamshield_AkismetHttpClient' => $extPath . 'Classes/System/class.tx_wtspamshield_akismet.php',
+'tx_wtspamshield_akismet_object' => $extPath . 'Classes/System/class.tx_wtspamshield_akismet_object.php',
+'tx_wtspamshield_akismet_httpclient' => $extPath . 'Classes/System/class.tx_wtspamshield_akismet_httpclient.php',
 'tx_wtspamshield_akismet' => $extPath . 'Classes/System/class.tx_wtspamshield_akismet.php',
 'tx_wtspamshield_div' => $extPath . 'Classes/System/class.tx_wtspamshield_div.php',
 'tx_wtspamshield_log' => $extPath . 'Classes/System/class.tx_wtspamshield_log.php',
@@ -23,7 +25,7 @@ $return = array(
 'tx_wtspamshield_extensions_abstract' => $extPath . 'Classes/Extensions/class.tx_wtspamshield_extensions_abstract.php',
 );
 
-if(t3lib_extMgm::isLoaded('direct_mail_subscription')) {
+if (t3lib_extMgm::isLoaded('direct_mail_subscription')) {
 	$return['user_feAdmin'] = t3lib_extMgm::extPath('direct_mail_subscription') . 'fe_adminLib.inc';
 }
 

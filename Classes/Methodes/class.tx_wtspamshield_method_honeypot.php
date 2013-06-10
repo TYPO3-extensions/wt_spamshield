@@ -22,29 +22,46 @@
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 
+/**
+ * honeypod check
+ *
+ * @author Ralf Zimmermann <ralf.zimmermann@tritum.de>
+ * @package tritum
+ * @subpackage wt_spamshield
+ */
 class tx_wtspamshield_method_honeypot extends tx_wtspamshield_method_abstract {
 
-	var $extKey = 'wt_spamshield'; // Extension key of current extension
-	var $inputName; // Name for input field
-	var $prefix_inputName; // Prefix for input name
-	
+	/**
+	 * @var string
+	 */
+	public $extKey = 'wt_spamshield';
+
+	/**
+	 * @var string
+	 */
+	public $inputName;
+
+	/**
+	 * @var string
+	 */
+	public $prefixInputName;
+
 	/**
 	 * Function createHoneypot() creates a non-visible input field
 	 *
-	 * @return	string		$code: Return form field (honeypot)
+	 * @return string $code Return form field (honeypot)
 	 */
-	function createHoneypot() {
-		$this->conf = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf'][$this->extKey]); // Get backend configuration of this extension
-		if ($this->conf['honeypotCheck']) { // only if honeypotcheck was enabled in ext Manager
-
+	public function createHoneypot() {
+		$this->conf = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf'][$this->extKey]);
+		if ($this->conf['honeypotCheck']) {
 			$cObjType = $GLOBALS['TSFE']->tmpl->setup['plugin.']['wt_spamshield.']['honeypot.']['explanation'];
 			$cObjvalues = $GLOBALS['TSFE']->tmpl->setup['plugin.']['wt_spamshield.']['honeypot.']['explanation.'];
-			$LLL = $cObjvalues['value'];
-			$cObjvalues['value'] = $this->getL10n($LLL);
+			$lll = $cObjvalues['value'];
+			$cObjvalues['value'] = $this->getL10n($lll);
 			$code = $this->cObj->cObjGetSingle($cObjType, $cObjvalues);
 
 			$code .= '<input type="text" name="';
-			$code .= $this->prefix_inputName . '[' . $this->inputName . ']"';
+			$code .= $this->prefixInputName . '[' . $this->inputName . ']"';
 			$code .= ' ' . $GLOBALS['TSFE']->tmpl->setup['plugin.']['wt_spamshield.']['honeypot.']['css.']['inputStyle'];
 			$code .= ' value=""';
 			$code .= ' ' . $GLOBALS['TSFE']->tmpl->setup['plugin.']['wt_spamshield.']['honeypot.']['css.']['inputClass'];
@@ -52,27 +69,31 @@ class tx_wtspamshield_method_honeypot extends tx_wtspamshield_method_abstract {
 
 			return $code;
 		}
+		return '';
 	}
 
 	/**
 	 * Function checkHoney() checks if a fly is in the honeypot
 	 *
-	 * @param	array		$sessiondata: Array with submitted values
-	 * @return	string		$error: Return errormessage if error exists
+	 * @param array &$sessiondata Array with submitted values
+	 * @return string $error Return errormessage if error exists
 	 */
-	function checkHoney(&$sessiondata) {
-		$this->conf = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf'][$this->extKey]); // Get backend configuration of this extension
+	public function checkHoney(&$sessiondata) {
+		$this->conf = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf'][$this->extKey]);
 
-		if (!empty($sessiondata[$this->inputName]) && $this->conf['honeypotCheck']) { // There is spam in the honeypot AND honeypotcheck was enabled in ext Manager
-			return $this->renderCObj($GLOBALS['TSFE']->tmpl->setup['plugin.']['wt_spamshield.']['errors.'], 'honeypot');
+		if (!empty($sessiondata[$this->inputName]) && $this->conf['honeypotCheck']) {
+			return $this->renderCobj($GLOBALS['TSFE']->tmpl->setup['plugin.']['wt_spamshield.']['errors.'], 'honeypot');
 		}
+		unset($sessiondata[$this->inputName]);
 
-		unset($sessiondata[$this->inputName]); // delete honeypot
+		return '';
 	}
 }
 
-if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/wt_spamshield/Classes/Methodes/class.tx_wtspamshield_method_honeypot.php']) {
-	include_once ($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/wt_spamshield/Classes/Methodes/class.tx_wtspamshield_method_honeypot.php']);
+if (defined('TYPO3_MODE')
+	&& isset($GLOBALS['TYPO3_CONF_VARS'][TYPO3_MODE]['XCLASS']['ext/wt_spamshield/Classes/Methodes/class.tx_wtspamshield_method_honeypot.php'])
+) {
+	require_once ($GLOBALS['TYPO3_CONF_VARS'][TYPO3_MODE]['XCLASS']['ext/wt_spamshield/Classes/Methodes/class.tx_wtspamshield_method_honeypot.php']);
 }
 
 ?>
