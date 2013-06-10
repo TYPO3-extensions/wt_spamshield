@@ -39,7 +39,7 @@ class tx_wtspamshield_method_session extends tx_wtspamshield_method_abstract {
 	 * @return void
 	 */
 	public function setSessionTime($forceValue = TRUE) {
-		$extConf = $this->getDiv->getExtConf();
+		$extConf = $this->getDiv()->getExtConf();
 
 		if (isset($extConf)) {
 			$timeStamp = intval($GLOBALS['TSFE']->fe_user->getKey('ses', 'wt_spamshield_form_tstamp'));
@@ -58,7 +58,7 @@ class tx_wtspamshield_method_session extends tx_wtspamshield_method_abstract {
 	 * @return string $error Return errormessage if error exists
 	 */
 	public function checkSessionTime() {
-		$extConf = $this->getDiv->getExtConf();
+		$extConf = $this->getDiv()->getExtConf();
 		$error = '';
 
 		if (isset($extConf)) {

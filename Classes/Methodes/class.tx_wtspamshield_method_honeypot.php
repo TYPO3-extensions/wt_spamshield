@@ -47,7 +47,7 @@ class tx_wtspamshield_method_honeypot extends tx_wtspamshield_method_abstract {
 	 * @return string $code Return form field (honeypot)
 	 */
 	public function createHoneypot() {
-		$extConf = $this->getDiv->getExtConf();
+		$extConf = $this->getDiv()->getExtConf();
 
 		if(isset($extConf)) {
 			if ($extConf['honeypotCheck']) {
@@ -78,7 +78,7 @@ class tx_wtspamshield_method_honeypot extends tx_wtspamshield_method_abstract {
 	 * @return string $error Return errormessage if error exists
 	 */
 	public function checkHoney(&$sessiondata) {
-		$extConf = $this->getDiv->getExtConf();
+		$extConf = $this->getDiv()->getExtConf();
 
 		if (!empty($sessiondata[$this->inputName])
 			&& isset($extConf)

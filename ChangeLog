@@ -1,3 +1,15 @@
+1.0.4-dev
+
+	2013-06-10
+	Ralf Zimmermann <ralf.zimmermann@tritum.de>
+	
+	* BUGFIX: logging - useful title in the backend list view
+	* BUGFIX: strip tags in errormessage log
+	* TASK: remove extensions abstract / move functions to tx_wtspamshield_div
+	* TASK: add getExtConf to tx_wtspamshield_div
+	* TASK: get TypoScript configuration from tx_wtspamshield_div
+	* FIX: getDiv() calls
+
 1.0.3-dev
 
 	2013-06-05

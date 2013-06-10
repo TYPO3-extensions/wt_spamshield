@@ -43,7 +43,7 @@ class tx_wtspamshield_method_httpcheck extends tx_wtspamshield_method_abstract {
 	 * @return string $error Return errormessage if error exists
 	 */
 	public function httpCheck($array) {
-		$extConf = $this->getDiv->getExtConf();
+		$extConf = $this->getDiv()->getExtConf();
 
 		if (isset($extConf) && isset($array)) {
 			if ($extConf['usehttpCheck'] >= 0) {

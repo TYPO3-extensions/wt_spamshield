@@ -41,7 +41,7 @@ class tx_wtspamshield_method_unique extends tx_wtspamshield_method_abstract {
 		$found = 0;
 		$wholearray = array();
 
-		$extConf = $this->getDiv->getExtConf();
+		$extConf = $this->getDiv()->getExtConf();
 		if (isset($extConf)) {
 			if ($extConf['notUnique']) {
 				$tsConf = $this->getDiv()->getTsConf();

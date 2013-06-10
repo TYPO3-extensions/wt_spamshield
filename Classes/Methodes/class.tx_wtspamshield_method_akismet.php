@@ -40,7 +40,7 @@ class tx_wtspamshield_method_akismet extends tx_wtspamshield_method_abstract {
 	 * @return string $error Return errormessage if error exists
 	 */
 	public function checkAkismet($form, $ext) {
-		$extConf = $this->getDiv->getExtConf();
+		$extConf = $this->getDiv()->getExtConf();
 		$error = '';
 
 		if (isset($extConf)) {

@@ -39,7 +39,7 @@ class tx_wtspamshield_method_namecheck extends tx_wtspamshield_method_abstract {
 	 * @return string $error Return errormessage if error exists
 	 */
 	public function nameCheck($name1, $name2) {
-		$extConf = $this->getDiv->getExtConf();
+		$extConf = $this->getDiv()->getExtConf();
 
 		if (isset($extConf)) {
 			if ($extConf['useNameCheck'] == 1) {
