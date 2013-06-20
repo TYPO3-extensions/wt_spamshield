@@ -146,6 +146,7 @@ class tx_wtspamshield_powermail extends tslib_pibase {
 				'blacklistCheck',
 				'sessionCheck',
 				'httpCheck',
+				'uniqueCheck',
 				'honeypotCheck',
 				'akismetCheck',
 			);

@@ -59,6 +59,9 @@ class tx_form_System_Validate_Wtspamshield extends tx_form_System_Validate_Abstr
 	 */
 	public function __construct($arguments) {
 		$this->tsConf = $this->getDiv()->getTsConf();
+		$honeypotInputName = $this->tsConf['honeypot.']['inputname.'][$this->tsKey];
+		$this->additionalValues['honeypotCheck']['prefixInputName'] = 'tx_form';
+		$this->additionalValues['honeypotCheck']['honeypotInputName'] = $honeypotInputName;
 		parent::__construct($arguments);
 	}
 
