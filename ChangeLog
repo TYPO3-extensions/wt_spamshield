@@ -1,3 +1,26 @@
+1.0.5-dev
+
+	2013-06-13
+	Ralf Zimmermann <ralf.zimmermann@tritum.de>
+
+	* TASK: some more code cleanup
+	* BUGFIX: show error messages in email
+	* BUGFIX: error with direct_mail_subscription
+	* FEATURE: make validators configurable by typoscript
+	* FEATURE: each extension can configure its own failure rate
+
+1.0.4-dev
+
+	2013-06-10
+	Ralf Zimmermann <ralf.zimmermann@tritum.de>
+
+	* BUGFIX: logging - useful title in the backend list view
+	* BUGFIX: strip tags in errormessage log
+	* BUGFIX: getDiv() calls
+	* TASK: remove extensions abstract / move functions to tx_wtspamshield_div
+	* TASK: add getExtConf to tx_wtspamshield_div
+	* TASK: get TypoScript configuration from tx_wtspamshield_div
+
 1.0.3-dev
 
 	2013-06-05

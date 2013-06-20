@@ -136,12 +136,7 @@ class tx_wtspamshield_defaultmailform extends tslib_pibase {
 	 */
 	protected function validate(array $fieldValues) {
 
-		$processor = $this->getDiv()->getProcessor();
-		$processor->tsKey = $this->tsKey;
-		$processor->fieldValues = $fieldValues;
-		$processor->additionalValues = $this->additionalValues;
-		$processor->maxPoints = $this->tsConf['maxPoints.'][$this->tsKey];
-		$processor->methodes =
+		$availableValidators = 
 			array(
 				'blacklistCheck',
 				'httpCheck',
@@ -149,6 +144,16 @@ class tx_wtspamshield_defaultmailform extends tslib_pibase {
 				'sessionCheck',
 				'honeypotCheck',
 			);
+
+		$tsValidators = $this->getDiv()->commaListToArray($this->tsConf['validators.'][$this->tsKey . '_old.']['enable']);
+
+		$processor = $this->getDiv()->getProcessor();
+		$processor->tsKey = $this->tsKey;
+		$processor->fieldValues = $fieldValues;
+		$processor->additionalValues = $this->additionalValues;
+		$processor->failureRate = intval($this->tsConf['validators.'][$this->tsKey . '_old.']['how_many_validators_can_fail']);
+		$processor->methodes = array_intersect($tsValidators, $availableValidators);
+
 		$error = $processor->validate();
 		return $error;
 	}

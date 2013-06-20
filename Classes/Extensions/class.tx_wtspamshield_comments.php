@@ -141,12 +141,7 @@ class tx_wtspamshield_comments extends tslib_pibase {
 		$this->additionalValues['nameCheck']['name1'] = $fieldValues['firstname'];
 		$this->additionalValues['nameCheck']['name2'] = $fieldValues['lastname'];
 
-		$processor = $this->getDiv()->getProcessor();
-		$processor->tsKey = $this->tsKey;
-		$processor->fieldValues = $fieldValues;
-		$processor->additionalValues = $this->additionalValues;
-		$processor->maxPoints = $this->tsConf['maxPoints.'][$this->tsKey];
-		$processor->methodes =
+		$availableValidators = 
 			array(
 				'blacklistCheck',
 				'nameCheck',
@@ -155,8 +150,18 @@ class tx_wtspamshield_comments extends tslib_pibase {
 				'honeypotCheck',
 				'akismetCheck',
 			);
+
+		$tsValidators = $this->getDiv()->commaListToArray($this->tsConf['validators.'][$this->tsKey . '.']['enable']);
+
+		$processor = $this->getDiv()->getProcessor();
+		$processor->tsKey = $this->tsKey;
+		$processor->fieldValues = $fieldValues;
+		$processor->additionalValues = $this->additionalValues;
+		$processor->failureRate = intval($this->tsConf['validators.'][$this->tsKey . '.']['how_many_validators_can_fail']);
+		$processor->methodes = array_intersect($tsValidators, $availableValidators);
+
 		$processor->validate();
-		return $processor->currentPoints;
+		return $processor->currentFailures * 1000;
 	}
 }
 

@@ -105,6 +105,20 @@ class tx_wtspamshield_div extends tslib_pibase {
 	}
 
 	/**
+	 * isActivated
+	 * 
+	 * @param string $list
+	 * @return mixed
+	 */
+	public function commaListToArray($list) {
+		$list = trim($list);
+		$list = str_replace(' ', '', $list);
+		$list = explode(',', $list);
+
+		return $list;
+	}
+
+	/**
 	 * getTsConf
 	 * 
 	 * @return mixed

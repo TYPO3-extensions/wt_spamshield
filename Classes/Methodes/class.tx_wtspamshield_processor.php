@@ -49,7 +49,7 @@ class tx_wtspamshield_processor {
 	/**
 	 * @var int
 	 */
-	public $maxPoints;
+	public $failureRate;
 
 	/**
 	 * @var mixed
@@ -59,7 +59,7 @@ class tx_wtspamshield_processor {
 	/**
 	 * @var int
 	 */
-	public $currentPoints;
+	public $currentFailures = 0;
 
 	/**
 	 * @var mixed
@@ -73,10 +73,10 @@ class tx_wtspamshield_processor {
 	 */
 	public function log() {
 		$methodLogInstance = t3lib_div::makeInstance('tx_wtspamshield_log');
-		$methodLogInstance->dbLog($this->tsKey, $this->currentPoints, $this->errorMessages, $this->fieldValues);
+		$methodLogInstance->dbLog($this->tsKey, $this->currentFailures, $this->errorMessages, $this->fieldValues);
 
 		$methodSendEmailInstance = t3lib_div::makeInstance('tx_wtspamshield_mail');
-		$methodSendEmailInstance->sendEmail($this->tsKey, $this->currentPoints, $this->errorMessages, $this->fieldValues);
+		$methodSendEmailInstance->sendEmail($this->tsKey, $this->currentFailures, $this->errorMessages, $this->fieldValues);
 	}
 
 	/**
@@ -105,14 +105,14 @@ class tx_wtspamshield_processor {
 				$methodInstance->tsKey = $this->tsKey;
 				$methodReturn = $methodInstance->validate();
 				if (!empty($methodReturn)) {
-					$this->currentPoints += 1000;
+					$this->currentFailures++;
 					$this->errorMessages[] = $methodReturn;
 				}
 				$this->fieldValues = $methodInstance->fieldValues;
 			}
 		}
 
-		if($this->currentPoints > intval($this->maxPoints)) {
+		if($this->currentFailures > $this->failureRate) {
 			$this->log();
 			$errorMessage = implode(' ', $this->errorMessages);
 		}
