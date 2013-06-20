@@ -59,7 +59,6 @@ class tx_wtspamshield_defaultmailform extends tslib_pibase {
 	/**
 	 * Constructor
 	 *
-	 * @param array $arguments
 	 * @return void
 	 */
 	public function __construct() {
