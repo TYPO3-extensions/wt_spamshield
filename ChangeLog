@@ -1,3 +1,9 @@
+1.1.0-dev
+	2013-06-20
+	Ralf Zimmermann <ralf.zimmermann@tritum.de>
+
+	* TASK: test all extension and all checks with TYPO3 4.5, 4.7, 6.0, 6.1 with Selenium
+
 1.0.5-dev
 
 	2013-06-13
@@ -6,6 +12,7 @@
 	* TASK: some more code cleanup
 	* BUGFIX: show error messages in email
 	* BUGFIX: error with direct_mail_subscription
+	* BUGFIX: ke_userregister compatibility (TYPO3 6.1)
 	* FEATURE: make validators configurable by typoscript
 	* FEATURE: each extension can configure its own failure rate
 
