@@ -23,7 +23,7 @@
 ***************************************************************/
 
 /**
- * defaultmailform hook
+ * defaultmailform hook (TYPO3 <= 4.5)
  *
  * @author Ralf Zimmermann <ralf.zimmermann@tritum.de>
  * @package tritum

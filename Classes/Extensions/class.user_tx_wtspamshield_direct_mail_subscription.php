@@ -57,6 +57,11 @@ class user_tx_wtspamshield_direct_mail_subscription extends user_feAdmin {
 	public $spamshieldDisplayError;
 
 	/**
+	 * @var mixed
+	 */
+	public $parentConf;
+
+	/**
 	 * Constructor
 	 *
 	 * @return void
@@ -88,6 +93,9 @@ class user_tx_wtspamshield_direct_mail_subscription extends user_feAdmin {
 	public function displayCreateScreen() {
 
 		if ( $this->getDiv()->isActivated($this->tsKey) ) {
+			if (isset($this->parentConf)) {
+				$this->conf['create'] = $this->parentConf;
+			}
 			$methodHoneypotInstance = t3lib_div::makeInstance('tx_wtspamshield_method_honeypot');
 			$methodHoneypotInstance->additionalValues = $this->additionalValues;
 			$this->markerArray['###HIDDENFIELDS###'] .= $methodHoneypotInstance->createHoneypot();
@@ -115,9 +123,9 @@ class user_tx_wtspamshield_direct_mail_subscription extends user_feAdmin {
 					// $this->error='###TEMPLATE_NO_PERMISSIONS###';
 				$this->saved = 0;
 				$this->cmd = 'create';
+				$this->parentConf = $this->conf['create'];
+				unset($this->conf['create']);
 				$this->spamshieldDisplayError = $error;
-			} else {
-				return parent::save();
 			}
 		}
 

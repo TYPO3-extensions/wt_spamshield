@@ -38,6 +38,13 @@ if ($t3Version >= 6000000 AND t3lib_extMgm::isLoaded('form')) {
 		= 'EXT:wt_spamshield/Classes/Extensions/class.tx_wtspamshield_defaultmailform.php:tx_wtspamshield_defaultmailform';
 }
 
+	// Hook direct_mail_subscription
+	// Sorry, there is no better way, the autoloader does not work
+if (t3lib_extMgm::isLoaded('direct_mail_subscription')) {
+	$directMailSubscription = t3lib_extMgm::extPath('direct_mail_subscription') . 'fe_adminLib.inc';
+	require_once($directMailSubscription);
+}
+
 	// Hook tx_comments: Generate Form
 $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['comments']['form'][]
 	= 'EXT:wt_spamshield/Classes/Extensions/class.tx_wtspamshield_comments.php:tx_wtspamshield_comments->form';

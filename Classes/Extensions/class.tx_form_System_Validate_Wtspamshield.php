@@ -23,7 +23,7 @@
 ***************************************************************/
 
 /**
- * tx_wtspamshield hook
+ * defaultmailform wtspamshield rule (TYPO3 4.6, 4.7)
  *
  * @author Ralf Zimmermann <ralf.zimmermann@tritum.de>
  * @package tritum

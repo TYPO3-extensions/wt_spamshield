@@ -112,7 +112,7 @@ class tx_wtspamshield_processor {
 			}
 		}
 
-		if($this->currentPoints > $this->maxPoints) {
+		if($this->currentPoints > intval($this->maxPoints)) {
 			$this->log();
 			$errorMessage = implode(' ', $this->errorMessages);
 		}

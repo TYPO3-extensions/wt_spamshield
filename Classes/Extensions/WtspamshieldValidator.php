@@ -25,7 +25,7 @@ namespace TYPO3\CMS\Form\Validation;
 ***************************************************************/
 
 /**
- * wtspamshield rule
+ * defaultmailform wtspamshield rule (TYPO3 6.x)
  *
  * @author Ralf Zimmermann <ralf.zimmermann@tritum.de>
  * @package tritum

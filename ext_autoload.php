@@ -24,9 +24,5 @@ $return = array(
 'tx_wtspamshield_method_unique' => $extPath . 'Classes/Methodes/class.tx_wtspamshield_method_unique.php',
 );
 
-if (t3lib_extMgm::isLoaded('direct_mail_subscription')) {
-	$return['user_feAdmin'] = t3lib_extMgm::extPath('direct_mail_subscription') . 'fe_adminLib.inc';
-}
-
 return $return;
 ?>
