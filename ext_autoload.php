@@ -13,6 +13,7 @@ $return = array(
 'tx_wtspamshield_log' => $extPath . 'Classes/System/class.tx_wtspamshield_log.php',
 'tx_wtspamshield_mail' => $extPath . 'Classes/System/class.tx_wtspamshield_mail.php',
 
+'tx_wtspamshield_processor' => $extPath . 'Classes/Methodes/class.tx_wtspamshield_processor.php',
 'tx_wtspamshield_method_abstract' => $extPath . 'Classes/Methodes/class.tx_wtspamshield_method_abstract.php',
 'tx_wtspamshield_method_akismet' => $extPath . 'Classes/Methodes/class.tx_wtspamshield_method_akismet.php',
 'tx_wtspamshield_method_blacklist' => $extPath . 'Classes/Methodes/class.tx_wtspamshield_method_blacklist.php',

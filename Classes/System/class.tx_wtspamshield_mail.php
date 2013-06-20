@@ -59,18 +59,10 @@ class tx_wtspamshield_mail extends tslib_pibase {
 			: t3lib_div::int_from_ver(TYPO3_version);
 
 		if (isset($conf)) {
+			$errorMessages['points'] = 'Score: ' . $points;
+			$errorMessages = strip_tags(implode(' / ', $errorMessages));
+
 			if (t3lib_div::validEmail($conf['email_notify'])) {
-				$errorMessages['points'] = 'Score: ' . $points;
-
-					// Downwards compatibility
-				if ($t3Version < 4007000) {
-					$formValues = t3lib_div::view_array($formArray);
-					$errorMessages = t3lib_div::view_array($errorMessages);
-				} else {
-					$formValues = t3lib_utility_Debug::viewArray($formArray);
-					$errorMessages = t3lib_utility_Debug::viewArray($errorMessages);
-				}
-
 				if (!$sendPlain) {
 						// Prepare mail
 					$mailtext = '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
@@ -125,7 +117,6 @@ class tx_wtspamshield_mail extends tslib_pibase {
 						$this->htmlMail->send($conf['email_notify']);
 					}
 				} else {
-					$errorMessages = strip_tags(implode(' / ', $errorMessages));
 					$info = array(
 						'Extension' => $ext,
 						'PID' => $GLOBALS['TSFE']->id,

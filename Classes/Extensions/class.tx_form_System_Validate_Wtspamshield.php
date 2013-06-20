@@ -114,7 +114,7 @@ class tx_form_System_Validate_Wtspamshield extends tx_form_System_Validate_Abstr
 		$processor->tsKey = $this->tsKey;
 		$processor->fieldValues = $fieldValues;
 		$processor->additionalValues = $this->additionalValues;
-		$processor->maxPoints = $this->tsConf['maxPoints'];
+		$processor->maxPoints = $this->tsConf['maxPoints.'][$this->tsKey];
 		$processor->methodes =
 			array(
 				'blacklistCheck',

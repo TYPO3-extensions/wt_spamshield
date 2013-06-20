@@ -142,7 +142,7 @@ class tx_wtspamshield_ve_guestbook extends tslib_pibase {
 				$obj->config['feedback_mail'] = FALSE;
 				if ( intval($this->tsConf['redirect.'][$this->tsKey]) > 0) {
 					$obj->config['redirect_page'] =
-						intval($$this->tsConf['redirect.'][$this->tsKey]);
+						intval($this->tsConf['redirect.'][$this->tsKey]);
 				} else {
 					$obj->config['redirect_page'] = $GLOBALS['TSFE']->tmpl->rootLine[0]['uid'];
 				}
@@ -166,11 +166,11 @@ class tx_wtspamshield_ve_guestbook extends tslib_pibase {
 		$processor->tsKey = $this->tsKey;
 		$processor->fieldValues = $fieldValues;
 		$processor->additionalValues = $this->additionalValues;
-		$processor->maxPoints = $this->tsConf['maxPoints'];
+		$processor->maxPoints = $this->tsConf['maxPoints.'][$this->tsKey];
 		$processor->methodes =
 			array(
 				'blacklistCheck',
-				'nameCheck'
+				'nameCheck',
 				'sessionCheck',
 				'httpCheck',
 				'honeypotCheck',

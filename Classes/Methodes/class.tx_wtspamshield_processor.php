@@ -71,7 +71,7 @@ class tx_wtspamshield_processor {
 	 * 
 	 * @return void
 	 */
-	protected function log() {
+	public function log() {
 		$methodLogInstance = t3lib_div::makeInstance('tx_wtspamshield_log');
 		$methodLogInstance->dbLog($this->tsKey, $this->currentPoints, $this->errorMessages, $this->fieldValues);
 
@@ -84,7 +84,7 @@ class tx_wtspamshield_processor {
 	 * 
 	 * @return string
 	 */
-	protected function validate() {
+	public function validate() {
 		$errorMessage = '';
 
 		$methodMap = array(

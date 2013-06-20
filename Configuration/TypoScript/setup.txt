@@ -1,4 +1,14 @@
 plugin.wt_spamshield {
+  maxPoints {
+    standardMailform = {$plugin.wt_spamshield.maxPoints.mailform}
+    powermail = {$plugin.wt_spamshield.maxPoints.powermail}
+    ve_guestbook = {$plugin.wt_spamshield.maxPoints.ve_guestbook}
+    comments = {$plugin.wt_spamshield.maxPoints.comments}
+    t3_blog = {$plugin.wt_spamshield.maxPoints.t3_blog}
+    direct_mail_subscription = {$plugin.wt_spamshield.maxPoints.direct_mail_subscription}
+    ke_userregister = {$plugin.wt_spamshield.maxPoints.ke_userregister}
+  }
+
   enable {
     standardMailform = {$plugin.wt_spamshield.mailform}
     powermail = {$plugin.wt_spamshield.powermail}

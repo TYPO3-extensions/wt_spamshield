@@ -136,7 +136,7 @@ class user_tx_wtspamshield_direct_mail_subscription extends user_feAdmin {
 		$processor->tsKey = $this->tsKey;
 		$processor->fieldValues = $fieldValues;
 		$processor->additionalValues = $this->additionalValues;
-		$processor->maxPoints = $this->tsConf['maxPoints'];
+		$processor->maxPoints = $this->tsConf['maxPoints.'][$this->tsKey];
 		$processor->methodes =
 			array(
 				'blacklistCheck',

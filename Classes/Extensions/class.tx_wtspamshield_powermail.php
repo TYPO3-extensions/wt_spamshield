@@ -140,7 +140,7 @@ class tx_wtspamshield_powermail extends tslib_pibase {
 		$processor->tsKey = $this->tsKey;
 		$processor->fieldValues = $fieldValues;
 		$processor->additionalValues = $this->additionalValues;
-		$processor->maxPoints = $this->tsConf['maxPoints'];
+		$processor->maxPoints = $this->tsConf['maxPoints.'][$this->tsKey];
 		$processor->methodes =
 			array(
 				'blacklistCheck',

@@ -39,7 +39,7 @@ class tx_wtspamshield_log extends tslib_pibase {
 	/**
 	 * @var integer
 	 */
-	public $dbInsert = 1;
+	public $dbInsert = TRUE;
 
 	/**
 	 * Function dbLog to write a log into the database if spam was recognized
@@ -64,9 +64,9 @@ class tx_wtspamshield_log extends tslib_pibase {
 
 			$title = date('d.m.Y H:i:s', time()) . ' - ' .
 				$ext . ' - pid: ' . $GLOBALS['TSFE']->id .
-				' - points: ' . $points;
+				' - Score: ' . $points;
 
-			$errorMessage = 'Score: ' $points;
+			$errorMessage = 'Score: ' . $points;
 
 			$dbValues = array (
 				'pid' => intval($conf['pid']),
@@ -84,11 +84,9 @@ class tx_wtspamshield_log extends tslib_pibase {
 				? t3lib_utility_VersionNumber::convertVersionNumberToInteger(TYPO3_version)
 				: t3lib_div::int_from_ver(TYPO3_version);
 			if ($t3Version < 4007000) {
-				$dbValues += array('formvalues' => t3lib_div::view_array($formArray));
-				$dbValues += array('errorMessages' => t3lib_div::view_array($errorMessages));
+				$dbValues += array('formvalues' => t3lib_div::view_array($formArray) . t3lib_div::view_array($errorMessages));
 			} else {
-				$dbValues += array('formvalues' => t3lib_utility_Debug::viewArray($formArray));
-				$dbValues += array('errorMessages' => t3lib_utility_Debug::viewArray($errorMessages));
+				$dbValues += array('formvalues' => t3lib_utility_Debug::viewArray($formArray) . t3lib_utility_Debug::viewArray($errorMessages));
 			}
 
 			$GLOBALS['TYPO3_DB']->exec_INSERTquery('tx_wtspamshield_log', $dbValues);

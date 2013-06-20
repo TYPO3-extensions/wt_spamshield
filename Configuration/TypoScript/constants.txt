@@ -24,6 +24,27 @@ plugin.wt_spamshield {
   # cat=wt_spamshield main//0060; type=boolean; label= Protect ve_guestbook: Enable spamshield for ve_guestbook
   ve_guestbook = 0
 
+  # cat=wt_spamshield main//0100; type=text; label= Spam points: maximum of Spam points for default mailform
+  maxPoints.mailform = 999
+
+  # cat=wt_spamshield main//0110; type=text; label= Spam points: maximum of Spam points for powermail
+  maxPoints.powermail = 2000
+
+  # cat=wt_spamshield main//0120; type=text; label= Spam points: maximum of Spam points for ve_guestbook
+  maxPoints.ve_guestbook = 2000
+
+  # cat=wt_spamshield main//0130; type=text; label= Spam points: maximum of Spam points for comments
+  maxPoints.comments = 2000
+
+  # cat=wt_spamshield main//0140; type=text; label= Spam points: maximum of Spam points for t3_blog
+  maxPoints.t3_blog = 2000
+
+  # cat=wt_spamshield main//0150; type=text; label= Spam points: maximum of Spam points for direct_mail_subscription
+  maxPoints.direct_mail_subscription = 2000
+
+  # cat=wt_spamshield main//0150; type=text; label= Spam points: maximum of Spam points for ke_userregister
+  maxPoints.ke_userregister = 2000
+
   # cat=wt_spamshield main//0200; type=text; label= Mailform Redirect: Redirect URL for default mailform
   redirect_mailform =
 
