@@ -64,6 +64,8 @@ class tx_wtspamshield_defaultmailform extends tslib_pibase {
 	 */
 	public function __construct() {
 		$this->tsConf = $this->getDiv()->getTsConf();
+		$honeypotInputName = $this->tsConf['honeypot.']['inputname.'][$this->tsKey];
+		$this->additionalValues['honeypotCheck']['honeypotInputName'] = $honeypotInputName;
 	}
 
 	/**
