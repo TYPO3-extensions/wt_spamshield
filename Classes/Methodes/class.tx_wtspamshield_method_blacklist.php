@@ -32,13 +32,27 @@
 class tx_wtspamshield_method_blacklist extends tx_wtspamshield_method_abstract {
 
 	/**
-	 * Function checkBlacklist() checks if IP or sender is blacklisted
+	 * @var mixed
+	 */
+	public $fieldValues;
+
+	/**
+	 * @var mixed
+	 */
+	public $additionalValues;
+
+	/**
+	 * @var string
+	 */
+	public $tsKey;
+
+	/**
+	 * Function validate() checks if IP or sender is blacklisted
 	 *
-	 * @param array $formValues Form values
 	 * @return string Return Error if blacklisted
 	 */
-	public function checkBlacklist($formValues) {
-		if ($this->isCurrentIpBlacklisted() || $this->isCurrentEmailBlacklisted($formValues)) {
+	public function validate() {
+		if ($this->isCurrentIpBlacklisted() || $this->isCurrentEmailBlacklisted($this->fieldValues)) {
 			$tsConf = $this->getDiv()->getTsConf();
 			return $this->renderCobj($tsConf['errors.'], 'blacklist');
 		}

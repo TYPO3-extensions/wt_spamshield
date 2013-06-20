@@ -45,16 +45,32 @@ class tx_wtspamshield_mail extends tslib_pibase {
 	 * Function sendEmail sends a notify mail to the admin if spam was recognized
 	 * 
 	 * @param string $ext Name of extension in which the spam was recognized
-	 * @param string $error Error Message
+	 * @param integer $points 
+	 * @param string $errorMessages Error Message
 	 * @param array $formArray Array with submitted values
 	 * @param boolean $sendPlain Plain instead of HTML mails
 	 * @return void
 	 */
-	public function sendEmail($ext, $error, $formArray, $sendPlain = 1) {
+	public function sendEmail($ext, $points, $errorMessages, $formArray, $sendPlain = 1) {
 		$conf = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf'][$this->extKey]);
+
+		$t3Version = class_exists('t3lib_utility_VersionNumber')
+			? t3lib_utility_VersionNumber::convertVersionNumberToInteger(TYPO3_version)
+			: t3lib_div::int_from_ver(TYPO3_version);
 
 		if (isset($conf)) {
 			if (t3lib_div::validEmail($conf['email_notify'])) {
+				$errorMessages['points'] = 'Score: ' . $points;
+
+					// Downwards compatibility
+				if ($t3Version < 4007000) {
+					$formValues = t3lib_div::view_array($formArray);
+					$errorMessages = t3lib_div::view_array($errorMessages);
+				} else {
+					$formValues = t3lib_utility_Debug::viewArray($formArray);
+					$errorMessages = t3lib_utility_Debug::viewArray($errorMessages);
+				}
+
 				if (!$sendPlain) {
 						// Prepare mail
 					$mailtext = '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
@@ -77,7 +93,7 @@ class tx_wtspamshield_mail extends tslib_pibase {
 									</tr>
 									<tr>
 										<td><strong>Error:</strong></td>
-										<td>' . $error . '</td>
+										<td>' . $errorMessages . '</td>
 									</tr>
 									<tr>
 										<td><strong>IP:</strong></td>
@@ -89,7 +105,7 @@ class tx_wtspamshield_mail extends tslib_pibase {
 									</tr>
 									<tr>
 										<td valign=top><strong>Form values:</strong></td>
-										<td>' . t3lib_div::view_array($formArray) . '</td>
+										<td>' . $formValues . '</td>
 									</tr>
 								</table>
 							</body>
@@ -109,11 +125,12 @@ class tx_wtspamshield_mail extends tslib_pibase {
 						$this->htmlMail->send($conf['email_notify']);
 					}
 				} else {
+					$errorMessages = strip_tags(implode(' / ', $errorMessages));
 					$info = array(
 						'Extension' => $ext,
 						'PID' => $GLOBALS['TSFE']->id,
 						'URL' => t3lib_div::getIndpEnv('HTTP_HOST'),
-						'Error' => $error,
+						'Error' => $errorMessages,
 						'IP' => t3lib_div::getIndpEnv('REMOTE_ADDR'),
 						'Useragent' => t3lib_div::getIndpEnv('HTTP_USER_AGENT'),
 					);

@@ -32,6 +32,21 @@
 class tx_wtspamshield_method_session extends tx_wtspamshield_method_abstract {
 
 	/**
+	 * @var mixed
+	 */
+	public $fieldValues;
+
+	/**
+	 * @var mixed
+	 */
+	public $additionalValues;
+
+	/**
+	 * @var string
+	 */
+	public $tsKey;
+
+	/**
 	 * Set Timestamp in session (when the form is rendered)
 	 *
 	 * @param boolean $forceValue Whether to force setting the
@@ -57,7 +72,7 @@ class tx_wtspamshield_method_session extends tx_wtspamshield_method_abstract {
 	 * 
 	 * @return string $error Return errormessage if error exists
 	 */
-	public function checkSessionTime() {
+	public function validate() {
 		$extConf = $this->getDiv()->getExtConf();
 		$error = '';
 

@@ -39,6 +39,30 @@ class tx_wtspamshield_t3blog extends tslib_pibase {
 	protected $div;
 
 	/**
+	 * @var mixed
+	 */
+	public $additionalValues = array();
+
+	/**
+	 * @var string
+	 */
+	public $tsKey = 't3_blog';
+
+	/**
+	 * @var mixed
+	 */
+	public $tsConf;
+
+	/**
+	 * Constructor
+	 *
+	 * @return void
+	 */
+	public function __construct() {
+		$this->tsConf = $this->getDiv()->getTsConf();
+	}
+
+	/**
 	 * getDiv
 	 * 
 	 * @return tx_wtspamshield_div
@@ -62,9 +86,9 @@ class tx_wtspamshield_t3blog extends tslib_pibase {
 
 		$validateArray = $params['data'];
 
-		if ( $this->getDiv()->isActivated('t3_blog') ) {
+		if ( $this->getDiv()->isActivated($this->tsKey) ) {
 
-			$error = $this->processValidationChain($validateArray);
+			$error = $this->validate($validateArray);
 
 			if (!empty($error)) {
 					// Right now we cannot set errorMessage because it is
@@ -77,38 +101,24 @@ class tx_wtspamshield_t3blog extends tslib_pibase {
 	}
 
 	/**
-	 * processValidationChain
+	 * validate
 	 * 
 	 * @param array $fieldValues
 	 * @return string
 	 */
-	protected function processValidationChain(array $fieldValues) {
-		$error = '';
+	protected function validate(array $fieldValues) {
 
-			// 1c. httpCheck
-		if (!$error) {
-			$methodHttpcheckInstance = t3lib_div::makeInstance('tx_wtspamshield_method_httpcheck');
-			$error .= $methodHttpcheckInstance->httpCheck($fieldValues);
-		}
-
-			// 1f. Akismet Check
-		if (!$error) {
-			$methodAkismetInstance = t3lib_div::makeInstance('tx_wtspamshield_method_akismet');
-			$error .= $methodAkismetInstance->checkAkismet($fieldValues, 't3_blog');
-		}
-
-			// 2a. Safe log file
-		if ($error) {
-			$methodLogInstance = t3lib_div::makeInstance('tx_wtspamshield_log');
-			$methodLogInstance->dbLog('t3_blog', $error, $fieldValues);
-		}
-
-			// 2b. Send email to admin
-		if ($error) {
-			$methodSendEmailInstance = t3lib_div::makeInstance('tx_wtspamshield_mail');
-			$methodSendEmailInstance->sendEmail('t3_blog', $error, $fieldValues);
-		}
-
+		$processor = $this->getDiv()->getProcessor();
+		$processor->tsKey = $this->tsKey;
+		$processor->fieldValues = $fieldValues;
+		$processor->additionalValues = $this->additionalValues;
+		$processor->maxPoints = $this->tsConf['maxPoints'];
+		$processor->methodes =
+			array(
+				'httpCheck',
+				'akismetCheck',
+			);
+		$error = $processor->validate();
 		return $error;
 	}
 }

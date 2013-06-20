@@ -32,14 +32,19 @@
 class tx_wtspamshield_method_honeypot extends tx_wtspamshield_method_abstract {
 
 	/**
-	 * @var string
+	 * @var mixed
 	 */
-	public $inputName;
+	public $fieldValues;
+
+	/**
+	 * @var mixed
+	 */
+	public $additionalValues;
 
 	/**
 	 * @var string
 	 */
-	public $prefixInputName;
+	public $tsKey;
 
 	/**
 	 * Function createHoneypot() creates a non-visible input field
@@ -59,7 +64,7 @@ class tx_wtspamshield_method_honeypot extends tx_wtspamshield_method_abstract {
 				$code = $this->cObj->cObjGetSingle($cObjType, $cObjvalues);
 
 				$code .= '<input type="text" name="';
-				$code .= $this->prefixInputName . '[' . $this->inputName . ']"';
+				$code .= $this->additionalValues['prefixInputName'] . '[' . $this->additionalValues['honeypotInputName'] . ']"';
 				$code .= ' ' . $tsConf['honeypot.']['css.']['inputStyle'];
 				$code .= ' value=""';
 				$code .= ' ' . $tsConf['honeypot.']['css.']['inputClass'];
@@ -72,22 +77,21 @@ class tx_wtspamshield_method_honeypot extends tx_wtspamshield_method_abstract {
 	}
 
 	/**
-	 * Function checkHoney() checks if a fly is in the honeypot
+	 * Function validate() checks if a fly is in the honeypot
 	 *
-	 * @param array &$sessiondata Array with submitted values
 	 * @return string $error Return errormessage if error exists
 	 */
-	public function checkHoney(&$sessiondata) {
+	public function validate() {
 		$extConf = $this->getDiv()->getExtConf();
 
-		if (!empty($sessiondata[$this->inputName])
+		if (!empty($this->fieldValues[ $this->additionalValues['honeypotInputName'] ])
 			&& isset($extConf)
 			&& $extConf['honeypotCheck']
 		) {
 			$tsConf = $this->getDiv()->getTsConf();
 			return $this->renderCobj($tsConf['errors.'], 'honeypot');
 		}
-		unset($sessiondata[$this->inputName]);
+		unset($this->fieldValues[ $this->additionalValues['honeypotInputName'] ]);
 
 		return '';
 	}

@@ -47,6 +47,11 @@ class tx_wtspamshield_div extends tslib_pibase {
 	public $extConf;
 
 	/**
+	 * @var tx_wtspamshield_processor
+	 */
+	public $processor;
+
+	/**
 	 * Disable Spamshield for current page - set entry to session
 	 *
 	 * @param int $time how long should the disabling work (in seconds)
@@ -127,6 +132,18 @@ class tx_wtspamshield_div extends tslib_pibase {
 			}
 		}
 		return $this->extConf;
+	}
+
+	/**
+	 * getProcessor
+	 * 
+	 * @return tx_wtspamshield_processor
+	 */
+	public function getProcessor() {
+		if (!isset($this->processor)) {
+			$this->processor = t3lib_div::makeInstance('tx_wtspamshield_processor');
+		}
+		return $this->processor;
 	}
 
 	/**

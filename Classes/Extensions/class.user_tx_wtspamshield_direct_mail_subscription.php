@@ -32,9 +32,24 @@
 class user_tx_wtspamshield_direct_mail_subscription extends user_feAdmin {
 
 	/**
+	 * @var tx_wtspamshield_div
+	 */
+	protected $div;
+
+	/**
+	 * @var mixed
+	 */
+	public $additionalValues = array();
+
+	/**
 	 * @var string
 	 */
-	public $prefixInputName = 'FE[tt_address]';
+	public $tsKey = 'direct_mail_subscription';
+
+	/**
+	 * @var mixed
+	 */
+	public $tsConf;
 
 	/**
 	 * @var string
@@ -42,9 +57,16 @@ class user_tx_wtspamshield_direct_mail_subscription extends user_feAdmin {
 	public $spamshieldDisplayError;
 
 	/**
-	 * @var tx_wtspamshield_div
+	 * Constructor
+	 *
+	 * @return void
 	 */
-	protected $div;
+	public function __construct() {
+		$this->tsConf = $this->getDiv()->getTsConf();
+		$honeypotInputName = $this->tsConf['honeypot.']['inputname.'][$this->tsKey];
+		$this->additionalValues['honeypotCheck']['prefixInputName'] = 'FE[tt_address]';
+		$this->additionalValues['honeypotCheck']['honeypotInputName'] = $honeypotInputName;
+	}
 
 	/**
 	 * getDiv
@@ -65,12 +87,9 @@ class user_tx_wtspamshield_direct_mail_subscription extends user_feAdmin {
 	 */
 	public function displayCreateScreen() {
 
-		if ( $this->getDiv()->isActivated('direct_mail_subscription') ) {
-			$tsConf = $this->getDiv()->getTsConf();
-			$honeypotInputName = $tsConf ['honeypot.']['inputname.']['direct_mail_subscription'];
+		if ( $this->getDiv()->isActivated($this->tsKey) ) {
 			$methodHoneypotInstance = t3lib_div::makeInstance('tx_wtspamshield_method_honeypot');
-			$methodHoneypotInstance->inputName = $honeypotInputName;
-			$methodHoneypotInstance->prefixInputName = $this->prefixInputName;
+			$methodHoneypotInstance->additionalValues = $this->additionalValues;
 			$this->markerArray['###HIDDENFIELDS###'] .= $methodHoneypotInstance->createHoneypot();
 			if ($this->spamshieldDisplayError) {
 				$this->markerArray['###HIDDENFIELDS###'] .= $this->spamshieldDisplayError;
@@ -88,14 +107,11 @@ class user_tx_wtspamshield_direct_mail_subscription extends user_feAdmin {
 	public function save() {
 		$error = '';
 
-		if ( $this->getDiv()->isActivated('direct_mail_subscription') ) {
+		if ( $this->getDiv()->isActivated($this->tsKey) ) {
 			$validateArray = $this->dataArr;
-			$error = $this->processValidationChain($validateArray);
+			$error = $this->validate($validateArray);
 
 			if (!empty($error)) {
-					// error handling
-				$methodLogInstance = t3lib_div::makeInstance('tx_wtspamshield_log');
-				$methodLogInstance->dbLog('direct_mail_subscription', $error, $validateArray);
 					// $this->error='###TEMPLATE_NO_PERMISSIONS###';
 				$this->saved = 0;
 				$this->cmd = 'create';
@@ -109,41 +125,26 @@ class user_tx_wtspamshield_direct_mail_subscription extends user_feAdmin {
 	}
 
 	/**
-	 * processValidationChain
+	 * validate
 	 * 
 	 * @param array $fieldValues
 	 * @return string
 	 */
-	protected function processValidationChain(array $fieldValues) {
-		$error = '';
+	protected function validate(array $fieldValues) {
 
-			// 1a. blacklistCheck
-		if (!$error) {
-			$methodBlacklistInstance = t3lib_div::makeInstance('tx_wtspamshield_method_blacklist');
-			$error .= $methodBlacklistInstance->checkBlacklist($fieldValues);
-		}
-
-			// 1c. httpCheck
-		if (!$error) {
-			$methodHttpcheckInstance = t3lib_div::makeInstance('tx_wtspamshield_method_httpcheck');
-			$error .= $methodHttpcheckInstance->httpCheck($fieldValues);
-		}
-
-			// 1d. uniqueCheck
-		if (!$error) {
-			$methodUniqueInstance = t3lib_div::makeInstance('tx_wtspamshield_method_unique');
-			$error .= $methodUniqueInstance->main($fieldValues);
-		}
-
-			// 1e. honeypotCheck
-		if (!$error) {
-			$tsConf = $this->getDiv()->getTsConf();
-			$honeypotInputName = $tsConf['honeypot.']['inputname.']['direct_mail_subscription'];
-			$honeypotInputName = t3lib_div::makeInstance('tx_wtspamshield_method_honeypot');
-			$honeypotInputName->inputName = $honeypotInputName;
-			$error .= $honeypotInputName->checkHoney($fieldValues);
-		}
-
+		$processor = $this->getDiv()->getProcessor();
+		$processor->tsKey = $this->tsKey;
+		$processor->fieldValues = $fieldValues;
+		$processor->additionalValues = $this->additionalValues;
+		$processor->maxPoints = $this->tsConf['maxPoints'];
+		$processor->methodes =
+			array(
+				'blacklistCheck',
+				'httpCheck',
+				'uniqueCheck',
+				'honeypotCheck',
+			);
+		$error = $processor->validate();
 		return $error;
 	}
 }

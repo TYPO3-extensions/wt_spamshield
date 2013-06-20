@@ -32,14 +32,36 @@
 class tx_wtspamshield_powermail extends tslib_pibase {
 
 	/**
-	 * @var string
-	 */
-	public $prefixInputName = 'tx_powermail_pi1';
-
-	/**
 	 * @var tx_wtspamshield_div
 	 */
 	protected $div;
+
+	/**
+	 * @var mixed
+	 */
+	public $additionalValues = array();
+
+	/**
+	 * @var string
+	 */
+	public $tsKey = 'powermail';
+
+	/**
+	 * @var mixed
+	 */
+	public $tsConf;
+
+	/**
+	 * Constructor
+	 *
+	 * @return void
+	 */
+	public function __construct() {
+		$this->tsConf = $this->getDiv()->getTsConf();
+		$honeypotInputName = $this->tsConf['honeypot.']['inputname.'][$this->tsKey];
+		$this->additionalValues['honeypotCheck']['prefixInputName'] = 'tx_powermail_pi1';
+		$this->additionalValues['honeypotCheck']['honeypotInputName'] = $honeypotInputName;
+	}
 
 	/**
 	 * getDiv
@@ -64,7 +86,7 @@ class tx_wtspamshield_powermail extends tslib_pibase {
 	 */
 	public function PM_FormWrapMarkerHook($outerMarkerArray, &$subpartArray, $conf, $obj) {
 
-		if ( $this->getDiv()->isActivated('powermail') ) {
+		if ( $this->getDiv()->isActivated($this->tsKey) ) {
 				// 1. check Extension Manager configuration
 			$this->getDiv()->getExtConf();
 
@@ -73,11 +95,8 @@ class tx_wtspamshield_powermail extends tslib_pibase {
 			$methodSessionInstance->setSessionTime();
 
 				// 3. Add Honeypot
-			$tsConf = $this->getDiv()->getTsConf();
-			$honeypotInputName = $tsConf['honeypot.']['inputname.']['powermail'];
 			$methodHoneypotInstance = t3lib_div::makeInstance('tx_wtspamshield_method_honeypot');
-			$methodHoneypotInstance->inputName = $honeypotInputName;
-			$methodHoneypotInstance->prefixInputName = $this->prefixInputName;
+			$methodHoneypotInstance->additionalValues = $this->additionalValues;
 			$subpartArray['###POWERMAIL_CONTENT###'] .= $methodHoneypotInstance->createHoneypot();
 		}
 	}
@@ -96,9 +115,9 @@ class tx_wtspamshield_powermail extends tslib_pibase {
 	public function PM_SubmitBeforeMarkerHook($obj, $markerArray = array(), $sessiondata = array()) {
 		$error = '';
 
-		if ( $this->getDiv()->isActivated('powermail') ) {
+		if ( $this->getDiv()->isActivated($this->tsKey) ) {
 
-			$error = $this->processValidationChain($sessiondata);
+			$error = $this->validate($sessiondata);
 
 				// 2c. Return Error message if exists
 			if (!empty($error)) {
@@ -110,74 +129,28 @@ class tx_wtspamshield_powermail extends tslib_pibase {
 	}
 
 	/**
-	 * processValidationChain
+	 * validate
 	 * 
 	 * @param array $fieldValues
 	 * @return string
 	 */
-	protected function processValidationChain(array $fieldValues) {
-		$error = '';
+	protected function validate(array $fieldValues) {
 
-			// 1a. blacklistCheck
-		if (!$error) {
-			$methodBlacklistInstance = t3lib_div::makeInstance('tx_wtspamshield_method_blacklist');
-			$error .= $methodBlacklistInstance->checkBlacklist($fieldValues);
-		}
-
-			// 1b. sessionCheck
-		if (!$error) {
-			$methodSessionInstance = t3lib_div::makeInstance('tx_wtspamshield_method_session');
-			$error .= $methodSessionInstance->checkSessionTime();
-		}
-
-			// 1c. httpCheck
-		if (!$error) {
-			$methodHttpcheckInstance = t3lib_div::makeInstance('tx_wtspamshield_method_httpcheck');
-			$error .= $methodHttpcheckInstance->httpCheck($fieldValues);
-		}
-
-			// 1d. uniqueCheck
-		if (!$error) {
-			$methodUniqueInstance = t3lib_div::makeInstance('tx_wtspamshield_method_unique');
-			$error .= $methodUniqueInstance->main($fieldValues);
-		}
-
-			// 1e. honeypotCheck
-		if (!$error) {
-			$tsConf = $this->getDiv()->getTsConf();
-			$honeypotInputName = $tsConf['honeypot.']['inputname.']['powermail'];
-			$methodHoneypotInstance = t3lib_div::makeInstance('tx_wtspamshield_method_honeypot');
-			$methodHoneypotInstance->inputName = $honeypotInputName;
-			$error .= $methodHoneypotInstance->checkHoney($fieldValues);
-		}
-
-			// 1f. Akismet Check
-		if (!$error) {
-				// get GPvars, downwards compatibility
-			$t3Version = class_exists('t3lib_utility_VersionNumber')
-				? t3lib_utility_VersionNumber::convertVersionNumberToInteger(TYPO3_version)
-				: t3lib_div::int_from_ver(TYPO3_version);
-			if ($t3Version < 4006000) {
-				$form = t3lib_div::GPvar('tx_powermail_pi1');
-			} else {
-				$form = t3lib_div::_GP('tx_powermail_pi1');
-			}
-			$methodAkismetInstance = t3lib_div::makeInstance('tx_wtspamshield_method_akismet');
-			$error .= $methodAkismetInstance->checkAkismet($form, 'powermail');
-		}
-
-			// 2a. Safe log file
-		if ($error) {
-			$methodLogInstance = t3lib_div::makeInstance('tx_wtspamshield_log');
-			$methodLogInstance->dbLog('powermail', $error, $fieldValues);
-		}
-
-			// 2b. Send email to admin
-		if ($error) {
-			$methodSendEmailInstance = t3lib_div::makeInstance('tx_wtspamshield_mail');
-			$methodSendEmailInstance->sendEmail('powermail', $error, $fieldValues);
-		}
-
+		$processor = $this->getDiv()->getProcessor();
+		$processor->tsKey = $this->tsKey;
+		$processor->fieldValues = $fieldValues;
+		$processor->additionalValues = $this->additionalValues;
+		$processor->maxPoints = $this->tsConf['maxPoints'];
+		$processor->methodes =
+			array(
+				'blacklistCheck',
+				'sessionCheck',
+				'httpCheck',
+				'uniqueCheck',
+				'honeypotCheck',
+				'akismetCheck',
+			);
+		$error = $processor->validate();
 		return $error;
 	}
 }

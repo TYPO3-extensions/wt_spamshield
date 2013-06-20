@@ -37,12 +37,28 @@ class tx_form_System_Validate_Wtspamshield extends tx_form_System_Validate_Abstr
 	protected $div;
 
 	/**
+	 * @var mixed
+	 */
+	public $additionalValues = array();
+
+	/**
+	 * @var string
+	 */
+	public $tsKey = 'standardMailform';
+
+	/**
+	 * @var mixed
+	 */
+	public $tsConf;
+
+	/**
 	 * Constructor
 	 *
 	 * @param array $arguments
 	 * @return void
 	 */
 	public function __construct($arguments) {
+		$this->tsConf = $this->getDiv()->getTsConf();
 		parent::__construct($arguments);
 	}
 
@@ -66,7 +82,7 @@ class tx_form_System_Validate_Wtspamshield extends tx_form_System_Validate_Abstr
 	 */
 	public function isValid() {
 
-		if ( $this->getDiv()->isActivated('standardMailform') ) {
+		if ( $this->getDiv()->isActivated($this->tsKey) ) {
 			$error = '';
 
 			if ($this->requestHandler->has($this->fieldName)) {
@@ -74,7 +90,7 @@ class tx_form_System_Validate_Wtspamshield extends tx_form_System_Validate_Abstr
 				$validateArray = array(
 					$this->fieldName => $value
 				);
-				$error = $this->processValidationChain($validateArray);
+				$error = $this->validate($validateArray);
 			}
 
 			if (!empty($error)) {
@@ -87,47 +103,25 @@ class tx_form_System_Validate_Wtspamshield extends tx_form_System_Validate_Abstr
 	}
 
 	/**
-	 * processValidationChain
+	 * validate
 	 * 
 	 * @param array $fieldValues
 	 * @return string
 	 */
-	protected function processValidationChain(array $fieldValues) {
-		$error = '';
+	protected function validate(array $fieldValues) {
 
-			// 1a. blacklistCheck
-		if (!$error) {
-			$methodBlacklistInstance = t3lib_div::makeInstance('tx_wtspamshield_method_blacklist');
-			$error .= $methodBlacklistInstance->checkBlacklist($fieldValues);
-		}
-
-			// 1c. httpCheck
-		if (!$error) {
-			$methodHttpcheckInstance = t3lib_div::makeInstance('tx_wtspamshield_method_httpcheck');
-			$error .= $methodHttpcheckInstance->httpCheck($fieldValues);
-		}
-
-			// 1e. honeypotCheck
-		if (!$error) {
-			$tsConf = $this->getDiv()->getTsConf();
-			$honeypotInputName = $tsConf['honeypot.']['inputname.']['standardMailform'];
-			$methodHoneypotInstance = t3lib_div::makeInstance('tx_wtspamshield_method_honeypot');
-			$methodHoneypotInstance->inputName = $honeypotInputName;
-			$error .= $methodHoneypotInstance->checkHoney($fieldValues);
-		}
-
-			// 2a. Safe log file
-		if ($error) {
-			$methodLogInstance = t3lib_div::makeInstance('tx_wtspamshield_log');
-			$methodLogInstance->dbLog('standardMailform', $error, $fieldValues);
-		}
-
-			// 2b. Send email to admin
-		if ($error) {
-			$methodSendEmailInstance = t3lib_div::makeInstance('tx_wtspamshield_mail');
-			$methodSendEmailInstance->sendEmail('standardMailform', $error, $fieldValues);
-		}
-
+		$processor = $this->getDiv()->getProcessor();
+		$processor->tsKey = $this->tsKey;
+		$processor->fieldValues = $fieldValues;
+		$processor->additionalValues = $this->additionalValues;
+		$processor->maxPoints = $this->tsConf['maxPoints'];
+		$processor->methodes =
+			array(
+				'blacklistCheck',
+				'httpCheck',
+				'honeypotCheck',
+			);
+		$error = $processor->validate();
 		return $error;
 	}
 

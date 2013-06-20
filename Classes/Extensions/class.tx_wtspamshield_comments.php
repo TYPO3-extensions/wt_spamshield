@@ -39,14 +39,31 @@ class tx_wtspamshield_comments extends tslib_pibase {
 	protected $div;
 
 	/**
-	 * @var string
+	 * @var mixed
 	 */
-	public $prefixInputName = 'tx_comments_pi1';
+	public $additionalValues = array();
 
 	/**
-	 * @var int
+	 * @var string
 	 */
-	public $points;
+	public $tsKey = 'comments';
+
+	/**
+	 * @var mixed
+	 */
+	public $tsConf;
+
+	/**
+	 * Constructor
+	 *
+	 * @return void
+	 */
+	public function __construct() {
+		$this->tsConf = $this->getDiv()->getTsConf();
+		$honeypotInputName = $this->tsConf['honeypot.']['inputname.'][$this->tsKey];
+		$this->additionalValues['honeypotCheck']['prefixInputName'] = 'tx_comments_pi1';
+		$this->additionalValues['honeypotCheck']['honeypotInputName'] = $honeypotInputName;
+	}
 
 	/**
 	 * getDiv
@@ -74,7 +91,7 @@ class tx_wtspamshield_comments extends tslib_pibase {
 		$template = $params['template'];
 		$markers = $params['markers'];
 
-		if ( $this->getDiv()->isActivated('comments') ) {
+		if ( $this->getDiv()->isActivated( $this->tsKey ) ) {
 
 				// 1. check Extension Manager configuration
 			$this->getDiv()->getExtConf();
@@ -84,11 +101,8 @@ class tx_wtspamshield_comments extends tslib_pibase {
 			$methodSessionInstance->setSessionTime();
 
 				// 3. Honeypot check - generate honeypot Input field
-			$tsConf = $this->getDiv()->getTsConf();
-			$honeypotInputName = $tsConf['honeypot.']['inputname.']['comments'];
 			$methodHoneypotInstance = t3lib_div::makeInstance('tx_wtspamshield_method_honeypot');
-			$methodHoneypotInstance->inputName = $honeypotInputName;
-			$methodHoneypotInstance->prefixInputName = $this->prefixInputName;
+			$methodHoneypotInstance->additionalValues = $this->additionalValues;
 			$markers['###JS_USER_DATA###'] = $methodHoneypotInstance->createHoneypot() . $markers['###JS_USER_DATA###'];
 		}
 		return $markers;
@@ -108,106 +122,41 @@ class tx_wtspamshield_comments extends tslib_pibase {
 		$cObj = $GLOBALS['TSFE']->cObj;
 		$error = '';
 		$validateArray = $params['formdata'];
-		$this->points = $params['points'];
+		$points = $params['points'];
 
-		if ( $this->getDiv()->isActivated('comments') ) {
-			$error = $this->processValidationChain($validateArray);
+		if ( $this->getDiv()->isActivated( $this->tsKey ) ) {
+			$points += $this->validate($validateArray);
 		}
 
-		return $this->points;
+		return $points;
 	}
 
 	/**
-	 * processValidationChain
+	 * validate
 	 * 
 	 * @param array $fieldValues
 	 * @return string
 	 */
-	protected function processValidationChain(array $fieldValues) {
-		$error = '';
+	protected function validate(array $fieldValues) {
+		$this->additionalValues['nameCheck']['name1'] = $fieldValues['firstname'];
+		$this->additionalValues['nameCheck']['name2'] = $fieldValues['lastname'];
 
-			// 1a. blacklistCheck
-		if (!$error) {
-			$methodBlacklistInstance = t3lib_div::makeInstance('tx_wtspamshield_method_blacklist');
-			$error .= $methodBlacklistInstance->checkBlacklist($fieldValues);
-
-			if (!empty($tempError)) {
-				$this->points += 1000;
-			}
-			$error .= $tempError;
-		}
-
-			// 1b. nameCheck
-		if (!$error) {
-			$methodNamecheckInstance = t3lib_div::makeInstance('tx_wtspamshield_method_namecheck');
-			$tempError = $methodNamecheckInstance->nameCheck($fieldValues['firstname'], $fieldValues['lastname']);
-
-			if (!empty($tempError)) {
-				$this->points += 1000;
-			}
-			$error .= $tempError;
-		}
-
-			// 1c. httpCheck
-		if (!$error) {
-			$methodHttpcheckInstance = t3lib_div::makeInstance('tx_wtspamshield_method_httpcheck');
-			$tempError = $methodHttpcheckInstance->httpCheck($fieldValues);
-
-			if (!empty($tempError)) {
-				$this->points += 1000;
-			}
-			$error .= $tempError;
-		}
-
-			// 1d. sessionCheck
-		if (!$error) {
-			$methodSessionInstance = t3lib_div::makeInstance('tx_wtspamshield_method_session');
-			$tempError = $methodSessionInstance->checkSessionTime();
-
-			if (!empty($tempError)) {
-				$this->points += 1000;
-			}
-			$error .= $tempError;
-		}
-
-			// 1e. honeypotCheck
-		if (!$error) {
-			$tsConf = $this->getDiv()->getTsConf();
-			$honeypotInputName = $tsConf['honeypot.']['inputname.']['comments'];
-			$methodHoneypotInstance = t3lib_div::makeInstance('tx_wtspamshield_method_honeypot');
-			$methodHoneypotInstance->inputName = $honeypotInputName;
-			$tempError = $methodHoneypotInstance->checkHoney($fieldValues);
-
-			if (!empty($tempError)) {
-				$this->points += 1000;
-			}
-			$error .= $tempError;
-		}
-
-			// 1f. Akismet Check
-		if (!$error) {
-			$methodAkismetInstance = t3lib_div::makeInstance('tx_wtspamshield_method_akismet');
-			$tempError =  $methodAkismetInstance->checkAkismet($fieldValues, 'comments');
-
-			if (!empty($tempError)) {
-				$this->points += 1000;
-			}
-			$error .= $tempError;
-		}
-
-			// 2a. Safe log file
-		if ($error) {
-			$methodLogInstance = t3lib_div::makeInstance('tx_wtspamshield_log');
-			$methodLogInstance->dbLog('comments', $error, $fieldValues);
-		}
-
-			// 2b. Send email to admin
-		if ($error) {
-			$methodSendEmailInstance = t3lib_div::makeInstance('tx_wtspamshield_mail');
-			$methodSendEmailInstance->sendEmail('comments', $error, $fieldValues);
-		}
-
-		return $error;
+		$processor = $this->getDiv()->getProcessor();
+		$processor->tsKey = $this->tsKey;
+		$processor->fieldValues = $fieldValues;
+		$processor->additionalValues = $this->additionalValues;
+		$processor->maxPoints = $this->tsConf['maxPoints'];
+		$processor->methodes =
+			array(
+				'blacklistCheck',
+				'nameCheck',
+				'httpCheck',
+				'sessionCheck',
+				'honeypotCheck',
+				'akismetCheck',
+			);
+		$processor->validate();
+		return $processor->currentPoints;
 	}
 }
 

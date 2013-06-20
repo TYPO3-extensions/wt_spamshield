@@ -45,14 +45,15 @@ class tx_wtspamshield_log extends tslib_pibase {
 	 * Function dbLog to write a log into the database if spam was recognized
 	 *
 	 * @param string $ext Name of extension in which the spam was recognized
-	 * @param string $error Error Message
+	 * @param integer $points 
+	 * @param string $errorMessages Error Message
 	 * @param array $formArray Array with submitted values
 	 * @return string
 	 */
-	public function dbLog($ext, $error, $formArray) {
+	public function dbLog($ext, $points, $errorMessages, $formArray) {
 		$conf = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf'][$this->extKey]);
 
-		if (isset($conf)) {
+		if (isset($conf) && $this->dbInsert) {
 			if ($conf['pid'] == -1) {
 				return FALSE;
 			}
@@ -62,7 +63,10 @@ class tx_wtspamshield_log extends tslib_pibase {
 			}
 
 			$title = date('d.m.Y H:i:s', time()) . ' - ' .
-				$ext . ' - pid: ' . $GLOBALS['TSFE']->id;
+				$ext . ' - pid: ' . $GLOBALS['TSFE']->id .
+				' - points: ' . $points;
+
+			$errorMessage = 'Score: ' $points;
 
 			$dbValues = array (
 				'pid' => intval($conf['pid']),
@@ -70,7 +74,7 @@ class tx_wtspamshield_log extends tslib_pibase {
 				'crdate' => time(),
 				'title' => $title,
 				'form' => $ext,
-				'errormsg' => strip_tags($error),
+				'errormsg' => $errorMessage,
 				'pageid' => $GLOBALS['TSFE']->id,
 				'ip' => t3lib_div::getIndpEnv('REMOTE_ADDR'),
 				'useragent' => t3lib_div::getIndpEnv('HTTP_USER_AGENT')
@@ -81,13 +85,13 @@ class tx_wtspamshield_log extends tslib_pibase {
 				: t3lib_div::int_from_ver(TYPO3_version);
 			if ($t3Version < 4007000) {
 				$dbValues += array('formvalues' => t3lib_div::view_array($formArray));
+				$dbValues += array('errorMessages' => t3lib_div::view_array($errorMessages));
 			} else {
 				$dbValues += array('formvalues' => t3lib_utility_Debug::viewArray($formArray));
+				$dbValues += array('errorMessages' => t3lib_utility_Debug::viewArray($errorMessages));
 			}
 
-			if ($this->dbInsert) {
-				$GLOBALS['TYPO3_DB']->exec_INSERTquery('tx_wtspamshield_log', $dbValues);
-			}
+			$GLOBALS['TYPO3_DB']->exec_INSERTquery('tx_wtspamshield_log', $dbValues);
 		}
 		return '';
 	}

@@ -32,18 +32,31 @@
 class tx_wtspamshield_method_namecheck extends tx_wtspamshield_method_abstract {
 
 	/**
-	 * Function nameCheck() to disable the same first- and lastname
+	 * @var mixed
+	 */
+	public $fieldValues;
+
+	/**
+	 * @var mixed
+	 */
+	public $additionalValues;
+
+	/**
+	 * @var string
+	 */
+	public $tsKey;
+
+	/**
+	 * Function validate() to disable the same first- and lastname
 	 *
-	 * @param string $name1 Content of Field Firstname
-	 * @param string $name2 Content of Field Lastname
 	 * @return string $error Return errormessage if error exists
 	 */
-	public function nameCheck($name1, $name2) {
+	public function validate() {
 		$extConf = $this->getDiv()->getExtConf();
 
 		if (isset($extConf)) {
 			if ($extConf['useNameCheck'] == 1) {
-				if ($name1 === $name2 && $name1) {
+				if ($this->additionalValues['name1'] === $this->additionalValues['name2'] && $this->additionalValues['name1']) {
 					$tsConf = $this->getDiv()->getTsConf();
 					$error = $this->renderCobj($tsConf['errors.'], 'nameCheck');
 				}

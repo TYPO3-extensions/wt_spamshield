@@ -32,14 +32,27 @@
 class tx_wtspamshield_method_akismet extends tx_wtspamshield_method_abstract {
 
 	/**
-	 * Function checkAkismet() send form values to akismet server and
+	 * @var mixed
+	 */
+	public $fieldValues;
+
+	/**
+	 * @var mixed
+	 */
+	public $additionalValues;
+
+	/**
+	 * @var string
+	 */
+	public $tsKey;
+
+	/**
+	 * Function validate() send form values to akismet server and
 	 * waits for the feedback if it's spam or not
 	 *
-	 * @param array $form Array with submitted values
-	 * @param string $ext Name of extension in which the spam was recognized
 	 * @return string $error Return errormessage if error exists
 	 */
-	public function checkAkismet($form, $ext) {
+	public function validate() {
 		$extConf = $this->getDiv()->getExtConf();
 		$error = '';
 
@@ -49,10 +62,10 @@ class tx_wtspamshield_method_akismet extends tx_wtspamshield_method_abstract {
 				$tsConf = $this->getDiv()->getTsConf();
 
 					// Get field mapping from TS
-				$fields = $tsConf['fields.'][$ext . '.'];
+				$fields = $tsConf['fields.'][$this->tsKey . '.'];
 				foreach ($fields as $key => $value) {
-					if ($value && array_key_exists($value, $form)) {
-						$akismetArray[$key] = $form[$value];
+					if ($value && array_key_exists($value, $this->fieldValues)) {
+						$akismetArray[$key] = $this->fieldValues[$value];
 					}
 				}
 

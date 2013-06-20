@@ -42,6 +42,31 @@ class tx_wtspamshield_defaultmailform extends tslib_pibase {
 	protected $div;
 
 	/**
+	 * @var mixed
+	 */
+	public $additionalValues = array();
+
+	/**
+	 * @var string
+	 */
+	public $tsKey = 'standardMailform';
+
+	/**
+	 * @var mixed
+	 */
+	public $tsConf;
+
+	/**
+	 * Constructor
+	 *
+	 * @param array $arguments
+	 * @return void
+	 */
+	public function __construct() {
+		$this->tsConf = $this->getDiv()->getTsConf();
+	}
+
+	/**
 	 * getDiv
 	 * 
 	 * @return tx_wtspamshield_div
@@ -62,7 +87,7 @@ class tx_wtspamshield_defaultmailform extends tslib_pibase {
 	 * @return string
 	 */
 	public function generateSession($content, array $configuration = NULL) {
-		if ( $this->getDiv()->isActivated('standardMailform') ) {
+		if ( $this->getDiv()->isActivated($this->tsKey) ) {
 			$this->getDiv()->getExtConf();
 			$forceValue = !(isset($configuration['ifOutdated']) && $configuration['ifOutdated']);
 
@@ -84,14 +109,13 @@ class tx_wtspamshield_defaultmailform extends tslib_pibase {
 	 * @return object $form
 	 */
 	public function sendFormmail_preProcessVariables($form, $obj, $legacyConfArray = array()) {
-		if ( $this->getDiv()->isActivated('standardMailform') ) {
-			$error = $this->processValidationChain($form);
+		if ( $this->getDiv()->isActivated($this->tsKey) ) {
+			$error = $this->validate($form);
 
 				// 2c. Redirect and stop mail sending
 			if (!empty($error)) {
-				$tsConf = $this->getDiv()->getTsConf();
-				$link = (!empty($tsConf['redirect.']['standardMailform'])
-					? $tsConf['redirect.']['standardMailform']
+				$link = (!empty($this->tsConf['redirect.'][$this->tsKey])
+					? $this->tsConf['redirect.'][$this->tsKey]
 					: t3lib_div::getIndpEnv('TYPO3_SITE_URL'));
 				header('HTTP/1.1 301 Moved Permanently');
 				header('Location: ' . $link);
@@ -104,59 +128,27 @@ class tx_wtspamshield_defaultmailform extends tslib_pibase {
 	}
 
 	/**
-	 * processValidationChain
+	 * validate
 	 * 
 	 * @param array $fieldValues
 	 * @return string
 	 */
-	protected function processValidationChain(array $fieldValues) {
-		$error = '';
+	protected function validate(array $fieldValues) {
 
-			// 1a. blacklistCheck
-		if (!$error) {
-			$methodBlacklistInstance = t3lib_div::makeInstance('tx_wtspamshield_method_blacklist');
-			$error .= $methodBlacklistInstance->checkBlacklist($fieldValues);
-		}
-
-			// 1b. sessionCheck
-		if (!$error) {
-			$methodSessionInstance = t3lib_div::makeInstance('tx_wtspamshield_method_session');
-			$error .= $methodSessionInstance->checkSessionTime();
-		}
-
-			// 1c. httpCheck
-		if (!$error) {
-			$methodHttpcheckInstance = t3lib_div::makeInstance('tx_wtspamshield_method_httpcheck');
-			$error .= $methodHttpcheckInstance->httpCheck($fieldValues);
-		}
-
-			// 1d. uniqueCheck
-		if (!$error) {
-			$methodUniqueInstance = t3lib_div::makeInstance('tx_wtspamshield_method_unique');
-			$error .= $methodUniqueInstance->main($fieldValues);
-		}
-
-			// 1e. honeypotCheck
-		if (!$error) {
-			$tsConf = $this->getDiv()->getTsConf();
-			$honeypotInputName = $tsConf['honeypot.']['inputname.']['standardMailform'];
-			$methodHoneypotInstance = t3lib_div::makeInstance('tx_wtspamshield_method_honeypot');
-			$methodHoneypotInstance->inputName = $honeypotInputName;
-			$error .= $methodHoneypotInstance->checkHoney($fieldValues);
-		}
-
-			// 2a. Safe log file
-		if ($error) {
-			$methodLogInstance = t3lib_div::makeInstance('tx_wtspamshield_log');
-			$methodLogInstance->dbLog('standardMailform', $error, $fieldValues);
-		}
-
-			// 2b. Send email to admin
-		if ($error) {
-			$methodSendEmailInstance = t3lib_div::makeInstance('tx_wtspamshield_mail');
-			$methodSendEmailInstance->sendEmail('standardMailform', $error, $fieldValues);
-		}
-
+		$processor = $this->getDiv()->getProcessor();
+		$processor->tsKey = $this->tsKey;
+		$processor->fieldValues = $fieldValues;
+		$processor->additionalValues = $this->additionalValues;
+		$processor->maxPoints = $this->tsConf['maxPoints'];
+		$processor->methodes =
+			array(
+				'blacklistCheck',
+				'httpCheck',
+				'uniqueCheck',
+				'sessionCheck',
+				'honeypotCheck',
+			);
+		$error = $processor->validate();
 		return $error;
 	}
 }

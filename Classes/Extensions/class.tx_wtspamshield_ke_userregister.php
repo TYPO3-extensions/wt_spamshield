@@ -32,14 +32,36 @@
 class tx_wtspamshield_ke_userregister extends tslib_pibase {
 
 	/**
-	 * @var string
-	 */
-	public $prefixInputName = 'tx_keuserregister_pi1';
-
-	/**
 	 * @var tx_wtspamshield_div
 	 */
 	protected $div;
+
+	/**
+	 * @var mixed
+	 */
+	public $additionalValues = array();
+
+	/**
+	 * @var string
+	 */
+	public $tsKey = 'ke_userregister';
+
+	/**
+	 * @var mixed
+	 */
+	public $tsConf;
+
+	/**
+	 * Constructor
+	 *
+	 * @return void
+	 */
+	public function __construct() {
+		$this->tsConf = $this->getDiv()->getTsConf();
+		$honeypotInputName = $this->tsConf['honeypot.']['inputname.'][$this->tsKey];
+		$this->additionalValues['honeypotCheck']['prefixInputName'] = 'tx_keuserregister_pi1';
+		$this->additionalValues['honeypotCheck']['honeypotInputName'] = $honeypotInputName;
+	}
 
 	/**
 	 * getDiv
@@ -62,7 +84,7 @@ class tx_wtspamshield_ke_userregister extends tslib_pibase {
 	 * @return void
 	 */
 	public function additionalMarkers(&$markerArray, $pObj, $errors) {
-		if ( $this->getDiv()->isActivated('ke_userregister') ) {
+		if ( $this->getDiv()->isActivated($this->tsKey) ) {
 				// 1. check Extension Manager configuration
 			$this->getDiv()->getExtConf();
 
@@ -71,11 +93,8 @@ class tx_wtspamshield_ke_userregister extends tslib_pibase {
 			$methodSessionInstance->setSessionTime();
 
 				// 3. Honeypot check - generate honeypot Input field
-			$tsConf = $this->getDiv()->getTsConf();
-			$honeypotInputName = $tsConf['honeypot.']['inputname.']['ke_userregister'];
 			$methodHoneypotInstance = t3lib_div::makeInstance('tx_wtspamshield_method_honeypot');
-			$methodHoneypotInstance->inputName = $honeypotInputName;
-			$methodHoneypotInstance->prefixInputName = $this->prefixInputName;
+			$methodHoneypotInstance->additionalValues = $this->additionalValues;
 			$pObj->templateCode = str_replace('</form>', $methodHoneypotInstance->createHoneypot() . '</form>', $pObj->templateCode);
 		}
 	}
@@ -104,9 +123,9 @@ class tx_wtspamshield_ke_userregister extends tslib_pibase {
 			$validateArray = t3lib_div::_GP('tx_keuserregister_pi1');
 		}
 
-		if ( $this->getDiv()->isActivated('ke_userregister') ) {
+		if ( $this->getDiv()->isActivated($this->tsKey) ) {
 
-			$error = $this->processValidationChain($validateArray);
+			$error = $this->validate($validateArray);
 				// 2c. Error message
 			if ($error) {
 					// Workaround: create field via TS and put it in HTML
@@ -117,63 +136,30 @@ class tx_wtspamshield_ke_userregister extends tslib_pibase {
 	}
 
 	/**
-	 * processValidationChain
+	 * validate
 	 * 
 	 * @param array $fieldValues
 	 * @return string
 	 */
-	protected function processValidationChain(array $fieldValues) {
-		$error = '';
+	protected function validate(array $fieldValues) {
+		$this->additionalValues['nameCheck']['name1'] = $fieldValues['first_name'];
+		$this->additionalValues['nameCheck']['name2'] = $fieldValues['last_name'];
 
-			// 1a. blacklistCheck
-		$methodBlacklistInstance = t3lib_div::makeInstance('tx_wtspamshield_method_blacklist');
-		$error .= $methodBlacklistInstance->checkBlacklist($fieldValues);
-
-			// 1b. nameCheck
-		if (!$error) {
-			$methodNamecheckInstance = t3lib_div::makeInstance('tx_wtspamshield_method_namecheck');
-			$error .= $methodNamecheckInstance->nameCheck($fieldValues['first_name'], $fieldValues['last_name']);
-		}
-
-			// 1c. httpCheck
-		if (!$error) {
-			$methodHttpcheckInstance = t3lib_div::makeInstance('tx_wtspamshield_method_httpcheck');
-			$error .= $methodHttpcheckInstance->httpCheck($fieldValues);
-		}
-
-			// 1d. sessionCheck
-		if (!$error) {
-			$methodSessionInstance = t3lib_div::makeInstance('tx_wtspamshield_method_session');
-			$error .= $methodSessionInstance->checkSessionTime();
-		}
-
-			// 1e. honeypotCheck
-		if (!$error) {
-			$tsConf = $this->getDiv()->getTsConf();
-			$honeypotInputName = $tsConf['honeypot.']['inputname.']['ke_userregister'];
-			$methodHoneypotInstance = t3lib_div::makeInstance('tx_wtspamshield_method_honeypot');
-			$methodHoneypotInstance->inputName = $honeypotInputName;
-			$error .= $methodHoneypotInstance->checkHoney($fieldValues);
-		}
-
-			// 1f. Akismet Check
-		if (!$error) {
-			$methodAkismetInstance = t3lib_div::makeInstance('tx_wtspamshield_method_akismet');
-			$error .= $methodAkismetInstance->checkAkismet($fieldValues, 'ke_userregister');
-		}
-
-			// 2a. Safe log file
-		if ($error) {
-			$methodLogInstance = t3lib_div::makeInstance('tx_wtspamshield_log');
-			$methodLogInstance->dbLog('ke_userregister', $error, $fieldValues);
-		}
-
-			// 2b. Send email to admin
-		if ($error) {
-			$methodSendEmailInstance = t3lib_div::makeInstance('tx_wtspamshield_mail');
-			$methodSendEmailInstance->sendEmail('ke_userregister', $error, $fieldValues);
-		}
-
+		$processor = $this->getDiv()->getProcessor();
+		$processor->tsKey = $this->tsKey;
+		$processor->fieldValues = $fieldValues;
+		$processor->additionalValues = $this->additionalValues;
+		$processor->maxPoints = $this->tsConf['maxPoints'];
+		$processor->methodes =
+			array(
+				'blacklistCheck',
+				'nameCheck',
+				'httpCheck',
+				'sessionCheck',
+				'honeypotCheck',
+				'akismetCheck',
+			);
+		$error = $processor->validate();
 		return $error;
 	}
 

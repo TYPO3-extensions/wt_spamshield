@@ -32,14 +32,36 @@
 class tx_wtspamshield_ve_guestbook extends tslib_pibase {
 
 	/**
-	 * @var string
-	 */
-	public $prefixInputName = 'tx_veguestbook_pi1';
-
-	/**
 	 * @var tx_wtspamshield_div
 	 */
 	protected $div;
+
+	/**
+	 * @var mixed
+	 */
+	public $additionalValues = array();
+
+	/**
+	 * @var string
+	 */
+	public $tsKey = 've_guestbook';
+
+	/**
+	 * @var mixed
+	 */
+	public $tsConf;
+
+	/**
+	 * Constructor
+	 *
+	 * @return void
+	 */
+	public function __construct() {
+		$this->tsConf = $this->getDiv()->getTsConf();
+		$honeypotInputName = $this->tsConf['honeypot.']['inputname.'][$this->tsKey];
+		$this->additionalValues['honeypotCheck']['prefixInputName'] = 'tx_veguestbook_pi1';
+		$this->additionalValues['honeypotCheck']['honeypotInputName'] = $honeypotInputName;
+	}
 
 	/**
 	 * getDiv
@@ -66,7 +88,7 @@ class tx_wtspamshield_ve_guestbook extends tslib_pibase {
 
 		if (
 			$obj->code == 'FORM' &&
-			$this->getDiv()->isActivated('ve_guestbook')
+			$this->getDiv()->isActivated($this->tsKey)
 		) {
 				// 1. check Extension Manager configuration
 			$this->getDiv()->getExtConf();
@@ -76,11 +98,8 @@ class tx_wtspamshield_ve_guestbook extends tslib_pibase {
 			$methodSessionInstance->setSessionTime();
 
 				// 3. Honeypot check - generate honeypot Input field
-			$tsConf = $this->getDiv()->getTsConf();
-			$honeypotInputName = $tsConf['honeypot.']['inputname.']['ve_guestbook'];
 			$methodHoneypotInstance = t3lib_div::makeInstance('tx_wtspamshield_method_honeypot');
-			$methodHoneypotInstance->inputName = $honeypotInputName;
-			$methodHoneypotInstance->prefixInputName = $this->prefixInputName;
+			$methodHoneypotInstance->additionalValues = $this->additionalValues;
 			$obj->templateCode = str_replace('</form>', $methodHoneypotInstance->createHoneypot() . '</form>', $obj->templateCode);
 		}
 		return $markerArray;
@@ -98,7 +117,7 @@ class tx_wtspamshield_ve_guestbook extends tslib_pibase {
 		$cObj = $GLOBALS['TSFE']->cObj;
 		$error = '';
 
-		if ( $this->getDiv()->isActivated('ve_guestbook') ) {
+		if ( $this->getDiv()->isActivated($this->tsKey) ) {
 				// get GPvars, downwards compatibility
 			$t3Version = class_exists('t3lib_utility_VersionNumber')
 				? t3lib_utility_VersionNumber::convertVersionNumberToInteger(TYPO3_version)
@@ -108,7 +127,7 @@ class tx_wtspamshield_ve_guestbook extends tslib_pibase {
 			} else {
 				$validateArray = t3lib_div::_GP('tx_veguestbook_pi1');
 			}
-			$error = $this->processValidationChain($validateArray);
+			$error = $this->validate($validateArray);
 
 				// 2c. Truncate ve_guestbook temp table
 			if ($error) {
@@ -121,10 +140,9 @@ class tx_wtspamshield_ve_guestbook extends tslib_pibase {
 				$obj->strEntryTable = 'tx_wtspamshield_veguestbooktemp';
 				$obj->config['notify_mail'] = '';
 				$obj->config['feedback_mail'] = FALSE;
-				$tsConf = $this->getDiv()->getTsConf();
-				if ( intval($tsConf['redirect.']['ve_guestbook']) > 0) {
+				if ( intval($this->tsConf['redirect.'][$this->tsKey]) > 0) {
 					$obj->config['redirect_page'] =
-						intval($tsConf['redirect.']['ve_guestbook']);
+						intval($$this->tsConf['redirect.'][$this->tsKey]);
 				} else {
 					$obj->config['redirect_page'] = $GLOBALS['TSFE']->tmpl->rootLine[0]['uid'];
 				}
@@ -135,65 +153,30 @@ class tx_wtspamshield_ve_guestbook extends tslib_pibase {
 	}
 
 	/**
-	 * processValidationChain
+	 * validate
 	 * 
 	 * @param array $fieldValues
 	 * @return string
 	 */
-	protected function processValidationChain(array $fieldValues) {
-		$error = '';
+	protected function validate(array $fieldValues) {
+		$this->additionalValues['nameCheck']['name1'] = $fieldValues['firstname'];
+		$this->additionalValues['nameCheck']['name2'] = $fieldValues['surname'];
 
-			// 1a. blacklistCheck
-		if (!$error) {
-			$methodBlacklistInstance = t3lib_div::makeInstance('tx_wtspamshield_method_blacklist');
-			$error .= $methodBlacklistInstance->checkBlacklist($fieldValues);
-		}
-
-			// 1b. nameCheck
-		if (!$error) {
-			$methodNamecheckInstance = t3lib_div::makeInstance('tx_wtspamshield_method_namecheck');
-			$error .= $methodNamecheckInstance->nameCheck($fieldValues['firstname'], $fieldValues['surname']);
-		}
-
-			// 1c. httpCheck
-		if (!$error) {
-			$methodHttpcheckInstance = t3lib_div::makeInstance('tx_wtspamshield_method_httpcheck');
-			$error .= $methodHttpcheckInstance->httpCheck($fieldValues);
-		}
-
-			// 1d. sessionCheck
-		if (!$error) {
-			$methodSessionInstance = t3lib_div::makeInstance('tx_wtspamshield_method_session');
-			$error .= $methodSessionInstance->checkSessionTime();
-		}
-
-			// 1e. honeypotCheck
-		if (!$error) {
-			$tsConf = $this->getDiv()->getTsConf();
-			$honeypotInputName = $tsConf['honeypot.']['inputname.']['ve_guestbook'];
-			$methodHoneypotInstance = t3lib_div::makeInstance('tx_wtspamshield_method_honeypot');
-			$methodHoneypotInstance->inputName = $honeypotInputName;
-			$error .= $methodHoneypotInstance->checkHoney($fieldValues);
-		}
-
-			// 1f. Akismet Check
-		if (!$error) {
-			$methodAkismetInstance = t3lib_div::makeInstance('tx_wtspamshield_method_akismet');
-			$error .= $methodAkismetInstance->checkAkismet($fieldValues, 've_guestbook');
-		}
-
-			// 2a. Safe log file
-		if ($error) {
-			$methodLogInstance = t3lib_div::makeInstance('tx_wtspamshield_log');
-			$methodLogInstance->dbLog('ve_guestbook', $error, $fieldValues);
-		}
-
-			// 2b. Send email to admin
-		if ($error) {
-			$methodSendEmailInstance = t3lib_div::makeInstance('tx_wtspamshield_mail');
-			$methodSendEmailInstance->sendEmail('ve_guestbook', $error, $fieldValues);
-		}
-
+		$processor = $this->getDiv()->getProcessor();
+		$processor->tsKey = $this->tsKey;
+		$processor->fieldValues = $fieldValues;
+		$processor->additionalValues = $this->additionalValues;
+		$processor->maxPoints = $this->tsConf['maxPoints'];
+		$processor->methodes =
+			array(
+				'blacklistCheck',
+				'nameCheck'
+				'sessionCheck',
+				'httpCheck',
+				'honeypotCheck',
+				'akismetCheck',
+			);
+		$error = $processor->validate();
 		return $error;
 	}
 }

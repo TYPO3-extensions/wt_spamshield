@@ -32,12 +32,26 @@
 class tx_wtspamshield_method_unique extends tx_wtspamshield_method_abstract {
 
 	/**
+	 * @var mixed
+	 */
+	public $fieldValues;
+
+	/**
+	 * @var mixed
+	 */
+	public $additionalValues;
+
+	/**
+	 * @var string
+	 */
+	public $tsKey;
+
+	/**
 	 * Check if the values are in more fields and return error
 	 *
-	 * @param array $sessiondata Array with submitted values
 	 * @return string $error Return errormessage if error exists
 	 */
-	public function main($sessiondata) {
+	public function validate() {
 		$found = 0;
 		$wholearray = array();
 
@@ -55,8 +69,8 @@ class tx_wtspamshield_method_unique extends tx_wtspamshield_method_abstract {
 
 						if (is_array($fieldarray)) {
 							foreach ($fieldarray as $key => $value) {
-								if ($sessiondata[$value]) {
-									$wholearray[] = $sessiondata[$value];
+								if ($this->fieldValues[$value]) {
+									$wholearray[] = $this->fieldValues[$value];
 								}
 							}
 						}

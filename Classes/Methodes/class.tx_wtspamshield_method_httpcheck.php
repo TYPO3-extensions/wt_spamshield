@@ -32,20 +32,34 @@
 class tx_wtspamshield_method_httpcheck extends tx_wtspamshield_method_abstract {
 
 	/**
+	 * @var mixed
+	 */
+	public $fieldValues;
+
+	/**
+	 * @var mixed
+	 */
+	public $additionalValues;
+
+	/**
+	 * @var string
+	 */
+	public $tsKey;
+
+	/**
 	 * @var string
 	 */
 	public $searchstring = 'http://|https://|ftp.';
 
 	/**
-	 * Function nameCheck() to disable the same first- and lastname
+	 * Function validate()
 	 *
-	 * @param array $array Array with submitted values
 	 * @return string $error Return errormessage if error exists
 	 */
-	public function httpCheck($array) {
+	public function validate($array) {
 		$extConf = $this->getDiv()->getExtConf();
 
-		if (isset($extConf) && isset($array)) {
+		if (isset($extConf) && isset($this->fieldValues)) {
 			if ($extConf['usehttpCheck'] >= 0) {
 
 				$noOfErrors = 0;
@@ -53,7 +67,7 @@ class tx_wtspamshield_method_httpcheck extends tx_wtspamshield_method_abstract {
 				$error = $this->renderCobj($tsConf['errors.'], 'httpCheck');
 				$error = sprintf($error, $extConf['usehttpCheck']);
 
-				foreach ((array) $array as $key => $value) {
+				foreach ((array) $this->fieldValues as $key => $value) {
 					if (!is_array($value)) {
 
 						$result = array();
@@ -63,7 +77,7 @@ class tx_wtspamshield_method_httpcheck extends tx_wtspamshield_method_abstract {
 						}
 					} else {
 						if (!is_array($value2)) {
-							foreach ((array) $array[$key] as $key2 => $value2 ) {
+							foreach ((array) $this->fieldValues[$key] as $key2 => $value2 ) {
 								$result = array();
 								preg_match_all('@' . $this->searchstring . '@', $value2, $result);
 								if (isset($result[0])) {
