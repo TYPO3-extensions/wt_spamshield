@@ -102,7 +102,7 @@ class tx_wtspamshield_comments extends tslib_pibase {
 
 				// 3. Honeypot check - generate honeypot Input field
 			$methodHoneypotInstance = t3lib_div::makeInstance('tx_wtspamshield_method_honeypot');
-			$methodHoneypotInstance->additionalValues = $this->additionalValues;
+			$methodHoneypotInstance->additionalValues = $this->additionalValues['honeypotCheck'];
 			$markers['###JS_USER_DATA###'] = $methodHoneypotInstance->createHoneypot() . $markers['###JS_USER_DATA###'];
 		}
 		return $markers;

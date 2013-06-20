@@ -96,7 +96,7 @@ class tx_wtspamshield_powermail extends tslib_pibase {
 
 				// 3. Add Honeypot
 			$methodHoneypotInstance = t3lib_div::makeInstance('tx_wtspamshield_method_honeypot');
-			$methodHoneypotInstance->additionalValues = $this->additionalValues;
+			$methodHoneypotInstance->additionalValues = $this->additionalValues['honeypotCheck'];
 			$subpartArray['###POWERMAIL_CONTENT###'] .= $methodHoneypotInstance->createHoneypot();
 		}
 	}
@@ -146,7 +146,6 @@ class tx_wtspamshield_powermail extends tslib_pibase {
 				'blacklistCheck',
 				'sessionCheck',
 				'httpCheck',
-				'uniqueCheck',
 				'honeypotCheck',
 				'akismetCheck',
 			);

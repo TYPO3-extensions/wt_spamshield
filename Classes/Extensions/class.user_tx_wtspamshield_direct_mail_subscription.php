@@ -97,7 +97,7 @@ class user_tx_wtspamshield_direct_mail_subscription extends user_feAdmin {
 				$this->conf['create'] = $this->parentConf;
 			}
 			$methodHoneypotInstance = t3lib_div::makeInstance('tx_wtspamshield_method_honeypot');
-			$methodHoneypotInstance->additionalValues = $this->additionalValues;
+			$methodHoneypotInstance->additionalValues = $this->additionalValues['honeypotCheck'];
 			$this->markerArray['###HIDDENFIELDS###'] .= $methodHoneypotInstance->createHoneypot();
 			if ($this->spamshieldDisplayError) {
 				$this->markerArray['###HIDDENFIELDS###'] .= $this->spamshieldDisplayError;

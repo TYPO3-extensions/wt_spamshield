@@ -99,7 +99,7 @@ class tx_wtspamshield_ve_guestbook extends tslib_pibase {
 
 				// 3. Honeypot check - generate honeypot Input field
 			$methodHoneypotInstance = t3lib_div::makeInstance('tx_wtspamshield_method_honeypot');
-			$methodHoneypotInstance->additionalValues = $this->additionalValues;
+			$methodHoneypotInstance->additionalValues = $this->additionalValues['honeypotCheck'];
 			$obj->templateCode = str_replace('</form>', $methodHoneypotInstance->createHoneypot() . '</form>', $obj->templateCode);
 		}
 		return $markerArray;
