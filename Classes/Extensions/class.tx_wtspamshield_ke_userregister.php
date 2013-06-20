@@ -116,8 +116,12 @@ class tx_wtspamshield_ke_userregister extends tslib_pibase {
 
 		$error = '';
 
+		$t3Version = class_exists('t3lib_utility_VersionNumber')
+			? t3lib_utility_VersionNumber::convertVersionNumberToInteger(TYPO3_version)
+			: t3lib_div::int_from_ver(TYPO3_version);
+
 			// get GPvars, downwards compatibility
-		if (t3lib_div::int_from_ver(TYPO3_version) < 4006000) {
+		if ($t3Version < 4004000){
 			$validateArray = t3lib_div::GPvar('tx_keuserregister_pi1');
 		} else {
 			$validateArray = t3lib_div::_GP('tx_keuserregister_pi1');
