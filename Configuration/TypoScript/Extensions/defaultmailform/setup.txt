@@ -9,5 +9,5 @@ tt_content.mailform {
     preUserFunc.ifOutdated = 1
     innerWrap = | <input name="uid987651" type="text" style="position: absolute; margin: 0 0 0 -9999px;" value="" />
     no_cache = 1
-	}
+  }
 }
