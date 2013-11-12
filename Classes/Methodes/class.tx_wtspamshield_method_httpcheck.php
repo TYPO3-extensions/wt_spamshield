@@ -54,10 +54,9 @@ class tx_wtspamshield_method_httpcheck extends tx_wtspamshield_method_abstract {
 	/**
 	 * Function validate()
 	 *
-	 * @param mixed $array
 	 * @return string $error Return errormessage if error exists
 	 */
-	public function validate($array) {
+	public function validate() {
 		$extConf = $this->getDiv()->getExtConf();
 
 		if (isset($extConf) && isset($this->fieldValues)) {
