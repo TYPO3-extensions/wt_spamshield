@@ -68,6 +68,19 @@ class tx_wtspamshield_method_session extends tx_wtspamshield_method_abstract {
 	}
 
 	/**
+	 * Save the current Page TS in session (when the form is rendered)
+	 *
+	 * @param string $key
+	 * @return void
+	 */
+	public function saveCurrentTSInSession($key) {
+		$key = 'wt_spamshield_enable_' . $key;
+		$value = $GLOBALS['TSFE']->tmpl->setup['plugin.']['wt_spamshield.'];
+		$GLOBALS['TSFE']->fe_user->setKey('ses', $key, $value);
+		$GLOBALS['TSFE']->storeSessionData();
+	}
+
+	/**
 	 * Return Errormessage if session it runned out
 	 * 
 	 * @return string $error Return errormessage if error exists

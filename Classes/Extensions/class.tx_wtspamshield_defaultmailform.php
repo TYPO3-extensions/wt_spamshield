@@ -95,6 +95,7 @@ class tx_wtspamshield_defaultmailform extends tslib_pibase {
 				// Set session on form create
 			$methodSessionInstance = t3lib_div::makeInstance('tx_wtspamshield_method_session');
 			$methodSessionInstance->setSessionTime($forceValue);
+			$methodSessionInstance->saveCurrentTSInSession('standardMailform');
 		}
 
 		return $content;
@@ -110,11 +111,16 @@ class tx_wtspamshield_defaultmailform extends tslib_pibase {
 	 * @return object $form
 	 */
 	public function sendFormmail_preProcessVariables($form, $obj, $legacyConfArray = array()) {
-		if ( $this->getDiv()->isActivated($this->tsKey) ) {
+		if ( $this->getDiv()->isActivated($this->tsKey, TRUE) ) {
 			$error = $this->validate($form);
 
 				// 2c. Redirect and stop mail sending
 			if (!empty($error)) {
+				$sessionKey = 'wt_spamshield_enable_' . $this->tsKey;
+				$sessionValue = $GLOBALS['TSFE']->fe_user->getKey('ses', $sessionKey);
+				if ($sessionValue) {
+					$this->tsConf = $sessionValue;
+				}
 				$link = (!empty($this->tsConf['redirect.'][$this->tsKey])
 					? $this->tsConf['redirect.'][$this->tsKey]
 					: t3lib_div::getIndpEnv('TYPO3_SITE_URL'));

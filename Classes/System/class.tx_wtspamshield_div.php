@@ -94,13 +94,22 @@ class tx_wtspamshield_div extends tslib_pibase {
 	 * @param string $extension
 	 * @return boolean
 	 */
-	public function isActivated($extension) {
+	public function isActivated($extension, $sessionLookup = FALSE) {
+		if ($sessionLookup) {
+			$sessionKey = 'wt_spamshield_enable_' . $extension;
+			$sessionValue = $GLOBALS['TSFE']->fe_user->getKey('ses', $sessionKey);
+			if (isset($sessionValue['enable.'][$extension])) {
+				return TRUE;
+			}
+		}
+
 		$tsConf = $this->getTsConf();
 		if (!empty($tsConf['enable.'][$extension])
 			&& $this->spamshieldIsNotDisabled()
 		) {
 			return TRUE;
 		}
+
 		return FALSE;
 	}
 
