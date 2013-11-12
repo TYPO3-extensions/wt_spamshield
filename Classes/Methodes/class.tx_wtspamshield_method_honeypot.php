@@ -84,14 +84,14 @@ class tx_wtspamshield_method_honeypot extends tx_wtspamshield_method_abstract {
 	public function validate() {
 		$extConf = $this->getDiv()->getExtConf();
 
-		if (!empty($this->fieldValues[ $this->additionalValues['honeypotInputName'] ])
+		if (!empty($this->fieldValues[$this->additionalValues['honeypotInputName']])
 			&& isset($extConf)
 			&& $extConf['honeypotCheck']
 		) {
 			$tsConf = $this->getDiv()->getTsConf();
 			return $this->renderCobj($tsConf['errors.'], 'honeypot');
 		}
-		unset($this->fieldValues[ $this->additionalValues['honeypotInputName'] ]);
+		unset($this->fieldValues[$this->additionalValues['honeypotInputName']]);
 
 		return '';
 	}
