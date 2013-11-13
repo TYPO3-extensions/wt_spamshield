@@ -1,3 +1,16 @@
+1.1.1
+	2013-11-12
+	Ralf Zimmermann <ralf.zimmermann@tritum.de>
+
+	* ADD feature #52840: Autofill covers honeypot field
+	* FIX #52455: Redirect and log doesn't work in 6.1.4+
+	* FIX #51281: Missing argument 1 for tx_wtspamshield_method_httpcheck::validate()
+	* ADD feature #50903: Use wt_spamshield old mailform on TYPO3 >= 4.6 (add static template)
+
+	Bjoern Jacob <bjoern.jacob@tritum.de>
+
+	* UPD: update of manual
+
 1.1.0
 	2013-06-20
 	Ralf Zimmermann <ralf.zimmermann@tritum.de>
