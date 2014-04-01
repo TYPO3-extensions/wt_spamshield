@@ -18,6 +18,9 @@ plugin.wt_spamshield {
   # cat=wt_spamshield main//0040; type=boolean; label= Protect powermail: Enable spamshield for powermail (version 1.x)
   powermail = 0
 
+  # cat=wt_spamshield main//0045; type=boolean; label= Protect powermail: Enable spamshield for powermail (version 2.x)
+  powermail2 = 0
+
   # cat=wt_spamshield main//0050; type=boolean; label= Protect t3_blog: Enable spamshield for t3_blog
   t3_blog = 0
 
@@ -41,6 +44,12 @@ plugin.wt_spamshield {
 
   # cat=wt_spamshield main//0125; type=text; label= failure rate for powermail: how many validators can fail
   validators.powermail.how_many_validators_can_fail = 0
+
+  # cat=wt_spamshield main//0127; type=text; label= validators for powermail2: available validators are akismetCheck
+  validators.powermail2.enable = akismetCheck
+
+  # cat=wt_spamshield main//0128; type=text; label= failure rate for powermail2: how many validators can fail
+  validators.powermail2.how_many_validators_can_fail = 0
 
   # cat=wt_spamshield main//0130; type=text; label= validators for ve_guestbook: available validators are blacklistCheck, nameCheck, sessionCheck, httpCheck, honeypotCheck, akismetCheck
   validators.ve_guestbook.enable = blacklistCheck, nameCheck, sessionCheck, httpCheck, honeypotCheck, akismetCheck
