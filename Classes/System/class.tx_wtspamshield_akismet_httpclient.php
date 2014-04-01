@@ -101,7 +101,7 @@ class tx_wtspamshield_akismet_httpclient extends tx_wtspamshield_akismet_object 
 					$path .
 					" HTTP/1.1\r\n" .
 					'Host: ' .
-					( ( !empty($this->apiKey) )
+					( ( strlen($this->apiKey) > 0 )
 						? $this->apiKey  . '.'
 						: NULL
 					) .

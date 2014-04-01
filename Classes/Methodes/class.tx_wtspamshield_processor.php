@@ -104,7 +104,7 @@ class tx_wtspamshield_processor {
 				$methodInstance->additionalValues = $this->additionalValues[$method];
 				$methodInstance->tsKey = $this->tsKey;
 				$methodReturn = $methodInstance->validate();
-				if (!empty($methodReturn)) {
+				if (strlen($methodReturn) > 0) {
 					$this->currentFailures++;
 					$this->errorMessages[] = $methodReturn;
 				}

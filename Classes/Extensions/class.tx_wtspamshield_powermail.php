@@ -120,7 +120,7 @@ class tx_wtspamshield_powermail extends tslib_pibase {
 			$error = $this->validate($sessiondata);
 
 				// 2c. Return Error message if exists
-			if (!empty($error)) {
+			if (strlen($error) > 0) {
 				return '<div class="wtspamshield-errormsg">' . $error . '</div>';
 			}
 		}

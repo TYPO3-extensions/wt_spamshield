@@ -58,7 +58,6 @@ class tx_wtspamshield_method_akismet extends tx_wtspamshield_method_abstract {
 
 		if (isset($extConf)) {
 			if ($extConf['AkismetKey']) {
-
 				$akismetArray = array();
 				$tsConf = $this->getDiv()->getTsConf();
 

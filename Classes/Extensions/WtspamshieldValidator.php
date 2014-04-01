@@ -98,7 +98,7 @@ class WtspamshieldValidator extends \TYPO3\CMS\Form\Validation\AbstractValidator
 				$error = $this->validate($validateArray);
 			}
 
-			if (!empty($error)) {
+			if (strlen($error) > 0) {
 				$this->setError('', strip_tags($error));
 				return FALSE;
 			}

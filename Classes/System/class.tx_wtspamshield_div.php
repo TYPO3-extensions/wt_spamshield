@@ -104,7 +104,7 @@ class tx_wtspamshield_div extends tslib_pibase {
 		}
 
 		$tsConf = $this->getTsConf();
-		if (!empty($tsConf['enable.'][$extension])
+		if (intval($tsConf['enable.'][$extension]) == 1
 			&& $this->spamshieldIsNotDisabled()
 		) {
 			return TRUE;

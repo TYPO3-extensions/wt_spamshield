@@ -115,13 +115,13 @@ class tx_wtspamshield_defaultmailform extends tslib_pibase {
 			$error = $this->validate($form);
 
 				// 2c. Redirect and stop mail sending
-			if (!empty($error)) {
+			if (strlen($error) > 0) {
 				$sessionKey = 'wt_spamshield_enable_' . $this->tsKey;
 				$sessionValue = $GLOBALS['TSFE']->fe_user->getKey('ses', $sessionKey);
 				if ($sessionValue) {
 					$this->tsConf = $sessionValue;
 				}
-				$link = (!empty($this->tsConf['redirect.'][$this->tsKey])
+				$link = (strlen($this->tsConf['redirect.'][$this->tsKey]) > 0
 					? $this->tsConf['redirect.'][$this->tsKey]
 					: t3lib_div::getIndpEnv('TYPO3_SITE_URL'));
 				header('HTTP/1.1 301 Moved Permanently');

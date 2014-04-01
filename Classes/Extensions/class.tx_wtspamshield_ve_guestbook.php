@@ -135,7 +135,7 @@ class tx_wtspamshield_ve_guestbook extends tslib_pibase {
 			}
 
 				// 2d. Redirect if error happens
-			if (!empty($error)) {
+			if (strlen($error) > 0) {
 				$saveData = array('tstamp' => time());
 				$obj->strEntryTable = 'tx_wtspamshield_veguestbooktemp';
 				$obj->config['notify_mail'] = '';

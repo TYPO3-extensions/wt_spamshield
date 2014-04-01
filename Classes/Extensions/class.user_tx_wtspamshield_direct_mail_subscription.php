@@ -119,7 +119,7 @@ class user_tx_wtspamshield_direct_mail_subscription extends user_feAdmin {
 			$validateArray = $this->dataArr;
 			$error = $this->validate($validateArray);
 
-			if (!empty($error)) {
+			if (strlen($error) > 0) {
 					// $this->error='###TEMPLATE_NO_PERMISSIONS###';
 				$this->saved = 0;
 				$this->cmd = 'create';

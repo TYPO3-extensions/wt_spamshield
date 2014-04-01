@@ -90,7 +90,7 @@ class tx_wtspamshield_t3blog extends tslib_pibase {
 
 			$error = $this->validate($validateArray);
 
-			if (!empty($error)) {
+			if (strlen($error) > 0) {
 					// Right now we cannot set errorMessage because it is
 					// protected, see forge.typo3.org #42615
 					// $reference->errorMessage = $error;

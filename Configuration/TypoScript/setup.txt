@@ -13,10 +13,6 @@ plugin.wt_spamshield {
       enable = {$plugin.wt_spamshield.validators.powermail.enable}
       how_many_validators_can_fail = {$plugin.wt_spamshield.validators.powermail.how_many_validators_can_fail}
     }
-    powermail2 {
-      enable = {$plugin.wt_spamshield.validators.powermail2.enable}
-      how_many_validators_can_fail = {$plugin.wt_spamshield.validators.powermail2.how_many_validators_can_fail}
-    }
     ve_guestbook {
       enable = {$plugin.wt_spamshield.validators.ve_guestbook.enable}
       how_many_validators_can_fail = {$plugin.wt_spamshield.validators.ve_guestbook.how_many_validators_can_fail}
@@ -42,7 +38,6 @@ plugin.wt_spamshield {
   enable {
     standardMailform = {$plugin.wt_spamshield.mailform}
     powermail = {$plugin.wt_spamshield.powermail}
-    powermail2 = {$plugin.wt_spamshield.powermail2}
     ve_guestbook = {$plugin.wt_spamshield.ve_guestbook}
     comments = {$plugin.wt_spamshield.comments}
     t3_blog = {$plugin.wt_spamshield.t3_blog}
@@ -164,13 +159,6 @@ plugin.wt_spamshield {
       homepage =
       body =
       permalink =
-    }
-    powermail2 {
-      author =
-      email =
-      homepage =
-      body =
-      permalink = 
     }
     t3_blog {
       author = author
