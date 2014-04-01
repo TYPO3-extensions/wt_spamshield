@@ -70,4 +70,17 @@ $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['tx_keuserregister']['specialEvaluations'
 	// Hook t3_blog
 $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['t3blog']['aftercommentinsertion'][]
 	= 'EXT:wt_spamshield/Classes/Extensions/class.tx_wtspamshield_t3blog.php:tx_wtspamshield_t3blog->insertNewComment';
+
+	// Register tx_wtspamshield_log table in table garbage collection task
+if ($t3Version >= 6000000) {
+	$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['scheduler']['tasks']['TYPO3\CMS\Scheduler\Task\TableGarbageCollectionTask']['options']['tables']['tx_wtspamshield_log'] = array(
+		'dateField' => 'tstamp',
+		'expirePeriod' => 180,
+	);
+} elseif ($t3Version >= 4007000) {
+	$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['scheduler']['tasks']['tx_scheduler_TableGarbageCollection']['options']['tables']['tx_wtspamshield_log'] = array(
+		'dateField' => 'tstamp',
+		'expirePeriod' => 180,
+	);
+}
 ?>
