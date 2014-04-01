@@ -54,7 +54,7 @@ class tx_wtspamshield_method_honeypot extends tx_wtspamshield_method_abstract {
 	public function createHoneypot() {
 		$extConf = $this->getDiv()->getExtConf();
 
-		if(isset($extConf)) {
+		if (isset($extConf)) {
 			if ($extConf['honeypotCheck']) {
 				$tsConf = $this->getDiv()->getTsConf();
 				$cObjType = $tsConf['honeypot.']['explanation'];

@@ -113,7 +113,7 @@ class tx_form_System_Validate_Wtspamshield extends tx_form_System_Validate_Abstr
 	 */
 	protected function validate(array $fieldValues) {
 
-		$availableValidators = 
+		$availableValidators =
 			array(
 				'blacklistCheck',
 				'httpCheck',

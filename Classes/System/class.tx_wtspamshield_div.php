@@ -145,7 +145,7 @@ class tx_wtspamshield_div extends tslib_pibase {
 	 * @return mixed
 	 */
 	public function getExtConf() {
-		if(!isset($this->extConf)) {
+		if (!isset($this->extConf)) {
 			$extConf = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf'][$this->extKey]);
 			if ( !is_array($extConf) ) {
 				echo $this->msg('Please open ' . $this->extKey . ' in the Extension Manager, scroll down and click "Update"');

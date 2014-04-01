@@ -115,7 +115,7 @@ class WtspamshieldValidator extends \TYPO3\CMS\Form\Validation\AbstractValidator
 	 */
 	protected function validate(array $fieldValues) {
 
-		$availableValidators = 
+		$availableValidators =
 			array(
 				'blacklistCheck',
 				'httpCheck',

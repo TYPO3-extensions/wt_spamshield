@@ -121,7 +121,7 @@ class tx_wtspamshield_ke_userregister extends tslib_pibase {
 			: t3lib_div::int_from_ver(TYPO3_version);
 
 			// get GPvars, downwards compatibility
-		if ($t3Version < 4004000){
+		if ($t3Version < 4004000) {
 			$validateArray = t3lib_div::GPvar('tx_keuserregister_pi1');
 		} else {
 			$validateArray = t3lib_div::_GP('tx_keuserregister_pi1');
@@ -149,7 +149,7 @@ class tx_wtspamshield_ke_userregister extends tslib_pibase {
 		$this->additionalValues['nameCheck']['name1'] = $fieldValues['first_name'];
 		$this->additionalValues['nameCheck']['name2'] = $fieldValues['last_name'];
 
-		$availableValidators = 
+		$availableValidators =
 			array(
 				'blacklistCheck',
 				'nameCheck',

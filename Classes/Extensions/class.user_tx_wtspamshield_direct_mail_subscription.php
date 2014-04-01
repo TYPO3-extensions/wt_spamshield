@@ -140,7 +140,7 @@ class user_tx_wtspamshield_direct_mail_subscription extends user_feAdmin {
 	 */
 	protected function validate(array $fieldValues) {
 
-		$availableValidators = 
+		$availableValidators =
 			array(
 				'blacklistCheck',
 				'httpCheck',

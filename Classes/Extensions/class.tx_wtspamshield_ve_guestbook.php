@@ -162,7 +162,7 @@ class tx_wtspamshield_ve_guestbook extends tslib_pibase {
 		$this->additionalValues['nameCheck']['name1'] = $fieldValues['firstname'];
 		$this->additionalValues['nameCheck']['name2'] = $fieldValues['surname'];
 
-		$availableValidators = 
+		$availableValidators =
 			array(
 				'blacklistCheck',
 				'nameCheck',

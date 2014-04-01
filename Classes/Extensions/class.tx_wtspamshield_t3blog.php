@@ -108,7 +108,7 @@ class tx_wtspamshield_t3blog extends tslib_pibase {
 	 */
 	protected function validate(array $fieldValues) {
 
-		$availableValidators = 
+		$availableValidators =
 			array(
 				'httpCheck',
 				'akismetCheck',

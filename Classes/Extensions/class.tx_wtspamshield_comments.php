@@ -141,7 +141,7 @@ class tx_wtspamshield_comments extends tslib_pibase {
 		$this->additionalValues['nameCheck']['name1'] = $fieldValues['firstname'];
 		$this->additionalValues['nameCheck']['name2'] = $fieldValues['lastname'];
 
-		$availableValidators = 
+		$availableValidators =
 			array(
 				'blacklistCheck',
 				'nameCheck',

@@ -84,9 +84,13 @@ class tx_wtspamshield_log extends tslib_pibase {
 				? t3lib_utility_VersionNumber::convertVersionNumberToInteger(TYPO3_version)
 				: t3lib_div::int_from_ver(TYPO3_version);
 			if ($t3Version < 4007000) {
-				$dbValues += array('formvalues' => t3lib_div::view_array($formArray) . t3lib_div::view_array($errorMessages));
+				$dbValues += array(
+					'formvalues' => t3lib_div::view_array($formArray) . t3lib_div::view_array($errorMessages)
+				);
 			} else {
-				$dbValues += array('formvalues' => t3lib_utility_Debug::viewArray($formArray) . t3lib_utility_Debug::viewArray($errorMessages));
+				$dbValues += array(
+					'formvalues' => t3lib_utility_Debug::viewArray($formArray) . t3lib_utility_Debug::viewArray($errorMessages)
+				);
 			}
 
 			$GLOBALS['TYPO3_DB']->exec_INSERTquery('tx_wtspamshield_log', $dbValues);

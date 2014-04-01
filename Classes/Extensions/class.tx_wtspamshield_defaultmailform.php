@@ -142,7 +142,7 @@ class tx_wtspamshield_defaultmailform extends tslib_pibase {
 	 */
 	protected function validate(array $fieldValues) {
 
-		$availableValidators = 
+		$availableValidators =
 			array(
 				'blacklistCheck',
 				'httpCheck',

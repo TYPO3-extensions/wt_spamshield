@@ -136,7 +136,7 @@ class tx_wtspamshield_powermail extends tslib_pibase {
 	 */
 	protected function validate(array $fieldValues) {
 
-		$availableValidators = 
+		$availableValidators =
 			array(
 				'blacklistCheck',
 				'sessionCheck',
