@@ -27,6 +27,9 @@ plugin.wt_spamshield {
   # cat=wt_spamshield main//0060; type=boolean; label= Protect ve_guestbook: Enable spamshield for ve_guestbook
   ve_guestbook = 0
 
+  # cat=wt_spamshield main//0070; type=boolean; label= Protect pbsurvey: Enable spamshield for pbsurvey
+  pbsurvey = 0
+
   # cat=wt_spamshield main//0100; type=text; label= validators for standardMailform >= TYPO3 4.6: available validators are blacklistCheck, httpCheck, honeypotCheck
   validators.standardMailform_new.enable = blacklistCheck, httpCheck, honeypotCheck
 
@@ -81,6 +84,12 @@ plugin.wt_spamshield {
   # cat=wt_spamshield main//0175; type=text; label= failure rate for ke_userregister: how many validators can fail
   validators.ke_userregister.how_many_validators_can_fail = 0
 
+  # cat=wt_spamshield main//0180; type=text; label= validators for pbsurvey: available validators are httpCheck, sessionCheck, honeypotCheck
+  validators.pbsurvey.enable = httpCheck, sessionCheck, honeypotCheck
+
+  # cat=wt_spamshield main//0185; type=text; label= failure rate for pbsurvey: how many validators can fail
+  validators.pbsurvey.how_many_validators_can_fail = 0
+
   # cat=wt_spamshield main//0200; type=text; label= Mailform Redirect: Redirect URL for default mailform
   redirect_mailform =
 
@@ -110,4 +119,7 @@ plugin.wt_spamshield {
 
   # cat=wt_spamshield main//0470; type=text; label= Honeyput input name for ke_userregister
   honeypot.inputname.ke_userregister = uid987651
+
+  # cat=wt_spamshield main//0480; type=text; label= Honeyput input name for pbsurvey
+  honeypot.inputname.pbsurvey = uid987651
 }

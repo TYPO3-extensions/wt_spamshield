@@ -37,6 +37,10 @@ plugin.wt_spamshield {
       enable = {$plugin.wt_spamshield.validators.ke_userregister.enable}
       how_many_validators_can_fail = {$plugin.wt_spamshield.validators.ke_userregister.how_many_validators_can_fail}
     }
+    pbsurvey {
+      enable = {$plugin.wt_spamshield.validators.pbsurvey.enable}
+      how_many_validators_can_fail = {$plugin.wt_spamshield.validators.pbsurvey.how_many_validators_can_fail}
+    }
   }
 
   enable {
@@ -48,6 +52,7 @@ plugin.wt_spamshield {
     t3_blog = {$plugin.wt_spamshield.t3_blog}
     direct_mail_subscription = {$plugin.wt_spamshield.direct_mail_subscription}
     ke_userregister = {$plugin.wt_spamshield.ke_userregister}
+    pbsurvey = {$plugin.wt_spamshield.pbsurvey}
   }
 
   redirect {
@@ -75,6 +80,7 @@ plugin.wt_spamshield {
       comments = {$plugin.wt_spamshield.honeypot.inputname.comments}
       direct_mail_subscription = {$plugin.wt_spamshield.honeypot.inputname.direct_mail_subscription}
       ke_userregister = {$plugin.wt_spamshield.honeypot.inputname.ke_userregister}
+      pbsurvey = {$plugin.wt_spamshield.honeypot.inputname.pbsurvey}
     }
   }
 

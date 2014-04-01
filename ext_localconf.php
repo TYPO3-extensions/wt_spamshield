@@ -71,6 +71,14 @@ $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['tx_keuserregister']['specialEvaluations'
 $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['t3blog']['aftercommentinsertion'][]
 	= 'EXT:wt_spamshield/Classes/Extensions/class.tx_wtspamshield_t3blog.php:tx_wtspamshield_t3blog->insertNewComment';
 
+	// Hook pbsurvey: Generate Form
+$GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['pbsurvey']['tx_pbsurvey_pi1']['processHookItem'][]
+	= 'EXT:wt_spamshield/Classes/Extensions/class.tx_wtspamshield_pbsurvey.php:tx_wtspamshield_pbsurvey';
+
+	// Hook pbsurvey: Give error to guestbook
+$GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['pbsurvey']['externalFormValidation'][]
+	= 'EXT:wt_spamshield/Classes/Extensions/class.tx_wtspamshield_pbsurvey.php:tx_wtspamshield_pbsurvey';
+
 	// Register tx_wtspamshield_log table in table garbage collection task
 if ($t3Version >= 6000000) {
 	$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['scheduler']['tasks']['TYPO3\CMS\Scheduler\Task\TableGarbageCollectionTask']['options']['tables']['tx_wtspamshield_log'] = array(
