@@ -92,15 +92,11 @@ class tx_wtspamshield_comments extends tslib_pibase {
 		$markers = $params['markers'];
 
 		if ( $this->getDiv()->isActivated( $this->tsKey ) ) {
-
-				// 1. check Extension Manager configuration
-			$this->getDiv()->getExtConf();
-
-				// 2. Session check - generate session entry
+				// Session check - generate session entry
 			$methodSessionInstance = t3lib_div::makeInstance('tx_wtspamshield_method_session');
 			$methodSessionInstance->setSessionTime();
 
-				// 3. Honeypot check - generate honeypot Input field
+				// Honeypot check - generate honeypot Input field
 			$methodHoneypotInstance = t3lib_div::makeInstance('tx_wtspamshield_method_honeypot');
 			$methodHoneypotInstance->additionalValues = $this->additionalValues['honeypotCheck'];
 			$markers['###JS_USER_DATA###'] = $methodHoneypotInstance->createHoneypot() . $markers['###JS_USER_DATA###'];

@@ -51,15 +51,16 @@ class tx_wtspamshield_log extends tslib_pibase {
 	 * @return string
 	 */
 	public function dbLog($ext, $points, $errorMessages, $formArray) {
-		$conf = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf'][$this->extKey]);
+		$div = t3lib_div::makeInstance('tx_wtspamshield_div');
+		$tsConf = $div->getTsConf();
 
-		if (isset($conf) && $this->dbInsert) {
-			if ($conf['pid'] == -1) {
+		if ($this->dbInsert) {
+			if ($tsConf['logging.']['pid'] == -1) {
 				return FALSE;
 			}
 
-			if ($conf['pid'] == -2) {
-				$conf['pid'] = $GLOBALS['TSFE']->id;
+			if ($tsConf['logging.']['pid'] == -2) {
+				$tsConf['logging.']['pid'] = $GLOBALS['TSFE']->id;
 			}
 
 			$title = date('d.m.Y H:i:s', time()) . ' - ' .
@@ -69,7 +70,7 @@ class tx_wtspamshield_log extends tslib_pibase {
 			$errorMessage = 'Score: ' . $points;
 
 			$dbValues = array (
-				'pid' => intval($conf['pid']),
+				'pid' => intval($tsConf['logging.']['pid']),
 				'tstamp' => time(),
 				'crdate' => time(),
 				'title' => $title,

@@ -87,14 +87,11 @@ class tx_wtspamshield_powermail extends tslib_pibase {
 	public function PM_FormWrapMarkerHook($outerMarkerArray, &$subpartArray, $conf, $obj) {
 
 		if ( $this->getDiv()->isActivated($this->tsKey) ) {
-				// 1. check Extension Manager configuration
-			$this->getDiv()->getExtConf();
-
-				// 2. Set session on form create
+				// Set session on form create
 			$methodSessionInstance = t3lib_div::makeInstance('tx_wtspamshield_method_session');
 			$methodSessionInstance->setSessionTime();
 
-				// 3. Add Honeypot
+				// Add Honeypot
 			$methodHoneypotInstance = t3lib_div::makeInstance('tx_wtspamshield_method_honeypot');
 			$methodHoneypotInstance->additionalValues = $this->additionalValues['honeypotCheck'];
 			$subpartArray['###POWERMAIL_CONTENT###'] .= $methodHoneypotInstance->createHoneypot();
@@ -119,7 +116,7 @@ class tx_wtspamshield_powermail extends tslib_pibase {
 
 			$error = $this->validate($sessiondata);
 
-				// 2c. Return Error message if exists
+				// Return Error message if exists
 			if (strlen($error) > 0) {
 				return '<div class="wtspamshield-errormsg">' . $error . '</div>';
 			}

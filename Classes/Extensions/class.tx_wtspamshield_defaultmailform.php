@@ -89,7 +89,6 @@ class tx_wtspamshield_defaultmailform extends tslib_pibase {
 	 */
 	public function generateSession($content, array $configuration = NULL) {
 		if ( $this->getDiv()->isActivated($this->tsKey) ) {
-			$this->getDiv()->getExtConf();
 			$forceValue = !(isset($configuration['ifOutdated']) && $configuration['ifOutdated']);
 
 				// Set session on form create

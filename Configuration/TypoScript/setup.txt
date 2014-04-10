@@ -1,5 +1,10 @@
 plugin.wt_spamshield {
 
+  logging {
+    notificationAddress = {$plugin.wt_spamshield.logging.notificationAddress}
+    pid = {$plugin.wt_spamshield.logging.pid}
+  }
+
   validators {
     standardMailform_new {
       enable = {$plugin.wt_spamshield.validators.standardMailform_new.enable}
@@ -58,6 +63,23 @@ plugin.wt_spamshield {
   redirect {
     standardMailform = {$plugin.wt_spamshield.redirect_mailform}
     ve_guestbook = {$plugin.wt_spamshield.redirect_ve_guestbook}
+  }
+
+  httpCheck {
+    maximumLinkAmount = {$plugin.wt_spamshield.httpCheck.maximumLinkAmount}
+  }
+
+  uniqueCheck {
+    fields = {$plugin.wt_spamshield.uniqueCheck.fields}
+  }
+
+  akismetCheck {
+    akismetKey = {$plugin.wt_spamshield.akismetCheck.akismetKey}
+  }
+
+  sessionCheck {
+    sessionStartTime = {$plugin.wt_spamshield.sessionCheck.sessionStartTime}
+    sessionEndTime = {$plugin.wt_spamshield.sessionCheck.sessionEndTime}
   }
 
   honeypot {
@@ -172,10 +194,10 @@ plugin.wt_spamshield {
       permalink =
     }
     powermail2 {
-      author = 1
-      email = 2
-      homepage = 3
-      body = 5
+      author =
+      email =
+      homepage =
+      body =
       permalink = 
     }
     t3_blog {

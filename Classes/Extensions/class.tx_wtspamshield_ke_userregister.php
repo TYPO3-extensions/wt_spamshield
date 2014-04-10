@@ -85,14 +85,11 @@ class tx_wtspamshield_ke_userregister extends tslib_pibase {
 	 */
 	public function additionalMarkers(&$markerArray, $pObj, $errors) {
 		if ( $this->getDiv()->isActivated($this->tsKey) ) {
-				// 1. check Extension Manager configuration
-			$this->getDiv()->getExtConf();
-
-				// 2. Session check - generate session entry
+				// Session check - generate session entry
 			$methodSessionInstance = t3lib_div::makeInstance('tx_wtspamshield_method_session');
 			$methodSessionInstance->setSessionTime();
 
-				// 3. Honeypot check - generate honeypot Input field
+				// Honeypot check - generate honeypot Input field
 			$methodHoneypotInstance = t3lib_div::makeInstance('tx_wtspamshield_method_honeypot');
 			$methodHoneypotInstance->additionalValues = $this->additionalValues['honeypotCheck'];
 			$pObj->templateCode = str_replace('</form>', $methodHoneypotInstance->createHoneypot() . '</form>', $pObj->templateCode);
@@ -130,7 +127,7 @@ class tx_wtspamshield_ke_userregister extends tslib_pibase {
 		if ( $this->getDiv()->isActivated($this->tsKey) ) {
 
 			$error = $this->validate($validateArray);
-				// 2c. Error message
+				// Error message
 			if ($error) {
 					// Workaround: create field via TS and put it in HTML
 					// template of ke_userregister

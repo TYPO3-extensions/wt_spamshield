@@ -52,28 +52,21 @@ class tx_wtspamshield_method_honeypot extends tx_wtspamshield_method_abstract {
 	 * @return string $code Return form field (honeypot)
 	 */
 	public function createHoneypot() {
-		$extConf = $this->getDiv()->getExtConf();
+		$tsConf = $this->getDiv()->getTsConf();
+		$cObjType = $tsConf['honeypot.']['explanation'];
+		$cObjvalues = $tsConf['honeypot.']['explanation.'];
+		$lll = $cObjvalues['value'];
+		$cObjvalues['value'] = $this->getL10n($lll);
+		$code = $this->cObj->cObjGetSingle($cObjType, $cObjvalues);
 
-		if (isset($extConf)) {
-			if ($extConf['honeypotCheck']) {
-				$tsConf = $this->getDiv()->getTsConf();
-				$cObjType = $tsConf['honeypot.']['explanation'];
-				$cObjvalues = $tsConf['honeypot.']['explanation.'];
-				$lll = $cObjvalues['value'];
-				$cObjvalues['value'] = $this->getL10n($lll);
-				$code = $this->cObj->cObjGetSingle($cObjType, $cObjvalues);
+		$code .= '<input type="text" autocomplete="off" name="';
+		$code .= $this->additionalValues['prefixInputName'] . '[' . $this->additionalValues['honeypotInputName'] . ']"';
+		$code .= ' ' . $tsConf['honeypot.']['css.']['inputStyle'];
+		$code .= ' value=""';
+		$code .= ' ' . $tsConf['honeypot.']['css.']['inputClass'];
+		$code .= ' />';
 
-				$code .= '<input type="text" autocomplete="off" name="';
-				$code .= $this->additionalValues['prefixInputName'] . '[' . $this->additionalValues['honeypotInputName'] . ']"';
-				$code .= ' ' . $tsConf['honeypot.']['css.']['inputStyle'];
-				$code .= ' value=""';
-				$code .= ' ' . $tsConf['honeypot.']['css.']['inputClass'];
-				$code .= ' />';
-
-				return $code;
-			}
-		}
-		return '';
+		return $code;
 	}
 
 	/**
@@ -82,12 +75,8 @@ class tx_wtspamshield_method_honeypot extends tx_wtspamshield_method_abstract {
 	 * @return string $error Return errormessage if error exists
 	 */
 	public function validate() {
-		$extConf = $this->getDiv()->getExtConf();
 
-		if (strlen($this->fieldValues[$this->additionalValues['honeypotInputName']]) > 0
-			&& isset($extConf)
-			&& $extConf['honeypotCheck']
-		) {
+		if (strlen($this->fieldValues[$this->additionalValues['honeypotInputName']]) > 0) {
 			$tsConf = $this->getDiv()->getTsConf();
 			return $this->renderCobj($tsConf['errors.'], 'honeypot');
 		}

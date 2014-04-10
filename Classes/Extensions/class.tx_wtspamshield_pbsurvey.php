@@ -84,14 +84,13 @@ class tx_wtspamshield_pbsurvey extends tslib_pibase {
 	 */
 	public function hookItemProcessor($arrItem, &$pObj) {
 		$strOutput = '';
-		if ($this->getDiv()->isActivated($this->tsKey)) {
-			$this->getDiv()->getExtConf();
 
-				// 2. Session check - generate session entry
+		if ($this->getDiv()->isActivated($this->tsKey)) {
+				// Session check - generate session entry
 			$methodSessionInstance = t3lib_div::makeInstance('tx_wtspamshield_method_session');
 			$methodSessionInstance->setSessionTime();
 
-				// 3. Honeypot check - generate honeypot Input field
+				// Honeypot check - generate honeypot Input field
 			$methodHoneypotInstance = t3lib_div::makeInstance('tx_wtspamshield_method_honeypot');
 			$methodHoneypotInstance->additionalValues = $this->additionalValues['honeypotCheck'];
 			$strOutput = $methodHoneypotInstance->createHoneypot();
@@ -109,43 +108,45 @@ class tx_wtspamshield_pbsurvey extends tslib_pibase {
 	 * @return string $strOutput
 	 */
 	public function validateForm($arrValidation, $piVars, &$arrError, &$pObj) {
-		$stringTypes = array(2,4,5,10,12,13,14,15);
+		if ($this->getDiv()->isActivated($this->tsKey)) {
+			$stringTypes = array(2,4,5,10,12,13,14,15);
 
-		$validationFieds = array();
+			$validationFieds = array();
 
-		$honeypotInputName = $this->additionalValues['honeypotCheck']['honeypotInputName'];
-		$honeypotInputValue = $piVars[$honeypotInputName];
-		$validationFieds[$honeypotInputName] = $honeypotInputValue;
+			$honeypotInputName = $this->additionalValues['honeypotCheck']['honeypotInputName'];
+			$honeypotInputValue = $piVars[$honeypotInputName];
+			$validationFieds[$honeypotInputName] = $honeypotInputValue;
 
-		foreach($arrValidation as $intKey => $arrQuestionValidation) {
-			if (isset($piVars[$intKey])) {
-				$strTotalValue = '';
+			foreach($arrValidation as $intKey => $arrQuestionValidation) {
+				if (isset($piVars[$intKey])) {
+					$strTotalValue = '';
 
-				foreach($piVars[$intKey] as $intRow => $arrRowValue) {
-					if (!is_array($arrRowValue)) {
-						$intRow = $arrRowValue;
-						$arrRowValue = array(0 => $arrRowValue);
-					}
-					foreach ($arrRowValue as $intColumn => $strValue) {
-						if (in_array($arrQuestionValidation['type'], $stringTypes)
-							&& !empty($strValue)
-						) {
-							$strTotalValue = $strValue;
+					foreach($piVars[$intKey] as $intRow => $arrRowValue) {
+						if (!is_array($arrRowValue)) {
+							$intRow = $arrRowValue;
+							$arrRowValue = array(0 => $arrRowValue);
 						}
+						foreach ($arrRowValue as $intColumn => $strValue) {
+							if (in_array($arrQuestionValidation['type'], $stringTypes)
+								&& !empty($strValue)
+							) {
+								$strTotalValue = $strValue;
+							}
 
-						if ($arrQuestionValidation['type'] == 7) {
-							$strTotalValue .= ' ' . $strValue;
+							if ($arrQuestionValidation['type'] == 7) {
+								$strTotalValue .= ' ' . $strValue;
+							}
 						}
 					}
+					$validationFieds[$intKey] = $strTotalValue;
 				}
-				$validationFieds[$intKey] = $strTotalValue;
 			}
-		}
 
-		$error = $this->validate($validationFieds);
+			$error = $this->validate($validationFieds);
 
-		if (strlen($error) > 0) {
-			$arrError[] = $error;
+			if (strlen($error) > 0) {
+				$arrError[] = $error;
+			}
 		}
 	}
 

@@ -79,25 +79,27 @@ class tx_wtspamshield_powermail2 extends Tx_Powermail_Domain_Validator_CustomVal
 	 * @return void
 	 */
 	function validate($fields, $controller) {
-		$availableValidators = 
-			array(
-				'akismetCheck',
-			);
+		if ( $this->getDiv()->isActivated($this->tsKey) ) {
+			$availableValidators = 
+				array(
+					'akismetCheck',
+				);
 
-		$tsValidators = $this->getDiv()->commaListToArray($this->tsConf['validators.'][$this->tsKey . '.']['enable']);
+			$tsValidators = $this->getDiv()->commaListToArray($this->tsConf['validators.'][$this->tsKey . '.']['enable']);
 
-		$processor = $this->getDiv()->getProcessor();
-		$processor->tsKey = $this->tsKey;
-		$processor->fieldValues = $fields;
-		$processor->additionalValues = $this->additionalValues;
-		$processor->failureRate = intval($this->tsConf['validators.'][$this->tsKey . '.']['how_many_validators_can_fail']);
-		$processor->methodes = array_intersect($tsValidators, $availableValidators);
+			$processor = $this->getDiv()->getProcessor();
+			$processor->tsKey = $this->tsKey;
+			$processor->fieldValues = $fields;
+			$processor->additionalValues = $this->additionalValues;
+			$processor->failureRate = intval($this->tsConf['validators.'][$this->tsKey . '.']['how_many_validators_can_fail']);
+			$processor->methodes = array_intersect($tsValidators, $availableValidators);
 
-		$error = $processor->validate();
+			$error = $processor->validate();
 
-		if (strlen($error) > 0) {
-			$controller->addError('spam_details', 50 . '%');
-			$controller->isValid = FALSE;
+			if (strlen($error) > 0) {
+				$controller->addError('spam_details', 50 . '%');
+				$controller->isValid = FALSE;
+			}
 		}
 	}
 }
