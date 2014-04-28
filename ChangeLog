@@ -1,3 +1,21 @@
+1.2.0
+	2014-04-28
+	Ralf Zimmermann <ralf.zimmermann@tritum.de>
+
+	* ADD feature #57645: Compatibility with TYPO3 CMS 6.2
+	* ADD feature #48612: Powermail 2.x support
+	* ADD feature #57512: Include checks for pbsurvey
+	* ADD feature #53574: Add garbage collection task
+	* ADD feature #52840: Autofill covers honeypot field
+	* ADD feature #57523: Remove fields from global settings in extension manager
+	* FIX #53920: Honeypot field validation
+	* TASK #58302, 57944: code cleanup
+	
+	Bjoern Jacob <bjoern.jacob@tritum.de>
+
+	* UPD: update of manual
+	* UPD #53618: Documentation on honeypot.inputname is misleading
+
 1.1.1
 	2013-11-12
 	Ralf Zimmermann <ralf.zimmermann@tritum.de>
