@@ -67,15 +67,16 @@ class tx_wtspamshield_method_httpcheck extends tx_wtspamshield_method_abstract {
 				if (!is_array($value)) {
 
 					$result = array();
-					preg_match_all('@' . $this->searchstring . '@', $value, $result);
+					preg_match_all('@' . $this->searchstring . '@', strtolower($value), $result);
 					if (isset($result[0])) {
 						$noOfErrors += count($result[0]);
 					}
 				} else {
+						// ???
 					if (!is_array($value2)) {
 						foreach ((array) $this->fieldValues[$key] as $key2 => $value2 ) {
 							$result = array();
-							preg_match_all('@' . $this->searchstring . '@', $value2, $result);
+							preg_match_all('@' . $this->searchstring . '@', strtolower($value2), $result);
 							if (isset($result[0])) {
 								$noOfErrors += count($result[0]);
 							}
