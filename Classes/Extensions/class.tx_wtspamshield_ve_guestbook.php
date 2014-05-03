@@ -126,12 +126,12 @@ class tx_wtspamshield_ve_guestbook extends tslib_pibase {
 			}
 			$error = $this->validate($validateArray);
 
-				// 2c. Truncate ve_guestbook temp table
+				// Truncate ve_guestbook temp table
 			if ($error) {
-				mysql_query('TRUNCATE TABLE tx_wtspamshield_veguestbooktemp');
+				$GLOBALS['TYPO3_DB']->exec_TRUNCATEquery('tx_wtspamshield_veguestbooktemp');
 			}
 
-				// 2d. Redirect if error happens
+				// Redirect if error happens
 			if (strlen($error) > 0) {
 				$saveData = array('tstamp' => time());
 				$obj->strEntryTable = 'tx_wtspamshield_veguestbooktemp';
@@ -159,7 +159,7 @@ class tx_wtspamshield_ve_guestbook extends tslib_pibase {
 		$this->additionalValues['nameCheck']['name1'] = $fieldValues['firstname'];
 		$this->additionalValues['nameCheck']['name2'] = $fieldValues['surname'];
 
-		$availableValidators =
+		$availableValidators = 
 			array(
 				'blacklistCheck',
 				'nameCheck',
