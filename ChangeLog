@@ -1,3 +1,10 @@
+1.2.1
+	2014-05-03
+	Ralf Zimmermann <ralf.zimmermann@tritum.de>
+
+	* ADD feature #58448: New logo
+	* FIX #58447: error in ve_guestbook
+
 1.2.0
 	2014-04-28
 	Ralf Zimmermann <ralf.zimmermann@tritum.de>
