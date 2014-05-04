@@ -118,7 +118,16 @@ class tx_wtspamshield_powermail extends tslib_pibase {
 
 				// Return Error message if exists
 			if (strlen($error) > 0) {
-				return '<div class="wtspamshield-errormsg">' . $error . '</div>';
+				if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['wt_spamshield']['customMessageOnError'][$this->tsKey])) {
+					$customError = '';
+					foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['wt_spamshield']['customMessageOnError'][$this->tsKey] as $_classRef) {
+						$_procObj = &t3lib_div::getUserObj($_classRef);
+						$customError .= $_procObj->customMessageOnError($error, $this);
+					}
+					return $customError;
+				} else {
+					return '<div class="wtspamshield-errormsg">' . $error . '</div>';
+				}
 			}
 		}
 

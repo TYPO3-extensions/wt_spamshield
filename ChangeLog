@@ -1,3 +1,9 @@
+1.2.2
+	2014-05-04
+	Ralf Zimmermann <ralf.zimmermann@tritum.de>
+
+	* ADD feature #58442: add hook for custom powermail error messages 
+
 1.2.1
 	2014-05-03
 	Ralf Zimmermann <ralf.zimmermann@tritum.de>
