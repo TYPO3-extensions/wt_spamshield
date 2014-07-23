@@ -141,6 +141,7 @@ class tx_wtspamshield_comments extends tslib_pibase {
 			array(
 				'blacklistCheck',
 				'nameCheck',
+				'uniqueCheck',
 				'httpCheck',
 				'sessionCheck',
 				'honeypotCheck',
