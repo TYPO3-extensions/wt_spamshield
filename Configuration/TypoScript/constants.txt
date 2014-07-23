@@ -123,24 +123,30 @@ plugin.wt_spamshield {
   # cat=wt_spamshield main//0400; type=text; label= CSS class honeypot: CSS class for honeypot input field
   honeypot.css.inputClass = class="wt_spamshield_field wt_spamshield_honey"
 
-  # cat=wt_spamshield main//0410; type=text; label= Honeyput input name for comments
+  # cat=wt_spamshield main//0410; type=text; label= additional tags params for honeypot: additional tag params for honeypot
+  honeypot.additionalParams.standard = autocomplete="off"
+
+  # cat=wt_spamshield main//0420; type=text; label= additional html5 tags params for honeypot: additional html5 tags params for honeypot
+  honeypot.additionalParams.html5 = tabindex="-1"
+
+  # cat=wt_spamshield main//0430; type=text; label= Honeyput input name for comments
   honeypot.inputname.comments = uid987651
 
-  # cat=wt_spamshield main//0420; type=text; label= Honeyput input name for direct_mail_subscription
+  # cat=wt_spamshield main//0440; type=text; label= Honeyput input name for direct_mail_subscription
   honeypot.inputname.direct_mail_subscription = uid987651
 
-  # cat=wt_spamshield main//0430; type=text; label= Honeyput input name for standardMailform
+  # cat=wt_spamshield main//0450; type=text; label= Honeyput input name for standardMailform
   honeypot.inputname.standardMailform = uid987651
 
-  # cat=wt_spamshield main//0440; type=text; label= Honeyput input name for powermail
+  # cat=wt_spamshield main//0460; type=text; label= Honeyput input name for powermail
   honeypot.inputname.powermail = uid987651
 
-  # cat=wt_spamshield main//0450; type=text; label= Honeyput input name for ve_guestbook
+  # cat=wt_spamshield main//0470; type=text; label= Honeyput input name for ve_guestbook
   honeypot.inputname.ve_guestbook = uid987651
 
-  # cat=wt_spamshield main//0460; type=text; label= Honeyput input name for ke_userregister
+  # cat=wt_spamshield main//0480; type=text; label= Honeyput input name for ke_userregister
   honeypot.inputname.ke_userregister = uid987651
 
-  # cat=wt_spamshield main//0470; type=text; label= Honeyput input name for pbsurvey
+  # cat=wt_spamshield main//0490; type=text; label= Honeyput input name for pbsurvey
   honeypot.inputname.pbsurvey = uid987651
 }

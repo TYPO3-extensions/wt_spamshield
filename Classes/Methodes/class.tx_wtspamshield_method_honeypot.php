@@ -59,12 +59,25 @@ class tx_wtspamshield_method_honeypot extends tx_wtspamshield_method_abstract {
 		$cObjvalues['value'] = $this->getL10n($lll);
 		$code = $this->cObj->cObjGetSingle($cObjType, $cObjvalues);
 
-		$code .= '<input type="text" autocomplete="off" name="';
+		$doctypePart = substr($GLOBALS['TSFE']->config['config']['doctype'], 0, 5);
+
+		$code .= '<input type="text" name="';
 		$code .= $this->additionalValues['prefixInputName'] . '[' . $this->additionalValues['honeypotInputName'] . ']"';
 		$code .= ' ' . $tsConf['honeypot.']['css.']['inputStyle'];
-		$code .= ' value=""';
 		$code .= ' ' . $tsConf['honeypot.']['css.']['inputClass'];
-		$code .= ' />';
+		$code .= ' ' . $tsConf['honeypot.']['additionalParams.']['standard'];
+
+		if ($doctypePart == 'html5') {
+			$code .= ' ' . $tsConf['honeypot.']['additionalParams.']['html5'];
+		}
+
+		$code .= ' value=""';
+
+		if ($doctypePart == 'xhtml') {
+			$code .= ' />';
+		} else {
+			$code .= ' >';
+		}
 
 		return $code;
 	}

@@ -87,6 +87,11 @@ plugin.wt_spamshield {
       inputStyle = {$plugin.wt_spamshield.honeypot.css.inputStyle}
       inputClass = {$plugin.wt_spamshield.honeypot.css.inputClass}
     }
+    
+    additionalParams {
+      standard = {$plugin.wt_spamshield.honeypot.additionalParams.standard}
+      html5 = {$plugin.wt_spamshield.honeypot.additionalParams.html5}
+    }
 
     explanation = TEXT
     explanation {
