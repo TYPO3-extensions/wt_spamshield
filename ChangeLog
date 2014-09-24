@@ -1,4 +1,10 @@
-1.2.2
+1.3.0-dev
+	2014-05-04
+	Ralf Zimmermann <ralf.zimmermann@tritum.de>
+
+	* ADD feature #61854: default mailform: dont include honeypot field in email
+
+1.3.0-dev
 	2014-05-04
 	Ralf Zimmermann <ralf.zimmermann@tritum.de>
 
