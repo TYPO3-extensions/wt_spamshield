@@ -46,6 +46,10 @@ plugin.wt_spamshield {
       enable = {$plugin.wt_spamshield.validators.pbsurvey.enable}
       how_many_validators_can_fail = {$plugin.wt_spamshield.validators.pbsurvey.how_many_validators_can_fail}
     }
+    formhandler {
+      enable = {$plugin.wt_spamshield.validators.formhandler.enable}
+      how_many_validators_can_fail = {$plugin.wt_spamshield.validators.formhandler.how_many_validators_can_fail}
+    }
   }
 
   enable {
@@ -58,6 +62,7 @@ plugin.wt_spamshield {
     direct_mail_subscription = {$plugin.wt_spamshield.direct_mail_subscription}
     ke_userregister = {$plugin.wt_spamshield.ke_userregister}
     pbsurvey = {$plugin.wt_spamshield.pbsurvey}
+    formhandler = {$plugin.wt_spamshield.formhandler}
   }
 
   redirect {
@@ -108,6 +113,7 @@ plugin.wt_spamshield {
       direct_mail_subscription = {$plugin.wt_spamshield.honeypot.inputname.direct_mail_subscription}
       ke_userregister = {$plugin.wt_spamshield.honeypot.inputname.ke_userregister}
       pbsurvey = {$plugin.wt_spamshield.honeypot.inputname.pbsurvey}
+      formhandler = {$plugin.wt_spamshield.honeypot.inputname.formhandler}
     }
   }
 
@@ -218,6 +224,13 @@ plugin.wt_spamshield {
       homepage = homepage
       body = entry
       permalink = homepage
+    }
+    formhandler {
+      author =
+      email =
+      homepage =
+      body =
+      permalink =
     }
   }
 }

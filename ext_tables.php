@@ -5,6 +5,7 @@ if (!defined ('TYPO3_MODE')) {
 
 t3lib_extMgm::addStaticFile($_EXTKEY, 'Configuration/TypoScript', 'Main Settings');
 t3lib_extMgm::addStaticFile($_EXTKEY, 'Configuration/TypoScript/Extensions/direct_mail_subscription', 'direct_mail_subscription');
+t3lib_extMgm::addStaticFile($_EXTKEY, 'Configuration/TypoScript/Extensions/formhandler', 'formhandler');
 
 	// only add static template for default mailform
 	// if new form extension is not loaded
