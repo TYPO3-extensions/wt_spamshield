@@ -3,6 +3,7 @@
 	Ralf Zimmermann <ralf.zimmermann@tritum.de>
 
 	* FIX feature #62238: Akismet check takes a lot of time
+	* ADD feature #59247: Test field for Akismet
 
 	2014-09-24
 	Ralf Zimmermann <ralf.zimmermann@tritum.de>

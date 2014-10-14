@@ -80,6 +80,7 @@ plugin.wt_spamshield {
 
   akismetCheck {
     akismetKey = {$plugin.wt_spamshield.akismetCheck.akismetKey}
+    testMode = {$plugin.wt_spamshield.akismetCheck.testMode}
   }
 
   sessionCheck {

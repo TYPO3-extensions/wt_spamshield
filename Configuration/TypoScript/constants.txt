@@ -120,6 +120,9 @@ plugin.wt_spamshield {
   # cat=wt_spamshield main//0360; type=text; label= akismetCheck: Enter your Akismet key to activate Akismet check (signup at https://akismet.com/signup/).
   akismetCheck.akismetKey =
 
+  # cat=wt_spamshield main//0365; type=text; label= akismetCheck Test Mode: Enable the akismet test mode (is_test=1)
+  akismetCheck.testMode = 0
+
   # cat=wt_spamshield main//0370; type=int; label= Session start time (s): Minimum time frame between entering the form page and submiting the form. 0 for disable.
   sessionCheck.sessionStartTime = 10
 

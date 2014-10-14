@@ -71,6 +71,10 @@ class tx_wtspamshield_method_akismet extends tx_wtspamshield_method_abstract {
 			'user_agent' => t3lib_div::getIndpEnv('HTTP_USER_AGENT')
 		);
 
+		if ((int) $tsConf['akismetCheck.']['testMode'] == 1) {
+			$akismetArray['is_test'] = 1;
+		}
+
 		$akismet = new tx_wtspamshield_akismet(
 			'http://' . t3lib_div::getIndpEnv('HTTP_HOST') . '/',
 			$tsConf['akismetCheck.']['akismetKey'],
