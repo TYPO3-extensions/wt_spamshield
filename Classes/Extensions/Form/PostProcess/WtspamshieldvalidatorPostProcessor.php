@@ -94,12 +94,13 @@ class WtspamshieldvalidatorPostProcessor implements \TYPO3\CMS\Form\PostProcess\
 
 			$this->requestHandler->setMethod('session');
 			if ($this->requestHandler->hasRequest()) {
-				$session = $this->requestHandler->getSession();
-
-				$validateArray = $session;
+				$validateArray = $this->requestHandler->getSession();
+				$error = $this->validate($validateArray);
+			} else if ($this->requestHandler->getPost()) {
+				$validateArray = $this->requestHandler->getPost();
 				$error = $this->validate($validateArray);
 			} else {
-				$error = 'no session data';
+				$error = 'no form data';
 			}
 
 			$urlConf = array('parameter' => 0);
