@@ -1,11 +1,15 @@
 1.3.0-dev
-	2014-05-04
+	2014-10-14
+	Ralf Zimmermann <ralf.zimmermann@tritum.de>
+
+	* FIX feature #62238: Akismet check takes a lot of time
+
+	2014-09-24
 	Ralf Zimmermann <ralf.zimmermann@tritum.de>
 
 	* ADD feature #61854: default mailform: dont include honeypot field in email
 
-1.3.0-dev
-	2014-05-04
+	2014-09-01
 	Ralf Zimmermann <ralf.zimmermann@tritum.de>
 
 	* ADD feature #57513: add formhandler support 
