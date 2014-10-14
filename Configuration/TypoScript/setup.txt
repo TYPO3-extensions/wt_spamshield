@@ -233,6 +233,13 @@ plugin.wt_spamshield {
       body =
       permalink =
     }
+    standardMailform {
+      author = name
+      email = email
+      homepage = homepage
+      body = msg
+      permalink = homepage
+    }
   }
 }
 

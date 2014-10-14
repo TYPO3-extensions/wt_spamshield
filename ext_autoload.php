@@ -27,6 +27,7 @@ $return = array(
 'Tx_WtSpamshieldFormhandler_Interceptor_WtSpamshield' => $extPath . 'Classes/Extensions/Tx_WtSpamshieldFormhandler_Interceptor_WtSpamshield.php',
 
 'TYPO3\CMS\Form\PostProcess\WtspamshieldmailPostProcessor' => $extPath . 'Classes/Extensions/Form/PostProcess/WtspamshieldmailPostProcessor.php',
+'TYPO3\CMS\Form\PostProcess\WtspamshieldvalidatorPostProcessor' => $extPath . 'Classes/Extensions/Form/PostProcess/WtspamshieldvalidatorPostProcessor.php',
 'TRITUM\WtSpamshield\Form\View\Mail\Plain\PlainView' => $extPath . 'Classes/Extensions/Form/View/Mail/Plain/PlainView.php',
 'TRITUM\WtSpamshield\Form\View\Mail\Html\HtmlView' => $extPath . 'Classes/Extensions/Form/View/Mail/Html/HtmlView.php',
 );
