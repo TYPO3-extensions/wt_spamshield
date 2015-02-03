@@ -55,10 +55,6 @@ class tx_wtspamshield_mail extends tslib_pibase {
 		$div = t3lib_div::makeInstance('tx_wtspamshield_div');
 		$tsConf = $div->getTsConf();
 
-		$t3Version = class_exists('t3lib_utility_VersionNumber')
-			? t3lib_utility_VersionNumber::convertVersionNumberToInteger(TYPO3_version)
-			: t3lib_div::int_from_ver(TYPO3_version);
-
 		$errorMessages['points'] = 'Score: ' . $points;
 		$errorMessages = strip_tags(implode(' / ', $errorMessages));
 

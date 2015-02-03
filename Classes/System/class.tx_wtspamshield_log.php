@@ -81,9 +81,14 @@ class tx_wtspamshield_log extends tslib_pibase {
 				'useragent' => t3lib_div::getIndpEnv('HTTP_USER_AGENT')
 			);
 				// Downwards compatibility
-			$t3Version = class_exists('t3lib_utility_VersionNumber')
-				? t3lib_utility_VersionNumber::convertVersionNumberToInteger(TYPO3_version)
-				: t3lib_div::int_from_ver(TYPO3_version);
+			if (class_exists('\TYPO3\CMS\Core\Utility\GeneralUtility\VersionNumberUtility')) {
+				$t3Version = \TYPO3\CMS\Core\Utility\GeneralUtility\VersionNumberUtility::convertVersionNumberToInteger(TYPO3_version);
+			} else if (class_exists('t3lib_utility_VersionNumber')) {
+				$t3Version = t3lib_utility_VersionNumber::convertVersionNumberToInteger(TYPO3_version);
+			} else if (class_exists('t3lib_div')) {
+				$t3Version = t3lib_div::int_from_ver(TYPO3_version);
+			}
+
 			if ($t3Version < 4007000) {
 				$dbValues += array(
 					'formvalues' => t3lib_div::view_array($formArray) . t3lib_div::view_array($errorMessages)

@@ -116,9 +116,14 @@ class tx_wtspamshield_ve_guestbook extends tslib_pibase {
 
 		if ( $this->getDiv()->isActivated($this->tsKey) ) {
 				// get GPvars, downwards compatibility
-			$t3Version = class_exists('t3lib_utility_VersionNumber')
-				? t3lib_utility_VersionNumber::convertVersionNumberToInteger(TYPO3_version)
-				: t3lib_div::int_from_ver(TYPO3_version);
+			if (class_exists('\TYPO3\CMS\Core\Utility\GeneralUtility\VersionNumberUtility')) {
+				$t3Version = \TYPO3\CMS\Core\Utility\GeneralUtility\VersionNumberUtility::convertVersionNumberToInteger(TYPO3_version);
+			} else if (class_exists('t3lib_utility_VersionNumber')) {
+				$t3Version = t3lib_utility_VersionNumber::convertVersionNumberToInteger(TYPO3_version);
+			} else if (class_exists('t3lib_div')) {
+				$t3Version = t3lib_div::int_from_ver(TYPO3_version);
+			}
+
 			if ($t3Version < 4006000) {
 				$validateArray = t3lib_div::GPvar('tx_veguestbook_pi1');
 			} else {
