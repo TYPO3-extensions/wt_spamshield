@@ -5,7 +5,7 @@ namespace TYPO3\CMS\Form\PostProcess;
  *
  *  Copyright notice
  *
- *  (c) 2014 Ralf Zimmermann <ralf.zimmermann@tritum.de>, TRITUM GmbH
+ *  (c) 2015 Ralf Zimmermann <ralf.zimmermann@tritum.de>, TRITUM GmbH
  *
  *  All rights reserved
  *

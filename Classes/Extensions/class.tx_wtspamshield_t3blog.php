@@ -2,7 +2,7 @@
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2012 Bjoern Jacob <bjoern.jacob@tritum.de>
+*  (c) 2015 Bjoern Jacob <bjoern.jacob@tritum.de>
 *  based on Code of Alexander Kellner <Alexander.Kellner@einpraegsam.net>
 *  All rights reserved
 *

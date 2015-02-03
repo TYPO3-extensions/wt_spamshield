@@ -2,7 +2,7 @@
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2009 Ralf Zimmermann <ralf.zimmermann@tritum.de>
+*  (c) 2015 Ralf Zimmermann <ralf.zimmermann@tritum.de>
 *  All rights reserved
 *
 *  This script is part of the TYPO3 project. The TYPO3 project is
